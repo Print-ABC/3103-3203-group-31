@@ -1,10 +1,13 @@
 package com.ncshare.ncshare;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -53,4 +56,27 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment selectedFragment = null;
+        switch (item.getItemId()) {
+            case R.id.nav_profile:
+                selectedFragment = new ProfileFragment();
+                getSupportActionBar().setTitle("My Profile");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                break;
+            case R.id.nav_logout:
+                Intent intent = new Intent(MainActivity.this, Login.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
 }
