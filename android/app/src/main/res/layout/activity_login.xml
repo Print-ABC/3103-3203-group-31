@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1b1c1e"
+    android:background="@drawable/whitebackground"
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true">
 
@@ -15,7 +15,7 @@
         android:layout_marginTop="53dp"
         android:gravity="center_horizontal"
         android:text="Account Login"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textSize="26sp"
         android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="36dp"
-                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawableLeft="@drawable/ic_lock_black_24dp"
                     android:drawableTint="#0d0508"
                     android:hint="Password"
                     android:inputType="textPassword"
@@ -90,10 +90,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="22dp"
-                android:background="#0c0c0c"
+                android:background="#DBD6D6"
                 android:text="Sign in"
                 android:textAllCaps="false"
-                android:textColor="#fff"
+                android:textColor="#000"
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
@@ -107,5 +107,5 @@
         android:layout_marginTop="144dp"
         android:background="@drawable/user_profile_image"
         android:elevation="4dp" />
-        android:src="@drawable/ic_profile" />
+        android:src="@drawable/ic_share_black_24dp" />
 </RelativeLayout>

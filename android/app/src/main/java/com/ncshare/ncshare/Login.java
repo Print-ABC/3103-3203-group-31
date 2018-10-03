@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.support.v4.app.FragmentTransaction;
 
 public class Login extends AppCompatActivity {
 
@@ -33,6 +34,17 @@ public class Login extends AppCompatActivity {
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
                 Log.i("LOGIN ------> ", username + ", " + password);
+
+                /*
+                Bundle bundle = new Bundle();
+                bundle.putString("Username", username);
+                bundle.putString("Password", password);
+                HomeFragment homeFrag = new HomeFragment();
+                homeFrag.setArguments(bundle);
+                */
+
+                Intent intent = new Intent(Login.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         tvForgetPW.setOnClickListener(new View.OnClickListener(){

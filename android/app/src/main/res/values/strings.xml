@@ -9,4 +9,10 @@
         <item>Student</item>
         <item>Organization</item>
     </string-array>
+
+    <string name="title_home">Home</string>
+    <string name="title_namecards">Name Cards</string>
+    <string name="title_friends">Friends</string>
+    <string name="title_nfc">NFC</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
