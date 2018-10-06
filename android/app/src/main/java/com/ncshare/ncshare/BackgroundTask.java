@@ -13,10 +13,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Justus Chua
- */
-
 public class BackgroundTask extends AsyncTask<String, Void, String> {
 
     Context context;
@@ -38,21 +34,19 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
         // Account Registration
         if(method.equals("register")){
-            String userId = params[1];
+            String username = params[1];
             String email = params[2];
             String password = params[3];
             String name = params[4];
             String contact = params[5];
-            String organization = params[6];
-            String role = params[7];
+            String role = params[6];
 
             List<NameValuePair> params1 = new ArrayList<>();
-            params1.add(new BasicNameValuePair("userId", userId));
+            params1.add(new BasicNameValuePair("username", username));
             params1.add(new BasicNameValuePair("email", email));
             params1.add(new BasicNameValuePair("password", password));
             params1.add(new BasicNameValuePair("name", name));
             params1.add(new BasicNameValuePair("contact", contact));
-            params1.add(new BasicNameValuePair("organization", organization));
             params1.add(new BasicNameValuePair("role", role));
 
             JSONParser jsonParser = new JSONParser();

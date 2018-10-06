@@ -17,4 +17,19 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_profile">Profile</string>
     <string name="title_logout">Logout</string>
+
+    <!-- Register Error Messages -->
+    <string name="empty_email_error">Please enter an email address</string>
+    <string name="empty_username_error">Please enter an username</string>
+    <string name="empty_password_error">Please enter a password</string>
+    <string name="empty_name_error">Please enter your full name</string>
+    <string name="empty_contact_error">Please enter your mobile number</string>
+    <string name="empty_role_error">Please select a role</string>
+    <string name="invalid_contact_error">"Please enter a valid contact number, e.g 98765432"</string>
+    <string name="invalid_name_error">Please enter a valid full name, e.g. Peter Tan</string>
+    <string name="invalid_email_error">Please enter a valid email address</string>
+    <string name="invalid_password_error">Password must be of 6 to 20 characters containing at least one digit, one lowercase character and one uppercase character</string>
+    <string name="invalid_username_error">"Please enter a valid username (8 to 15 characters allowing points, dashes and underscores)"</string>
+    <string name="invalid_confirm_password_error">Password does not match</string>
+
 </resources>
