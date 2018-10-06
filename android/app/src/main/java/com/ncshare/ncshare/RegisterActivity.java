@@ -2,19 +2,12 @@ package com.ncshare.ncshare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ResourceCursorAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -56,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //if success, go login page
                 //else stay register page
-                Intent i = new Intent(RegisterActivity.this, Login.class);
+                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(i);
             }
         });
