@@ -1,0 +1,4 @@
+RewriteEngine On    # Turn on the rewriting engine
+#RewriteBase /rest/
+
+#RewriteRule ^company/(all)$ all.php $1 [NC,L]
