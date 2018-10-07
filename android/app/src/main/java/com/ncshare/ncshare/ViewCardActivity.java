@@ -9,5 +9,6 @@ public class ViewCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_student_card);
+//        setContentView(R.layout.activity_view_organization_card);
     }
 }

@@ -32,4 +32,6 @@
     <string name="invalid_username_error">"Please enter a valid username (8 to 15 characters allowing points, dashes and underscores)"</string>
     <string name="invalid_confirm_password_error">Password does not match</string>
 
+    <!-- XML attributes -->
+    <color name="black">#000000</color>
 </resources>
