@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText e_username, e_email, e_password, e_name, e_contact, e_cfmPassword;
+    EditText etUsername, etEmail, etPassword, etName, etContact, etCfmPassword;
     String username, email, password, name, contact, role, cfmPassword;
     Integer roleNum;
     MaterialBetterSpinner s_role;
@@ -27,12 +27,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        e_username = findViewById(R.id.editTextUsername);
-        e_email = findViewById(R.id.editTextEmail);
-        e_password = findViewById(R.id.editTextPassword);
-        e_name = findViewById(R.id.editTextName);
-        e_contact = findViewById(R.id.editTextContact);
-        e_cfmPassword = findViewById(R.id.editTextCfmPassword);
+        etUsername = findViewById(R.id.editTextUsername);
+        etEmail = findViewById(R.id.editTextEmail);
+        etPassword = findViewById(R.id.editTextPassword);
+        etName = findViewById(R.id.editTextName);
+        etContact = findViewById(R.id.editTextContact);
+        etCfmPassword = findViewById(R.id.editTextCfmPassword);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, spinnerRole);
         s_role = findViewById(R.id.spinner_role);
@@ -42,12 +42,12 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = e_username.getText().toString();
-                email = e_email.getText().toString();
-                password = e_password.getText().toString();
-                cfmPassword = e_cfmPassword.getText().toString();
-                name = e_name.getText().toString();
-                contact = e_contact.getText().toString();
+                username = etUsername.getText().toString();
+                email = etEmail.getText().toString();
+                password = etPassword.getText().toString();
+                cfmPassword = etCfmPassword.getText().toString();
+                name = etName.getText().toString();
+                contact = etContact.getText().toString();
                 role = s_role.getText().toString();
                 Log.i("--- INFO ---", username + ", " + email + ", " + password + ", " + name + ", " + contact + ", " + role);
 
@@ -120,14 +120,14 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(contact);
 
         if (contact.isEmpty()) {
-            e_contact.setError(getString(R.string.empty_contact_error));
+            etContact.setError(getString(R.string.empty_contact_error));
             return false;
         }
         if (!matcher.find()) {
-            e_contact.setError(getString(R.string.invalid_contact_error));
+            etContact.setError(getString(R.string.invalid_contact_error));
             return false;
         } else {
-            e_contact.setError(null);
+            etContact.setError(null);
             return true;
         }
     }
@@ -138,23 +138,23 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(name);
 
         if (name.isEmpty()) {
-            e_name.setError(getString(R.string.empty_name_error));
+            etName.setError(getString(R.string.empty_name_error));
             return false;
         } else if (!matcher.find()) {
-            e_name.setError(getString(R.string.invalid_name_error));
+            etName.setError(getString(R.string.invalid_name_error));
             return false;
         } else {
-            e_name.setError(null);
+            etName.setError(null);
             return true;
         }
     }
 
     private boolean validateCfmPassword() {
-        if (!cfmPassword.equals(e_password.getText().toString())) {
-            e_cfmPassword.setError(getString(R.string.invalid_confirm_password_error));
+        if (!cfmPassword.equals(etPassword.getText().toString())) {
+            etCfmPassword.setError(getString(R.string.invalid_confirm_password_error));
             return false;
         } else {
-            e_cfmPassword.setError(null);
+            etCfmPassword.setError(null);
             return true;
         }
     }
@@ -165,13 +165,13 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(password);
 
         if (password.isEmpty()) {
-            e_password.setError(getString(R.string.empty_password_error));
+            etPassword.setError(getString(R.string.empty_password_error));
             return false;
         } else if (!matcher.find()) {
-            e_password.setError(getString(R.string.invalid_password_error));
+            etPassword.setError(getString(R.string.invalid_password_error));
             return false;
         } else {
-            e_password.setError(null);
+            etPassword.setError(null);
             return true;
         }
     }
@@ -182,13 +182,13 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(email);
 
         if (email.isEmpty()) {
-            e_email.setError(getString(R.string.empty_email_error));
+            etEmail.setError(getString(R.string.empty_email_error));
             return false;
         } else if (!matcher.find()) {
-            e_email.setError(getString(R.string.invalid_email_error));
+            etEmail.setError(getString(R.string.invalid_email_error));
             return false;
         } else {
-            e_email.setError(null);
+            etEmail.setError(null);
             return true;
         }
 
@@ -199,13 +199,13 @@ public class RegisterActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(username);
         if (username.isEmpty()){
-            e_username.setError(getString(R.string.empty_username_error));
+            etUsername.setError(getString(R.string.empty_username_error));
             return false;
         } else if (!matcher.find()){
-            e_username.setError(getString(R.string.invalid_username_error));
+            etUsername.setError(getString(R.string.invalid_username_error));
             return false;
         } else {
-            e_username.setError(null);
+            etUsername.setError(null);
             return true;
         }
     }
