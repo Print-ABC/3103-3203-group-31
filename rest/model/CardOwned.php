@@ -30,6 +30,29 @@ class CardOwned {
         $stmt->execute();
         return $stmt;
     }
+    
+    // Insert a new card ownership
+    public function create() {
+        // Create query
+        $query = 'INSERT INTO ' . $this->table . ' SET co_user_id_owner = UNHEX(:co_user_id_owner), co_user_id_owned = UNHEX(:co_user_id_owned), co_username = :co_username, co_date_added = CURRENT_TIMESTAMP()';
+        // Prepare statement
+        $stmt = $this->conn->prepare($query);
+        // Clean data
+        $this->co_user_id_owner = htmlspecialchars(strip_tags($this->co_user_id_owner));
+        $this->co_user_id_owned = htmlspecialchars(strip_tags($this->co_user_id_owned));
+        $this->co_username = htmlspecialchars(strip_tags($this->co_username));
+        // Bind data
+        $stmt->bindParam(':co_user_id_owner', $this->co_user_id_owner);
+        $stmt->bindParam(':co_user_id_owned', $this->co_user_id_owned);
+        $stmt->bindParam(':co_username', $this->co_username);
+        // Execute query
+        if ($stmt->execute()) {
+            return true;
+        }
+        // Print error if something goes wrong
+        printf("Error: %s.\n", $stmt->error);
+        return false;
+    }
 }
 
 ?>

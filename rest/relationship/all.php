@@ -12,10 +12,10 @@ $database = new Database();
 $db = $database->connect();
 
 // Instantiate CompanyCard object
-$own = new Relationship($db);
+$user = new Relationship($db);
 
 // Query DB
-$result = $own->getAll();
+$result = $user->getAll();
 
 // Get row count
 $num = $result->rowCount();

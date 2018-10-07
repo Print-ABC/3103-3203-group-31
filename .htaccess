@@ -1,4 +1,11 @@
-RewriteEngine On    # Turn on the rewriting engine
-#RewriteBase /rest/
+#Options +FollowSymLinks -MultiViews
+#DocumentRoot "/"
 
-#RewriteRule ^company/(all)$ all.php $1 [NC,L]
+#<Directory "/rest/student/">
+#RewriteEngine On    # Turn on the rewriting engine
+##RewriteBase /rest/student/
+##RewriteCond %{REQUEST_FILENAME} !-d [OR]
+##RewriteCond %{REQUEST_FILENAME} !-f
+#
+#RewriteRule ^([0-9a-zA-Z_-]*)$ card.php?id=$1 [NC,L]
+#</Directory>
