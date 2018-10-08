@@ -15,7 +15,7 @@ public class Login extends AppCompatActivity {
     EditText etUsername, etPassword;
     Button btnLogin;
     String username, password;
-    TextView tvForgetPW, tvRegister;
+    TextView tvForgetPW, tvRegister, tvLoginError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class Login extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         tvForgetPW = findViewById(R.id.tvForgetPW);
         tvRegister = findViewById(R.id.tvRegister);
+        tvLoginError = findViewById(R.id.tvLoginError);
         btnLogin = findViewById(R.id.btnLogin);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -35,16 +36,26 @@ public class Login extends AppCompatActivity {
                 password = etPassword.getText().toString();
                 Log.i("LOGIN ------> ", username + ", " + password);
 
-                /*
-                Bundle bundle = new Bundle();
-                bundle.putString("Username", username);
-                bundle.putString("Password", password);
-                HomeFragment homeFrag = new HomeFragment();
-                homeFrag.setArguments(bundle);
-                */
+                if (username.isEmpty() || password.isEmpty()){
+                    tvLoginError.setText("Fields cannot be blank.");
+                }
 
-                Intent intent = new Intent(Login.this, MainActivity.class);
-                startActivity(intent);
+                //TODO Check with DB for verifying user
+                /* if wrong
+                else if (){
+
+                    vLoginError.setText("Incorrect username/password.");
+                }
+                */
+                //if correct
+                else {
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Username", username);
+                    bundle.putString("Password", password);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
         tvForgetPW.setOnClickListener(new View.OnClickListener(){

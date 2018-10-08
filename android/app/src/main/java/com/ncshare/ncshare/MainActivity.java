@@ -6,15 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
-
+    /* Reference for bottom Navigation
+    https://android.jlelse.eu/ultimate-guide-to-bottom-navigation-on-android-75e4efb8105f
+    */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -49,11 +50,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
+        Intent intentBundle = getIntent();
+        Bundle bundle = intentBundle.getExtras();
+        String username = bundle.getString("Username");
+        String password = bundle.getString("Password");
+        Log.i("Credentials ----" , username + ", " + password);
     }
 
     @Override

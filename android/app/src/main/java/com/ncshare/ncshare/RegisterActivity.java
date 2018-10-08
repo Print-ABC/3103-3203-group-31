@@ -2,29 +2,29 @@ package com.ncshare.ncshare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ResourceCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText e_userId, e_email, e_password, e_name, e_contact, e_organization;
-    String userId, email, password, name, contact, organization, role;
+    String userId, email, password, name, contact, organization, role, emailPattern;
     MaterialBetterSpinner s_role;
     Button btnRegister;
     String[] spinnerRole = {"Student", "Organization"};
+    TextView tvRegError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +40,10 @@ public class RegisterActivity extends AppCompatActivity {
                 android.R.layout.simple_dropdown_item_1line, spinnerRole);
         s_role = findViewById(R.id.spinner_role);
         s_role.setAdapter(arrayAdapter);
+        tvRegError = findViewById(R.id.tvRegError);
         btnRegister = findViewById(R.id.btnRegister);
+
+        emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,8 +59,21 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //if success, go login page
                 //else stay register page
-                Intent i = new Intent(RegisterActivity.this, Login.class);
-                startActivity(i);
+                if (userId.isEmpty() || password.isEmpty()|| email.isEmpty() || name.isEmpty() || contact.isEmpty() || role.isEmpty() || organization.isEmpty()){
+                    tvRegError.setText("Fields cannot be empty.");
+                }
+                else if (!email.matches(emailPattern)){
+                    tvRegError.setText("Invalid email format.");
+                }
+                else if (password.length()<6){
+                        tvRegError.setText("Password needs at least 6 characters.");
+                    }
+                // TODO Validate the fields of each input, if email/username existed
+
+                else {
+                    Intent i = new Intent(RegisterActivity.this, Login.class);
+                    startActivity(i);
+                }
             }
         });
     }
