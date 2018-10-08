@@ -58,7 +58,7 @@ class User {
     // Insert a new student card
     public function create() {
         // Create query
-        $query = 'INSERT INTO ' . $this->table . ' SET user_username = :user_username, user_name = :user_name, user_password = :user_password, user_contact = :user_contact, user_role = 0, user_friend_id = NULL';
+        $query = 'INSERT INTO ' . $this->table . ' SET user_username = :user_username, user_name = :user_name, user_password = :user_password, user_contact = :user_contact, user_role = :user_role, user_friend_id = NULL';
         // Prepare statement
         $stmt = $this->conn->prepare($query);
         // Clean data
@@ -66,11 +66,13 @@ class User {
         $this->user_name = htmlspecialchars(strip_tags($this->user_name));
         $this->user_password = htmlspecialchars(strip_tags($this->user_password));
         $this->user_contact = htmlspecialchars(strip_tags($this->user_contact));
+        $this->user_role = htmlspecialchars(strip_tags($this->user_role));
         // Bind data
         $stmt->bindParam(':user_username', $this->user_username);
         $stmt->bindParam(':user_name', $this->user_name);
         $stmt->bindParam(':user_password', $this->user_password);
         $stmt->bindParam(':user_contact', $this->user_contact);
+        $stmt->bindParam(':user_role', $this->user_role);
         // Execute query
         if ($stmt->execute()) {
             return true;

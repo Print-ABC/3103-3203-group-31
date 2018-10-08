@@ -22,6 +22,7 @@ $user->user_username = $data->user_username;
 $user->user_name = $data->user_name;
 $user->user_password = $data->user_password;
 $user->user_contact = $data->user_contact;
+$user->user_role = $data->user_role;
 
 // Insert into DB
 if ($user->create()) {
