@@ -27,17 +27,17 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        etUsername = findViewById(R.id.editTextUsername);
-        etEmail = findViewById(R.id.editTextEmail);
-        etPassword = findViewById(R.id.editTextPassword);
-        etName = findViewById(R.id.editTextName);
-        etContact = findViewById(R.id.editTextContact);
-        etCfmPassword = findViewById(R.id.editTextCfmPassword);
+        etUsername = (EditText) findViewById(R.id.editTextUsername);
+        etEmail = (EditText) findViewById(R.id.editTextEmail);
+        etPassword = (EditText) findViewById(R.id.editTextPassword);
+        etName = (EditText) findViewById(R.id.editTextName);
+        etContact = (EditText) findViewById(R.id.editTextContact);
+        etCfmPassword = (EditText) findViewById(R.id.editTextCfmPassword);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, spinnerRole);
-        s_role = findViewById(R.id.spinner_role);
+        s_role = (MaterialBetterSpinner) findViewById(R.id.spinner_role);
         s_role.setAdapter(arrayAdapter);
-        btnRegister = findViewById(R.id.btnRegister);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

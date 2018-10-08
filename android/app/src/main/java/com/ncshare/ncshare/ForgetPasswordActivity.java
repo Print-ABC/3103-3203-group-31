@@ -18,11 +18,11 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
-        tvBackLogin = findViewById(R.id.tvBackLogin);
-        tvResetMsg = findViewById(R.id.tvForgetPWError);
-        btnResetPW = findViewById(R.id.btnForgetPW);
-        etEmail = findViewById(R.id.etUsername);
-        etUsername = findViewById(R.id.etEmail);
+        tvBackLogin = (TextView) findViewById(R.id.tvBackLogin);
+        tvResetMsg = (TextView) findViewById(R.id.tvForgetPWError);
+        btnResetPW = (Button) findViewById(R.id.btnForgetPW);
+        etEmail = (EditText) findViewById(R.id.etUsername);
+        etUsername = (EditText) findViewById(R.id.etEmail);
 
         tvBackLogin.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){

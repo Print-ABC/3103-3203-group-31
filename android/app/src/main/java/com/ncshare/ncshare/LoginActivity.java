@@ -21,12 +21,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        tvForgetPW = findViewById(R.id.tvForgetPW);
-        tvRegister = findViewById(R.id.tvRegister);
-        tvLoginError = findViewById(R.id.tvLoginError);
-        btnLogin = findViewById(R.id.btnLogin);
+        etUsername = (EditText) findViewById(R.id.etUsername);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        tvForgetPW = (TextView) findViewById(R.id.tvForgetPW);
+        tvRegister = (TextView) findViewById(R.id.tvRegister);
+        tvLoginError = (TextView) findViewById(R.id.tvLoginError);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

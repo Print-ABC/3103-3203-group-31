@@ -36,7 +36,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
-        mSFriendsRecyclerView = view.findViewById(R.id.friends_recycler_view);
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
@@ -55,7 +55,7 @@ public class FriendsFragment extends Fragment {
         public FriendsHolder(View itemView){
             super(itemView);
 
-            mNameTextView = itemView.findViewById(R.id.friends_name);
+            mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
