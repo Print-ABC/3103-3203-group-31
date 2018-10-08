@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="com.ncshare.ncshare.ViewCardActivity"
+    tools:layout_editor_absoluteY="73dp">
+
+    <TextView
+        android:id="@+id/tvOrganization"
+        android:layout_width="252dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="105dp"
+        android:gravity="start"
+        android:scrollHorizontally="true"
+        android:text="NCShare Pte Ltd."
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvContact"
+        app:layout_constraintStart_toEndOf="@+id/tvContact" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="29dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="30dp"
+        android:gravity="start"
+        android:scrollHorizontally="true"
+        android:text="JUSTUS CHUA"
+        android:textAlignment="viewStart"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="29dp"
+        android:layout_marginLeft="41dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="Marketing Director"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+    <TextView
+        android:id="@+id/tvContact"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="516dp"
+        android:gravity="start"
+        android:text="98765432"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tvEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrganization"
+        android:layout_marginRight="516dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: "
+        android:textColor="@android:color/white"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvEmail"
+        app:layout_constraintStart_toStartOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="2dp"
+        android:gravity="start"
+        android:text="xjustusc@gmail.com"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="309dp"
+        android:layout_height="138dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ncsharelogo"
+        android:layout_marginRight="24dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="9dp"
+        android:layout_marginStart="41dp"
+        android:text="Tel: +65"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/tvContact"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrganization"
+        android:layout_marginLeft="41dp"
+        android:layout_marginRight="9dp" />
+
+</android.support.constraint.ConstraintLayout>

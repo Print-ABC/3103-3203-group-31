@@ -8,9 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +20,9 @@ public class RegisterActivity extends AppCompatActivity {
     MaterialBetterSpinner s_role;
     Button btnRegister;
     String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -51,7 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
                 role = s_role.getText().toString();
                 Log.i("--- INFO ---", username + ", " + email + ", " + password + ", " + name + ", " + contact + ", " + role);
 
-                if (validateInputs()){
+
+                if (validateInputs()) {
                     //if success, go login page
                     //else stay register page
                     registerUser();
@@ -67,25 +68,25 @@ public class RegisterActivity extends AppCompatActivity {
         if (validateUserId()) {
             result++;
         }
-        if (validateEmail()){
+        if (validateEmail()) {
             result++;
         }
-        if (validatePassword()){
+        if (validatePassword()) {
             result++;
         }
-        if (validateCfmPassword()){
+        if (validateCfmPassword()) {
             result++;
         }
-        if (validateName()){
+        if (validateName()) {
             result++;
         }
-        if (validateContact()){
+        if (validateContact()) {
             result++;
         }
-        if (validateRole()){
+        if (validateRole()) {
             result++;
         }
-        if(result == 7){
+        if (result == 7) {
             return true;
         } else {
             return false;
@@ -107,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
     Role 1 - Student
      */
     private Integer getRoleNum(String role) {
-        if (role.equals(Utils.ORGANIZATION)){
+        if (role.equals(Utils.ORGANIZATION)) {
             return 0;
         } else {
             return 1;
@@ -198,10 +199,10 @@ public class RegisterActivity extends AppCompatActivity {
         String regx = "^[a-zA-Z0-9._-]{8,15}$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(username);
-        if (username.isEmpty()){
+        if (username.isEmpty()) {
             etUsername.setError(getString(R.string.empty_username_error));
             return false;
-        } else if (!matcher.find()){
+        } else if (!matcher.find()) {
             etUsername.setError(getString(R.string.invalid_username_error));
             return false;
         } else {
@@ -210,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void registerUser(){
+    public void registerUser() {
         //Create and run a background task
         String method = "register";
         BackgroundTask backgroundTask = new BackgroundTask(this);
@@ -218,3 +219,4 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+
