@@ -13,17 +13,17 @@
         android:gravity="center_horizontal"
         android:text="Sign Up"
         android:textColor="#90c40909"
-        android:textSize="33dp"
+        android:textSize="30dp"
         android:textStyle="bold" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <EditText
-            android:id="@+id/editTextUserId"
+            android:id="@+id/editTextUsername"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -35,7 +35,7 @@
         android:id="@+id/email_address"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -50,7 +50,7 @@
         android:id="@+id/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -62,10 +62,25 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/cFmPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/editTextCfmPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Confirm Password"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/editTextName"
@@ -80,7 +95,7 @@
         android:id="@+id/contact"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/editTextContact"
@@ -98,21 +113,6 @@
         android:hint="Role"
         android:textColorHint="#05ab9a"
         app:met_floatingLabel="normal" />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/organization"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <EditText
-            android:id="@+id/editTextOrganization"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Organization"
-            android:inputType="textPersonName" />
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btnRegister"
