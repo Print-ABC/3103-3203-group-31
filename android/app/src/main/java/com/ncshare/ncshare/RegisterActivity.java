@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (validateInputs()) {
                     //if success, go login page
                     //else stay register page
-                    registerUser();
+                    //TODO: Add register function here
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(i);
                 }
@@ -209,13 +209,6 @@ public class RegisterActivity extends AppCompatActivity {
             etUsername.setError(null);
             return true;
         }
-    }
-
-    public void registerUser() {
-        //Create and run a background task
-        String method = "register";
-        BackgroundTask backgroundTask = new BackgroundTask(this);
-        backgroundTask.execute(method, username, email, password, name, contact, role);
     }
 
 }
