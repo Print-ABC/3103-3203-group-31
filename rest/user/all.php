@@ -33,6 +33,7 @@ if ($num > 0) {
             'username' => $user_name,
             'password' => $user_password,
             'contact' => $user_contact,
+            'user-email'=>$user_email,
             'user-role' => $user_role,
             'uid-friend' => $user_friend_id,
             'uid' => $user_id

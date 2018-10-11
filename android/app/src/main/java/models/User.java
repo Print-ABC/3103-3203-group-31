@@ -24,6 +24,10 @@ public class User {
     @SerializedName("uid-friend")
     @Expose
     private String uidFriend;
+    @SerializedName("user-email")
+    @Expose
+    private String userEmail;
+
     @SerializedName("uid")
     @Expose
     private String uid;
@@ -83,5 +87,9 @@ public class User {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+    public String getUserEmail() {return userEmail;}
+
+    public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
 
 }
