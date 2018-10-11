@@ -60,7 +60,7 @@ class User {
     // Insert a new student card
     public function create() {
         // Create query
-        $query = 'INSERT INTO ' . $this->table . ' SET user_username = :user_username, user_name = :user_name, user_password = :user_password, user_contact = :user_contact, user_email = :user_emal, user_role = :user_role, user_friend_id = NULL';
+        $query = 'INSERT INTO ' . $this->table . ' SET user_username = :user_username, user_name = :user_name, user_password = :user_password, user_contact = :user_contact, user_email = :user_email, user_role = :user_role, user_friend_id = NULL';
         // Prepare statement
         $stmt = $this->conn->prepare($query);
         // Clean data
