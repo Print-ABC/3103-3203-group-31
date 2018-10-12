@@ -29,14 +29,14 @@ if ($num > 0) {
         extract($row);
 
         $item = array(
-            'name' => $user_username,
-            'username' => $user_name,
-            'password' => $user_password,
-            'contact' => $user_contact,
-            'user-email'=>$user_email,
-            'user-role' => $user_role,
-            'uid-friend' => $user_friend_id,
-            'uid' => $user_id
+            'user_name' => $user_username,
+            'user_username' => $user_name,
+            'user_password' => $user_password,
+            'user_contact' => $user_contact,
+            'user_email'=>$user_email,
+            'user_role' => $user_role,
+            'user_friend_id' => $user_friend_id,
+            'user_id' => $user_id
         );
 
         // Push to array

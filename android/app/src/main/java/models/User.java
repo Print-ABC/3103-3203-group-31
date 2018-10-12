@@ -6,29 +6,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
-    @SerializedName("name")
+    @SerializedName("user_name")
     @Expose
     private String name;
-    @SerializedName("username")
+    @SerializedName("user_username")
     @Expose
     private String username;
-    @SerializedName("password")
+    @SerializedName("user_password")
     @Expose
     private String password;
-    @SerializedName("contact")
+    @SerializedName("user_contact")
     @Expose
     private String contact;
-    @SerializedName("user-role")
+    @SerializedName("user_role")
     @Expose
     private String userRole;
-    @SerializedName("uid-friend")
+    @SerializedName("user_friend_id")
     @Expose
     private String uidFriend;
-    @SerializedName("user-email")
+    @SerializedName("user_email")
     @Expose
     private String userEmail;
 
-    @SerializedName("uid")
+    @SerializedName("user_id")
     @Expose
     private String uid;
 

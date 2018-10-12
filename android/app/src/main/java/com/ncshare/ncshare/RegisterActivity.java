@@ -8,18 +8,31 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import models.User;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.RetrofitClient;
+import services.UserService;
+
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     EditText etUsername, etEmail, etPassword, etName, etContact, etCfmPassword;
     String username, email, password, name, contact, role, cfmPassword;
     Integer roleNum;
     MaterialBetterSpinner s_role;
     Button btnRegister;
     String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
+    private UserService userService;
 
     @Override
 
@@ -56,8 +69,30 @@ public class RegisterActivity extends AppCompatActivity {
                     //if success, go login page
                     //else stay register page
                     //TODO: Add register function here
-                    Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(i);
+                    User user = new User();
+                    user.setUserRole(roleNum.toString());
+                    user.setPassword(password);
+                    user.setUserEmail(email);
+                    user.setContact(contact);
+                    user.setUsername(username);
+                    user.setName(name);
+                    Call<ResponseBody> call = RetrofitClient
+                            .getInstance()
+                            .getApi()
+                            .addUser(user);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Toast.makeText(RegisterActivity.this, "Data Succesfully Inserted", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(i);
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(RegisterActivity.this, "Error "+ t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
