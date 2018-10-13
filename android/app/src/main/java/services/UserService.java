@@ -1,5 +1,6 @@
 package services;
 
+import models.Result;
 import models.User;
 import models.UserList;
 import okhttp3.RequestBody;
@@ -22,5 +23,8 @@ public interface UserService {
     Call<User> getUser(@Url String url);
 
     @POST("post")
-    Call<ResponseBody> addUser(@Body User body);
+    Call<Result> addUser(@Body User body);
+
+    @POST("login")
+    Call<Result> login(@Body User body);
 }

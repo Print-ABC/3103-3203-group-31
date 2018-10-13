@@ -1,4 +1,4 @@
-package com.ncshare.ncshare;
+package common;
 
 public class Utils {
     public static final String STUDENT = "Student";

@@ -1,4 +1,4 @@
-package com.ncshare.ncshare;
+package fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ncshare.ncshare.FriendsModel;
+import com.ncshare.ncshare.R;
+import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 

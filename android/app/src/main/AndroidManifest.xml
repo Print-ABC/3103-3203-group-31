@@ -11,11 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RegisterActivity"
+            android:name="activities.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="activities.LoginActivity"
             android:label="@string/login_title"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,10 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ForgetPasswordActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name="activities.ForgetPasswordActivity" />
+        <activity android:name="activities.MainActivity"></activity>
         <activity
-            android:name=".ViewCardActivity"
+            android:name="activities.ViewCardActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

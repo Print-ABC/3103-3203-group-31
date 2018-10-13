@@ -1,4 +1,4 @@
-package com.ncshare.ncshare;
+package activities;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import fragments.FriendsFragment;
+import fragments.HomeFragment;
+import fragments.NFCFragment;
+import fragments.NamecardsFragment;
+import fragments.ProfileFragment;
+import com.ncshare.ncshare.R;
 
 public class MainActivity extends AppCompatActivity {
 

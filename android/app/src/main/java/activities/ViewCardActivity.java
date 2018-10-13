@@ -1,7 +1,9 @@
-package com.ncshare.ncshare;
+package activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.ncshare.ncshare.R;
 
 public class ViewCardActivity extends AppCompatActivity {
 

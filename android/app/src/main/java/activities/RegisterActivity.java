@@ -1,5 +1,6 @@
-package com.ncshare.ncshare;
+package activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ncshare.ncshare.R;
+import common.Utils;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import models.Result;
 import models.User;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
     private UserService userService;
+    private ProgressDialog pDialog;
 
     @Override
 
@@ -76,20 +80,25 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setContact(contact);
                     user.setUsername(username);
                     user.setName(name);
-                    Call<ResponseBody> call = RetrofitClient
+                    displayLoader();
+                    Call<Result> call = RetrofitClient
                             .getInstance()
                             .getApi()
                             .addUser(user);
-                    call.enqueue(new Callback<ResponseBody>() {
+                    call.enqueue(new Callback<Result>() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            Toast.makeText(RegisterActivity.this, "Data Succesfully Inserted", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(i);
+                        public void onResponse(Call<Result> call, Response<Result> response) {
+                            btnRegister.setEnabled(true);
+                            Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.body().isSuccess()){
+                                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(i);
+                            }
                         }
 
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        public void onFailure(Call<Result> call, Throwable t) {
+                            btnRegister.setEnabled(true);
                             Toast.makeText(RegisterActivity.this, "Error "+ t.getMessage().toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -244,6 +253,18 @@ public class RegisterActivity extends AppCompatActivity {
             etUsername.setError(null);
             return true;
         }
+    }
+
+    /**
+     * Display Progress bar while Logging in
+     */
+    private void displayLoader() {
+        btnRegister.setEnabled(false);
+        pDialog = new ProgressDialog(RegisterActivity.this);
+        pDialog.setMessage("Registering.. Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 
 }
