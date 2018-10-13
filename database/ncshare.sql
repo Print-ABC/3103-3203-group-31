@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2018 at 09:19 AM
+-- Generation Time: Oct 13, 2018 at 10:16 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -113,7 +113,8 @@ INSERT INTO `student_card` (`stu_user_id`, `stu_card_name`, `stu_card_email`, `s
 CREATE TABLE `user` (
   `user_username` varchar(50) NOT NULL,
   `user_name` varchar(50) NOT NULL,
-  `user_password` varchar(50) NOT NULL,
+  `user_password` varchar(256) NOT NULL,
+  `user_salt` varchar(256) NOT NULL,
   `user_contact` varchar(50) NOT NULL,
   `user_role` int(11) NOT NULL,
   `user_friend_id` int(11) NOT NULL,
@@ -125,9 +126,9 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_username`, `user_name`, `user_password`, `user_contact`, `user_role`, `user_friend_id`, `user_id`, `user_email`) VALUES
-('xjustus', 'Justus Chua', 'password', '98765432', 1, 6, 0x78982067c8c211e8a31a3c970ea38bf7, 'justus@ncshare.co'),
-('barackObama', 'Barack Obama', 'password', '87654332', 0, 8, 0xd03b5549c8ca11e8a31a3c970ea38bf7, 'barackobama@usa.com');
+INSERT INTO `user` (`user_username`, `user_name`, `user_password`, `user_salt`, `user_contact`, `user_role`, `user_friend_id`, `user_id`, `user_email`) VALUES
+('xjustus', 'Justus Chua', '$2y$10$kNmphAu22Lw7VikxbPphSuXmPbmZHllHauQJRUV8Nr0Y1JXGHZGIO', '21072faead37d83443a0f9b022a3224fc5aa8360548720b1161ec95086fe8213', '98765432', 1, 6, 0x78982067c8c211e8a31a3c970ea38bf7, 'justus@ncshare.co'),
+('barackObama', 'Barack Obama', '$2y$10$Lg9UAPhpFkiz7Ll96wIpMuhjF8crH7o.xW5uK/Xkr6YNs0saudimC', '91720ea2e3b17833ad8d68be89aa58114003be5d67ea91d806e291baa80cd3ec', '87654332', 0, 8, 0xd03b5549c8ca11e8a31a3c970ea38bf7, 'barackobama@usa.com');
 
 --
 -- Triggers `user`
@@ -182,7 +183,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_friend_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_friend_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- Constraints for dumped tables
 --
