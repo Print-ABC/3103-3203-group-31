@@ -26,5 +26,5 @@ public interface UserService {
     Call<Result> addUser(@Body User body);
 
     @POST("login")
-    Call<Result> login(@Body User body);
+    Call<User> login(@Body User body);
 }

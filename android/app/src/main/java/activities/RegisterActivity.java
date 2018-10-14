@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
+
+import common.SessionHandler;
 import common.Utils;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -39,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -70,9 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 if (validateInputs()) {
-                    //if success, go login page
-                    //else stay register page
-                    //TODO: Add register function here
                     User user = new User();
                     user.setUserRole(roleNum.toString());
                     user.setPassword(password);

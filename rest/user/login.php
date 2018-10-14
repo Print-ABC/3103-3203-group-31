@@ -33,7 +33,8 @@ if (isset($input['user_username']) && isset($input['user_password'])) {
         $salt = getSalt();
         if(password_verify(concatPasswordWithSalt($input_password, $user->salt), $user->user_password)){
             $response["message"] = "Login successful";
-            $response["full_name"] = $user->user_name;
+            $response["user_name"] = $user->user_name;
+            $response["user_role"] = $user->user_role;
             $response["success"] = true;
         } else {
             $response["message"] = "Invalid username and password combination";

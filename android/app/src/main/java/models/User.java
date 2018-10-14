@@ -4,6 +4,8 @@ package models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class User {
 
     @SerializedName("user_name")
@@ -27,10 +29,37 @@ public class User {
     @SerializedName("user_email")
     @Expose
     private String userEmail;
-
     @SerializedName("user_id")
     @Expose
     private String uid;
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("success")
+    @Expose
+    private boolean success;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    private Date sessionExpiryDate;
+
+    public Date getSessionExpiryDate() { return sessionExpiryDate; }
+
+    public void setSessionExpiryDate(Date sessionExpiryDate) { this.sessionExpiryDate = sessionExpiryDate; }
 
     public String getName() {
         return name;

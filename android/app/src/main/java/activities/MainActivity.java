@@ -1,16 +1,22 @@
 package activities;
 
 import android.content.Intent;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import common.SessionHandler;
+import common.Utils;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NFCFragment;
@@ -19,6 +25,11 @@ import fragments.ProfileFragment;
 import com.ncshare.ncshare.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private SessionHandler session;
+    private Button btnExchangeNc, btnCreateNc, btnFriendList;
+    private BottomNavigationItemView friendsMenu;
 
     /* Reference for bottom Navigation
     https://android.jlelse.eu/ultimate-guide-to-bottom-navigation-on-android-75e4efb8105f
@@ -55,18 +66,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        session = new SessionHandler(getApplicationContext());
+
+        Utils.redirectToLogin(session, this);
         setContentView(R.layout.activity_main);
+
+        friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
+
+        if (session.getUserDetails().getUserRole().equals(Utils.ORGANIZATION_ROLE)){
+            friendsMenu.setVisibility(View.GONE);
+        } else {
+            friendsMenu.setVisibility(View.VISIBLE);
+        }
+
+        Log.e(TAG,session.getUserDetails().getName());
+        Log.e(TAG,session.getUserDetails().getUserRole());
+        Log.e(TAG,session.getUserDetails().getUsername());
 
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-
-        Intent intentBundle = getIntent();
-        Bundle bundle = intentBundle.getExtras();
-        String username = bundle.getString("Username");
-        String password = bundle.getString("Password");
-        Log.i("Credentials ----" , username + ", " + password);
     }
 
     @Override
@@ -86,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
+                session.logoutUser();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;

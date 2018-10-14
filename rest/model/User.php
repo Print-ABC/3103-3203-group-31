@@ -39,7 +39,7 @@ class User {
     }
 
     public function retrieveLoginCred() {
-        $query = 'SELECT `user_name`, `user_password`, `user_salt` FROM `user` WHERE `user_username` = :username';
+        $query = 'SELECT `user_name`, `user_role`,`user_password`, `user_salt` FROM `user` WHERE `user_username` = :username';
         $stmt = $this->conn->prepare($query);
         error_log($this->user_username);
         $stmt->bindParam(':username', $this->user_username);
@@ -48,6 +48,7 @@ class User {
         if ($row > 0) {
             $this->user_password = $row['user_password'];
             $this->user_name = $row['user_name'];
+            $this->user_role = $row['user_role'];
             $this->salt = $row['user_salt'];
             $this->conn = null;
             return true;

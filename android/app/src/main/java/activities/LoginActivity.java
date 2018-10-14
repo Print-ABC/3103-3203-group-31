@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
+import common.SessionHandler;
 import models.Result;
 import models.User;
 import retrofit2.Call;
@@ -22,15 +23,24 @@ import services.RetrofitClient;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     EditText etUsername, etPassword;
     Button btnLogin;
     String username, password;
     TextView tvForgetPW, tvRegister, tvLoginError;
     private ProgressDialog pDialog;
+    private SessionHandler session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        session = new SessionHandler(getApplicationContext());
+
+        // Check if user is logged in
+        if (session.isLoggedIn()){
+            directToMain();
+        }
+
         setContentView(R.layout.activity_login);
 
         etUsername = (EditText) findViewById(R.id.etUsername);
@@ -69,28 +79,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Direct user to MainActivity
+    private void directToMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void login() {
         displayLoader();
         User user = new User();
         user.setPassword(password);
         user.setUsername(username);
-        Call<Result> call = RetrofitClient
+        Call<User> call = RetrofitClient
                 .getInstance()
                 .getApi()
                 .login(user);
-        call.enqueue(new Callback<Result>() {
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 if(response.body().isSuccess()){
                     pDialog.dismiss();
                     tvLoginError.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("Username", username);
-                    bundle.putString("Password", password);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    session.loginUser(username, response.body().getName(), response.body().getUserRole());
+                    directToMain();
                 } else {
                     btnLogin.setEnabled(true);
                     pDialog.dismiss();
@@ -99,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 pDialog.dismiss();
             }
         });
