@@ -9,10 +9,9 @@ import models.User;
 
 public class SessionHandler {
     private static final String PREF_NAME = "UserSession";
-    private static final String KEY_USERNAME = "username";
     private static final String KEY_ROLE = "role";
     private static final String KEY_EXPIRES = "expires";
-    private static final String KEY_NAME = "user_name";
+    private static final String KEY_UID = "userID";
     private static final String KEY_EMPTY = "";
     private Context mContext;
     private SharedPreferences.Editor mEditor;
@@ -24,15 +23,13 @@ public class SessionHandler {
         this.mEditor = mPreferences.edit();
     }
 
+
     /**
      * Logs in the user by saving user details and setting session
-     *
-     * @param username
-     * @param fullName
+     * @param role
      */
-    public void loginUser(String username, String fullName, String role) {
-        mEditor.putString(KEY_USERNAME, username);
-        mEditor.putString(KEY_NAME, fullName);
+    public void loginUser(String uid, String role) {
+        mEditor.putString(KEY_UID, uid);
         mEditor.putString(KEY_ROLE, role);
         Date date = new Date();
 
@@ -77,8 +74,7 @@ public class SessionHandler {
             return null;
         }
         User user = new User();
-        user.setUsername(mPreferences.getString(KEY_USERNAME, KEY_EMPTY));
-        user.setName(mPreferences.getString(KEY_NAME, KEY_EMPTY));
+        user.setUid(mPreferences.getString(KEY_UID, KEY_EMPTY));
         user.setUserRole(mPreferences.getString(KEY_ROLE, KEY_EMPTY));
         user.setSessionExpiryDate(new Date(mPreferences.getLong(KEY_EXPIRES, 0)));
 

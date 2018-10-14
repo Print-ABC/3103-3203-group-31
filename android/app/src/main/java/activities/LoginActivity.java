@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         if (session.isLoggedIn()){
             directToMain();
         }
-
         setContentView(R.layout.activity_login);
 
         etUsername = (EditText) findViewById(R.id.etUsername);
@@ -102,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     tvLoginError.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    session.loginUser(username, response.body().getName(), response.body().getUserRole());
+                    session.loginUser(response.body().getUid(), response.body().getUserRole());
                     directToMain();
                 } else {
                     btnLogin.setEnabled(true);

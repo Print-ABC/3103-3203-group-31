@@ -32,7 +32,7 @@ if (isset($input['user_username']) && isset($input['user_password'])) {
     if($user->retrieveLoginCred()){
         if((hash_password($input_password, $user->salt) == $user->user_password)){
             $response["message"] = "Login successful";
-            $response["user_name"] = $user->user_name;
+            $response["user_id"] = $user->user_id;
             $response["user_role"] = $user->user_role;
             $response["success"] = true;
         } else {
