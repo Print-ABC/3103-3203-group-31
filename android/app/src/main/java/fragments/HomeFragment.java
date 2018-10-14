@@ -33,11 +33,19 @@ public class HomeFragment extends Fragment {
         btnFriendList = (Button)view.findViewById(R.id.btnFriendList);
 
         // Show/hide friend list button depending on user's role
-        if (session.getUserDetails().getUserRole().equals(Utils.ORGANIZATION_ROLE)){
+        if (Utils.isOrganization(session)){
             btnFriendList.setVisibility(View.GONE);
         } else {
             btnFriendList.setVisibility(View.VISIBLE);
         }
+
+        btnCreateNc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateNCFragment()).commit();
+            }
+        });
+
         return view;
     }
 }

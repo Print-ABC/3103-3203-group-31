@@ -1,14 +1,15 @@
 <?php
-/* 
+
+/*
  * Author   : Tan Suan Khai
  * Created  : 06 OCT 2018
  */
 
 class CompanyCard {
+
     // DB stuff
     private $conn;
     private $table = 'organization_card';
-    
     // Card Properties
     public $org_user_id;
     public $org_card_name;
@@ -16,12 +17,12 @@ class CompanyCard {
     public $org_card_job_title;
     public $org_card_contact;
     public $org_card_email;
-    
+
     // Constructor with DB
     public function __construct($db) {
         $this->conn = $db;
     }
-    
+
     // Return all company cards from DB
     public function getAll() {
         // Create query        
@@ -32,7 +33,7 @@ class CompanyCard {
         $stmt->execute();
         return $stmt;
     }
-    
+
     // Get one card
     public function getCard() {
         // Create query
@@ -52,10 +53,16 @@ class CompanyCard {
         $this->org_card_contact = $row['org_card_contact'];
         $this->org_card_email = $row['org_card_email'];
     }
-    
+
     public function create() {
         // Create query
         $query = 'INSERT INTO ' . $this->table . ' SET org_user_id = UNHEX(:org_user_id), org_card_name = :org_card_name, org_card_organization = :org_card_organization, org_card_job_title = :org_card_job_title, org_card_contact = :org_card_contact, org_card_email = :org_card_email';
+        error_log($this->org_user_id);
+        error_log($this->org_card_name);
+        error_log($this->org_card_organization);
+        error_log($this->org_card_job_title);
+        error_log($this->org_card_contact);
+        error_log($this->org_card_email);
         // Prepare statement
         $stmt = $this->conn->prepare($query);
         // Clean data
@@ -80,5 +87,21 @@ class CompanyCard {
         printf("Error: %s.\n", $stmt->error);
         return false;
     }
+
+    // Check if user has already created a card
+    function cardExists() {
+        $query = "SELECT HEX(org_user_id) as org_user_id FROM " . $this->table . " WHERE HEX(org_user_id) = :org_user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":org_user_id", $this->org_user_id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
+
 ?>

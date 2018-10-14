@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static okhttp3.logging.HttpLoggingInterceptor.*;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://10.0.2.2/ncshare/rest/user/";;
+    private static final String BASE_URL = "http://10.0.2.2/ncshare/rest/";
     private Retrofit retrofit;
     private static RetrofitClient retrofitClient;
 
@@ -38,7 +38,9 @@ public class RetrofitClient {
         return retrofitClient;
         }
 
-    public UserService getApi() {
+    public UserService getUserApi() {
         return retrofit.create(UserService.class);
+    }
+    public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);
     }
 }

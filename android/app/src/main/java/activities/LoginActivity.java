@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.ncshare.ncshare.R;
 
 import common.SessionHandler;
-import models.Result;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         user.setUsername(username);
         Call<User> call = RetrofitClient
                 .getInstance()
-                .getApi()
+                .getUserApi()
                 .login(user);
         call.enqueue(new Callback<User>() {
             @Override

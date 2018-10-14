@@ -31,8 +31,6 @@ if (isset($data['user_username']) && isset($data['user_password']) && isset($dat
     $user->user_contact = $data['user_contact'];
     $user->user_email = $data['user_email'];
     $user->user_role = $data['user_role'];
-    error_log($user->user_username);
-    error_log($user->user_email);
 
     if (!userExists($user->user_username, $user->user_email)) {
 

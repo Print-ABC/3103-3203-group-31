@@ -22,9 +22,9 @@ public interface UserService {
     @GET
     Call<User> getUser(@Url String url);
 
-    @POST("post")
+    @POST("user/post")
     Call<Result> addUser(@Body User body);
 
-    @POST("login")
+    @POST("user/login")
     Call<User> login(@Body User body);
 }

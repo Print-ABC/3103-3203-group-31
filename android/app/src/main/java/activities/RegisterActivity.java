@@ -30,12 +30,12 @@ import services.UserService;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    EditText etUsername, etEmail, etPassword, etName, etContact, etCfmPassword;
-    String username, email, password, name, contact, role, cfmPassword;
-    Integer roleNum;
-    MaterialBetterSpinner s_role;
-    Button btnRegister;
-    String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
+    private EditText etUsername, etEmail, etPassword, etName, etContact, etCfmPassword;
+    private String username, email, password, name, contact, role, cfmPassword;
+    private Integer roleNum;
+    private MaterialBetterSpinner s_role;
+    private Button btnRegister;
+    private String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
     private UserService userService;
     private ProgressDialog pDialog;
 
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     displayLoader();
                     Call<Result> call = RetrofitClient
                             .getInstance()
-                            .getApi()
+                            .getUserApi()
                             .addUser(user);
                     call.enqueue(new Callback<Result>() {
                         @Override
