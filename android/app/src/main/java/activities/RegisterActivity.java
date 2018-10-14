@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
-import common.SessionHandler;
 import common.Utils;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -110,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (validateUserId()) {
             result++;
         }
-        if (validateEmail()) {
+        if (Utils.validateEmail(email, etEmail, this)) {
             result++;
         }
         if (validatePassword()) {
@@ -119,10 +118,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (validateCfmPassword()) {
             result++;
         }
-        if (validateName()) {
+        if (Utils.validateName(name, etName, this)) {
             result++;
         }
-        if (validateContact()) {
+        if (Utils.validateContact(contact,etContact,this)) {
             result++;
         }
         if (validateRole()) {
@@ -146,49 +145,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /*
-    Role 0 - Organization
-    Role 1 - Student
+    Role 0 - Student
+    Role 1 - Organization
      */
     private Integer getRoleNum(String role) {
         if (role.equals(Utils.ORGANIZATION)) {
-            return 0;
-        } else {
             return 1;
-        }
-    }
-
-    private boolean validateContact() {
-        String regx = "(6|8|9)[0-9]{7}";
-        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(contact);
-
-        if (contact.isEmpty()) {
-            etContact.setError(getString(R.string.empty_contact_error));
-            return false;
-        }
-        if (!matcher.find()) {
-            etContact.setError(getString(R.string.invalid_contact_error));
-            return false;
         } else {
-            etContact.setError(null);
-            return true;
-        }
-    }
-
-    private boolean validateName() {
-        String regx = "^[\\p{L} .'-]+$";
-        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(name);
-
-        if (name.isEmpty()) {
-            etName.setError(getString(R.string.empty_name_error));
-            return false;
-        } else if (!matcher.find()) {
-            etName.setError(getString(R.string.invalid_name_error));
-            return false;
-        } else {
-            etName.setError(null);
-            return true;
+            return 0;
         }
     }
 
@@ -219,24 +183,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateEmail() {
-        String regx = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-        Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-
-        if (email.isEmpty()) {
-            etEmail.setError(getString(R.string.empty_email_error));
-            return false;
-        } else if (!matcher.find()) {
-            etEmail.setError(getString(R.string.invalid_email_error));
-            return false;
-        } else {
-            etEmail.setError(null);
-            return true;
-        }
-
-    }
-
     private boolean validateUserId() {
         String regx = "^[a-zA-Z0-9._-]{8,15}$";
         Pattern pattern = Pattern.compile(regx);
@@ -254,7 +200,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Display Progress bar while Logging in
+     * Display Progress bar while Registering
      */
     private void displayLoader() {
         btnRegister.setEnabled(false);

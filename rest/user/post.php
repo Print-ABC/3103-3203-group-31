@@ -35,7 +35,6 @@ if (isset($data['user_username']) && isset($data['user_password']) && isset($dat
     error_log($user->user_email);
 
     if (!userExists($user->user_username, $user->user_email)) {
-        error_log("Shouldnt go here");
 
         // Get a unique Salt
         $user->salt = getSalt();
