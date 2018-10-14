@@ -167,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validatePassword() {
-        String regx = "(^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,20}$)";
+        String regx = "(?=^.{16,35}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(password);
 
