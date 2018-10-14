@@ -40,9 +40,8 @@ if (isset($data['user_username']) && isset($data['user_password']) && isset($dat
         $user->salt = getSalt();
 
         // Generate a unique password Hash
-        $user->password_hash = password_hash(concatPasswordWithSalt($user->user_password, $user->salt), PASSWORD_DEFAULT);
-        
-
+        $user->password_hash = hash_password($user->user_password, $user->salt);
+       
         // Insert into DB
         if ($user->create()) {
             $response["message"] = "New user created";

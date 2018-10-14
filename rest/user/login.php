@@ -30,8 +30,9 @@ if (isset($input['user_username']) && isset($input['user_password'])) {
     
     // Retrieve login credentials using username
     if($user->retrieveLoginCred()){
-        $salt = getSalt();
-        if(password_verify(concatPasswordWithSalt($input_password, $user->salt), $user->user_password)){
+        error_log(hash_password($input_password, $user->salt));
+        error_log($user->user_password);
+        if((hash_password($input_password, $user->salt) == $user->user_password)){
             $response["message"] = "Login successful";
             $response["user_name"] = $user->user_name;
             $response["user_role"] = $user->user_role;

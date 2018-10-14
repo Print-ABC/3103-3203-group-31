@@ -1,6 +1,6 @@
 <?php
 
-$random_salt_length = 32;
+$random_salt_length = 64;
 
 /**
  * Queries the database and checks whether the user already exists
@@ -44,14 +44,7 @@ function getSalt() {
  * 
  * @return
  */
-function concatPasswordWithSalt($password, $salt) {
+function hash_password($password, $salt) {
     global $random_salt_length;
-    if ($random_salt_length % 2 == 0) {
-        $mid = $random_salt_length / 2;
-    } else {
-        $mid = ($random_salt_length - 1) / 2;
-    }
-
-    return
-            substr($salt, 0, $mid - 1) . $password . substr($salt, $mid, $random_salt_length - 1);
+    return hash_pbkdf2("sha256", $password, $salt, 1000, $random_salt_length);
 }
