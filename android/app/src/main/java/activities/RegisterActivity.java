@@ -184,7 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateUserId() {
-        String regx = "^[a-zA-Z0-9._-]{8,15}$";
+        String regx = "^[a-zA-Z0-9._-]{8,25}$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(username);
         if (username.isEmpty()) {

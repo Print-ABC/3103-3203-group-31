@@ -55,7 +55,7 @@ public class Utils {
      * @return
      */
     public static boolean validateName(String name, EditText etName, Context context) {
-        String regx = "^[\\p{L} .'-]+$";
+        String regx = "^[\\p{L} .'-]{1,30}+$";
         Pattern pattern = Pattern.compile(regx, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(name);
         if (name.isEmpty()) {
