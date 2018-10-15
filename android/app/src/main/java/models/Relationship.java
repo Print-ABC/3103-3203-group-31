@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Relationship {
 
-    @SerializedName("friend-one-id")
+    @SerializedName("friend_one_id")
     @Expose
     private String friendOneId;
-    @SerializedName("friend-two-id")
+    @SerializedName("friend_two_id")
     @Expose
     private String friendTwoId;
-    @SerializedName("friend-status")
+    @SerializedName("friend_status")
     @Expose
     private String friendStatus;
-    @SerializedName("friend-action-uid")
+    @SerializedName("friend_action_uid")
     @Expose
     private String friendActionUid;
 

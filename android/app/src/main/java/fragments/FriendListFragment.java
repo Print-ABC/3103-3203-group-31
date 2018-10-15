@@ -34,7 +34,8 @@ public class FriendListFragment extends Fragment {
     private ArrayList<FriendsModel> mFriends;
     private RecyclerView mSFriendsRecyclerView;
     private FriendsAdapter mAdapter;
-    public String user_friend_id;
+    public String user_friend_id = "";
+    public String user_friends;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,34 +46,66 @@ public class FriendListFragment extends Fragment {
             friends.setName(friendNames[i]);
             mFriends.add(friends);
         }
-        final User user = new User();
-        user.setUsername("hbhbhbhb");
-        Call<User> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .retrieveFUID(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.body().isSuccess()){
-                    Toast.makeText(getContext(), response.body().getUidFriend(), Toast.LENGTH_SHORT).show();
-                    //user_friend_id = response.body().getUidFriend();
-                    //Log.d("UIDF---", response.body().getUidFriend());
-                } else {
-                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("onFailure", "---------- Failed");
-            }
-        });
-
-
+        String uid= "859f94b2cfba11e8a30b8c16456733d9";
+        retrieveFUID(uid);
         super.onCreate(savedInstanceState);
     }
 
+    public void retrieveFUID(String uid){
+        // GET the user_friend_id of user by the uid
+        Call<User> call = RetrofitClient
+                .getInstance()
+                .getUserApi()
+                .retrieve(uid);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                response.body();
+                user_friend_id = response.body().getUidFriend();
+                Log.i("UID FRIEND in Call", user_friend_id);
+
+                //GET the friend_two_id of the user by the friend_one_id
+                Call<Relationship> callR = RetrofitClient
+                        .getInstance()
+                        .getRelationshipApi()
+                        .retrieveFriends(user_friend_id);
+                callR.enqueue(new Callback<Relationship>() {
+                    @Override
+                    public void onResponse(Call<Relationship> callR, Response<Relationship> responseR) {
+                        responseR.body();
+                        user_friends = responseR.body().getFriendTwoId();
+                        Log.i("UID FRIEND 2 ----------", user_friends);
+                        if (Integer.parseInt(responseR.body().getFriendStatus())== 1) {
+                            //GET the name of the friend by the user_friend_id
+                            Call<User> callU = RetrofitClient
+                                    .getInstance()
+                                    .getUserApi()
+                                    .retrieveFUID(user_friend_id);
+                            callU.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> callU, Response<User> responseU) {
+                                    responseU.body();
+                                    String user_name = responseU.body().getName();
+                                    Log.i("NAME ---------", user_name);
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> callU, Throwable t) {
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Relationship> callR, Throwable t) {
+                    }
+                });
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+            }
+        });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

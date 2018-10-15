@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private SessionHandler session;
-    private Button btnExchangeNc, btnCreateNc, btnFriendList;
     private BottomNavigationItemView friendsMenu;
 
     /* Reference for bottom Navigation
@@ -73,15 +72,12 @@ public class MainActivity extends AppCompatActivity {
 
         friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
 
-        if (session.getUserDetails().getUserRole().equals(Utils.ORGANIZATION_ROLE)){
+
+        if (Utils.isOrganization(session)){
             friendsMenu.setVisibility(View.GONE);
         } else {
             friendsMenu.setVisibility(View.VISIBLE);
         }
-
-        Log.e(TAG,session.getUserDetails().getName());
-        Log.e(TAG,session.getUserDetails().getUserRole());
-        Log.e(TAG,session.getUserDetails().getUsername());
 
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

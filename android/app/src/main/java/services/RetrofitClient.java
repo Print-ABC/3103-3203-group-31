@@ -38,7 +38,9 @@ public class RetrofitClient {
         return retrofitClient;
         }
 
-    public UserService getApi() {
+    public UserService getUserApi() {
         return retrofit.create(UserService.class);
+    }
+    public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);
     }
 }
