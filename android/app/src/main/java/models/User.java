@@ -1,65 +1,36 @@
 
 package models;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class User {
 
-    @SerializedName("user_name")
+    @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("user_username")
+    @SerializedName("username")
     @Expose
     private String username;
-    @SerializedName("user_password")
+    @SerializedName("email")
     @Expose
-    private String password;
-    @SerializedName("user_contact")
+    private String email;
+    @SerializedName("contact")
     @Expose
     private String contact;
-    @SerializedName("user_role")
+    @SerializedName("role")
     @Expose
-    private String userRole;
-    @SerializedName("user_friend_id")
+    private String role;
+    @SerializedName("password")
     @Expose
-    private String uidFriend;
-    @SerializedName("user_email")
+    private String password;
+    @SerializedName("friendship")
     @Expose
-    private String userEmail;
-    @SerializedName("user_id")
+    private List<String> friendship = null;
+    @SerializedName("cards")
     @Expose
-    private String uid;
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("success")
-    @Expose
-    private boolean success;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    private Date sessionExpiryDate;
-
-    public Date getSessionExpiryDate() { return sessionExpiryDate; }
-
-    public void setSessionExpiryDate(Date sessionExpiryDate) { this.sessionExpiryDate = sessionExpiryDate; }
+    private List<String> cards = null;
 
     public String getName() {
         return name;
@@ -77,12 +48,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getContact() {
@@ -93,32 +64,36 @@ public class User {
         this.contact = contact;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getRole() {
+        return role;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getUidFriend() {
-        return uidFriend;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUidFriend(String uidFriend) {
-        this.uidFriend = uidFriend;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getUid() {
-        return uid;
+    public List<String> getFriendship() {
+        return friendship;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setFriendship(List<String> friendship) {
+        this.friendship = friendship;
     }
 
-    public String getUserEmail() {return userEmail;}
+    public List<String> getCards() {
+        return cards;
+    }
 
-    public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
+    public void setCards(List<String> cards) {
+        this.cards = cards;
+    }
 
 }

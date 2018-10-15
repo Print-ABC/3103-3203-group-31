@@ -7,10 +7,9 @@ public class Result {
     @SerializedName("message")
     @Expose
     private String message;
-
     @SerializedName("success")
     @Expose
-    private boolean success;
+    private Boolean success;
 
     public String getMessage() {
         return message;
@@ -20,11 +19,12 @@ public class Result {
         this.message = message;
     }
 
-    public boolean isSuccess() {
+    public Boolean getSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    public void setSuccess(Boolean success) {
         this.success = success;
     }
+
 }

@@ -89,31 +89,31 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User();
         user.setPassword(password);
         user.setUsername(username);
-        Call<User> call = RetrofitClient
-                .getInstance()
-                .getUserApi()
-                .login(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.body().isSuccess()){
-                    pDialog.dismiss();
-                    tvLoginError.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    session.loginUser(response.body().getUid(), response.body().getUserRole());
-                    directToMain();
-                } else {
-                    btnLogin.setEnabled(true);
-                    pDialog.dismiss();
-                    tvLoginError.setText(response.body().getMessage());
-                }
-            }
+//        Call<User> call = RetrofitClient
+//                .getInstance()
+//                .getUserApi()
+//                .login(user);
+//        call.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if(response.body().isSuccess()){
+//                    pDialog.dismiss();
+//                    tvLoginError.setVisibility(View.INVISIBLE);
+//                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+//                    session.loginUser(response.body().getUid(), response.body().getRole());
+//                    directToMain();
+//                } else {
+//                    btnLogin.setEnabled(true);
+//                    pDialog.dismiss();
+//                    tvLoginError.setText(response.body().getMessage());
+//                }
+//            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                pDialog.dismiss();
-            }
-        });
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                pDialog.dismiss();
+//            }
+//        });
     }
 
     /**

@@ -79,13 +79,13 @@ public class CreateNCFragment extends Fragment {
                         }
                         //TODO: insert values into org table
                         Organization org = new Organization();
-                        Log.e(TAG, session.getUserDetails().getUid());
-                        org.setOrgCardContact(contact);
-                        org.setOrgCardEmail(email);
-                        org.setOrgCardJobTitle(jobTitle);
-                        org.setOrgCardName(name);
-                        org.setOrgCardOrganization(orgName);
-                        org.setOrgUserId(session.getUserDetails().getUid());
+//                        Log.e(TAG, session.getUserDetails().getUid());
+                        org.setContact(contact);
+                        org.setEmail(email);
+                        org.setJobTitle(jobTitle);
+                        org.setName(name);
+                        org.setOrganization(orgName);
+//                        org.setOrgUserId(session.getUserDetails().getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getOrganizationApi()
@@ -95,7 +95,7 @@ public class CreateNCFragment extends Fragment {
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 btnCreate.setEnabled(true);
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                if (response.body().isSuccess()){
+                                if (response.body().getSuccess()){
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())

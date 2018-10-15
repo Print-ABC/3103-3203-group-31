@@ -71,9 +71,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (validateInputs()) {
                     User user = new User();
-                    user.setUserRole(roleNum.toString());
+                    user.setRole(roleNum.toString());
                     user.setPassword(password);
-                    user.setUserEmail(email);
+                    user.setEmail(email);
                     user.setContact(contact);
                     user.setUsername(username);
                     user.setName(name);
@@ -86,8 +86,10 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Result> call, Response<Result> response) {
                             btnRegister.setEnabled(true);
+                            pDialog.dismiss();
+                            Log.e(TAG, response.body().getMessage());
                             Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            if (response.body().isSuccess()){
+                            if (response.body().getSuccess()){
                                 Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(i);
                             }
@@ -96,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<Result> call, Throwable t) {
                             btnRegister.setEnabled(true);
+                            pDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Error "+ t.getMessage().toString(), Toast.LENGTH_SHORT).show();
                         }
                     });

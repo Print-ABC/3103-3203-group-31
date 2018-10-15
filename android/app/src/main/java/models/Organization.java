@@ -6,71 +6,71 @@ import com.google.gson.annotations.SerializedName;
 
 public class Organization {
 
-    @SerializedName("org_user_id")
+    @SerializedName("uid")
     @Expose
-    private String orgUserId;
-    @SerializedName("org_card_name")
+    private String uid;
+    @SerializedName("name")
     @Expose
-    private String orgCardName;
-    @SerializedName("org_card_organization")
+    private String name;
+    @SerializedName("organization")
     @Expose
-    private String orgCardOrganization;
-    @SerializedName("org_card_contact")
+    private String organization;
+    @SerializedName("email")
     @Expose
-    private String orgCardContact;
-    @SerializedName("org_card_job_title")
+    private String email;
+    @SerializedName("contact")
     @Expose
-    private String orgCardJobTitle;
-    @SerializedName("org_card_email")
+    private String contact;
+    @SerializedName("jobTitle")
     @Expose
-    private String orgCardEmail;
+    private String jobTitle;
 
-    public String getOrgUserId() {
-        return orgUserId;
+    public String getUid() {
+        return uid;
     }
 
-    public void setOrgUserId(String orgUserId) {
-        this.orgUserId = orgUserId;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public String getOrgCardName() {
-        return orgCardName;
+    public String getName() {
+        return name;
     }
 
-    public void setOrgCardName(String orgCardName) {
-        this.orgCardName = orgCardName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getOrgCardOrganization() {
-        return orgCardOrganization;
+    public String getOrganization() {
+        return organization;
     }
 
-    public void setOrgCardOrganization(String orgCardOrganization) {
-        this.orgCardOrganization = orgCardOrganization;
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
-    public String getOrgCardContact() {
-        return orgCardContact;
+    public String getEmail() {
+        return email;
     }
 
-    public void setOrgCardContact(String orgCardContact) {
-        this.orgCardContact = orgCardContact;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getOrgCardJobTitle() {
-        return orgCardJobTitle;
+    public String getContact() {
+        return contact;
     }
 
-    public void setOrgCardJobTitle(String orgCardJobTitle) {
-        this.orgCardJobTitle = orgCardJobTitle;
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
-    public String getOrgCardEmail() {
-        return orgCardEmail;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setOrgCardEmail(String orgCardEmail) {
-        this.orgCardEmail = orgCardEmail;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
 }

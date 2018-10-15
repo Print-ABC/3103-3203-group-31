@@ -16,24 +16,24 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 public interface UserService {
-    @GET("user/.")
+    @GET("users/.")
     Call<UserList> getUserList();
 
     @GET
     Call<User> getUser(@Url String url);
 
-    @POST("user/post")
+    @POST("users/register")
     Call<Result> addUser(@Body User body);
 
-    @POST("user/login")
+    @POST("users/login")
     Call<User> login(@Body User body);
 
-    @POST("user/user")
+    @POST("users/user")
     Call<User> retrieve(@Query("id") String user_id);
 
-    @POST("user/retrieveFUID")
+    @POST("users/retrieveFUID")
     Call<User> retrieveFUID(@Query("id") String user_friend_id);
 
-    @POST("user/retrieveByUsername")
+    @POST("users/retrieveByUsername")
     Call<User> retrieveUsername(@Query("id") String user_username);
 }

@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static okhttp3.logging.HttpLoggingInterceptor.*;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://10.0.2.2/ncshare/rest/";
+    private static final String BASE_URL = "http://10.0.2.2:3000/";
     private Retrofit retrofit;
     private static RetrofitClient retrofitClient;
 

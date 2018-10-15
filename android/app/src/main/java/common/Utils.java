@@ -39,7 +39,7 @@ public class Utils {
      * @return
      */
     public static boolean isOrganization(SessionHandler session){
-        if (session.getUserDetails().getUserRole().equals(ORGANIZATION_ROLE)){
+        if (session.getUserDetails().getRole().equals(ORGANIZATION_ROLE)){
             return true;
         } else {
             return false;

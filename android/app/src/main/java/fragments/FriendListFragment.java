@@ -61,7 +61,7 @@ public class FriendListFragment extends Fragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 response.body();
-                user_friend_id = response.body().getUidFriend();
+//                user_friend_id = response.body().getUidFriend();
                 Log.i("UID FRIEND in Call", user_friend_id);
 
                 //GET the friend_two_id of the user by the friend_one_id

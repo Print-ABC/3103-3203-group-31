@@ -63,7 +63,7 @@ public class FriendSearchFragment extends Fragment {
                     public void onResponse(Call<User> call, Response<User> response) {
                         response.body();
                         String user_name = response.body().getName();
-                        String user_email = response.body().getUserEmail();
+                        String user_email = response.body().getEmail();
                         tvName.setText(user_name);
                         tvEmail.setText(user_email);
                         btnAdd.setVisibility(View.VISIBLE);
