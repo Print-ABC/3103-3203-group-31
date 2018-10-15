@@ -1,53 +1,82 @@
 package fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.ncshare.ncshare.R;
 
-public class FriendSearchFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import org.w3c.dom.Text;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.RetrofitClient;
+
+public class FriendSearchFragment extends Fragment {
+
+    private EditText etUsername;
+    private TextView tvName, tvEmail;
+    private Button btnAdd;
+    private ImageButton btnSearch;
 
     public FriendSearchFragment() {
-        // Required empty public constructor
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static FriendSearchFragment newInstance(String param1, String param2) {
-        FriendSearchFragment fragment = new FriendSearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend_search, container, false);
+        etUsername = (EditText) view.findViewById(R.id.etSearchUid);
+        tvName = (TextView) view.findViewById(R.id.tvFName);
+        tvEmail = (TextView) view.findViewById(R.id.tvFEmail);
+        btnAdd = (Button) view.findViewById(R.id.btnAdd);
+        btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<User> call = RetrofitClient
+                        .getInstance()
+                        .getUserApi()
+                        .retrieveUsername(etUsername.getText().toString());
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        response.body();
+                        String user_name = response.body().getName();
+                        String user_email = response.body().getUserEmail();
+                        tvName.setText(user_name);
+                        tvEmail.setText(user_email);
+                        btnAdd.setVisibility(View.VISIBLE);
+                        //TODO need check if already added or not
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> callU, Throwable t) {
+                    }
+                });
+            }
+        });
+        return view;
     }
 
 }

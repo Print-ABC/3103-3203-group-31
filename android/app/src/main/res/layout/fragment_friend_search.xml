@@ -1,36 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fragments.FriendSearchFragment">
+    tools:context="fragments.FriendSearchFragment"
+    android:padding="20dp">
 
-    <EditText
-        android:id="@+id/etSearchUid"
-        android:layout_width="341dp"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/username"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:drawableTint="#0d0508"
-        android:hint="Enter username"
-        android:singleLine="true" />
+        android:layout_marginTop="5dp">
+
+        <EditText
+            android:id="@+id/etSearchUid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Search Username"
+            android:inputType="textPersonName"
+            android:maxLength="30" />
+
+    </android.support.design.widget.TextInputLayout>
 
 
     <ImageButton
         android:id="@+id/btnSearch"
-        android:layout_width="44dp"
-        android:layout_height="38dp"
+        android:layout_width="51dp"
+        android:layout_height="55dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="right"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:src="@android:drawable/ic_search_category_default" />
-
 
     <TextView
         android:id="@+id/tvFName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_below="@+id/username"
+        android:layout_marginTop="20dp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvFEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFName"
+        android:layout_marginTop="5dp"/>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="153dp"
+        android:background="#0c0c0c"
+        android:text="Add Friend"
+        android:textColor="#fff"
+        android:visibility="invisible" />
+
+</RelativeLayout>

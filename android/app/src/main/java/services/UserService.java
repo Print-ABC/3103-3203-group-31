@@ -33,4 +33,7 @@ public interface UserService {
 
     @POST("user/retrieveFUID")
     Call<User> retrieveFUID(@Query("id") String user_friend_id);
+
+    @POST("user/retrieveByUsername")
+    Call<User> retrieveUsername(@Query("id") String user_username);
 }

@@ -102,6 +102,27 @@ class User {
         $this->user_id = $row['user_id'];
     }
     
+     public function getUserByUsername() {
+        // Create query
+        $query = 'SELECT user_username, user_name, user_password, user_contact, user_role, user_friend_id, user_email, HEX(user_id) as user_id FROM ' . $this->table
+                . ' WHERE user_username= ? ';
+        // Prepare statement
+        $stmt = $this->conn->prepare($query);
+        // Bind ID
+        $stmt->bindParam(1, $this->user_username);
+        // Execute query
+        $stmt->execute();
+        // Fetch data
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->user_username = $row['user_username'];
+        $this->user_name = $row['user_name'];
+        $this->user_email = $row['user_email'];
+        $this->user_password = $row['user_password'];
+        $this->user_contact = $row['user_contact'];
+        $this->user_role = $row['user_role'];
+        $this->user_friend_id = $row['user_friend_id'];
+        $this->user_id = $row['user_id'];
+    }
     // Insert a new student card
     public function create() {
         // Create query
