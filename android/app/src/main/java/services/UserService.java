@@ -28,6 +28,9 @@ public interface UserService {
     @POST("user/login")
     Call<User> login(@Body User body);
 
+    @POST("user/user")
+    Call<User> retrieve(@Query("id") String user_id);
+
     @POST("user/retrieveFUID")
-    Call<User> retrieveFUID(@Body User body);
+    Call<User> retrieveFUID(@Query("id") String user_friend_id);
 }

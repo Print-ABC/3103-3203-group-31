@@ -41,6 +41,9 @@ public class RetrofitClient {
     public UserService getUserApi() {
         return retrofit.create(UserService.class);
     }
+    public FriendService getRelationshipApi() {
+        return retrofit.create(FriendService.class);
+    }
     public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);
     }
 }

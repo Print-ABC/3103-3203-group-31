@@ -80,7 +80,7 @@ public class FriendListFragment extends Fragment {
                             Call<User> callU = RetrofitClient
                                     .getInstance()
                                     .getUserApi()
-                                    .retrieveFUID(user_friend_id);
+                                    .retrieveFUID(user_friends);
                             callU.enqueue(new Callback<User>() {
                                 @Override
                                 public void onResponse(Call<User> callU, Response<User> responseU) {
