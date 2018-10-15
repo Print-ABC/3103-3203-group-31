@@ -32,23 +32,15 @@ class Relationship {
         return $stmt;
     }
 
-   // Return all relationships from DB
+    // Return all relationships from DB
     public function getLink() {
         // Create query
         $query = 'SELECT friend_one_id, friend_two_id, friend_status, friend_action_user_id FROM ' . $this->table
                 . ' WHERE friend_one_id = ?';
         // Prepare statement
         $stmt = $this->conn->prepare($query);
-         // Bind ID
-        $stmt->bindParam(1, $this->friend_one_id);
         // Execute query
         $stmt->execute();
-        // Fetch data
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->friend_one_id = $row['friend_one_id'];
-        $this->friend_two_id = $row['friend_two_id'];
-        $this->friend_status = $row['friend_status'];
-        $this->friend_action_user_id = $row['friend_action_user_id'];
     }
 
     // Insert a new relationship

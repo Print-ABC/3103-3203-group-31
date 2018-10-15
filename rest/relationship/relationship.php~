@@ -22,10 +22,10 @@ $user->getUser();
 
 // Create JSON array
 $user_arr = array(
-    'user_username' => $user->user_username,
-    'user_name' => $user->user_name,
-    'user_password' => $user->user_password,
-    'user_contact' => $user->user_contact,
+    'name' => $user->user_username,
+    'username' => $user->user_name,
+    'password' => $user->user_password,
+    'contact' => $user->user_contact,
     'user_email'=>$user->user_email,
     'user_role' => $user->user_role,
     'user_friend_id' => $user->user_friend_id,

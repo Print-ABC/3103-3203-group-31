@@ -15,10 +15,10 @@ $db = $database->connect();
 $user = new User($db);
 
 // Get user ID
-$user->user_id = isset($_GET['id']) ? $_GET['id'] : die();
+$user->user_friend_id = isset($_GET['id']) ? $_GET['id'] : die();
 
 // Get post
-$user->getUser();
+$user->getUserByFID();
 
 // Create JSON array
 $user_arr = array(
