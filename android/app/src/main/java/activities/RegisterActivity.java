@@ -146,14 +146,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /*
-    Role 0 - Organization
-    Role 1 - Student
+    Role 1 - Organization
+    Role 0 - Student
      */
     private Integer getRoleNum(String role) {
         if (role.equals(Utils.ORGANIZATION)) {
-            return 0;
-        } else {
             return 1;
+        } else {
+            return 0;
         }
     }
 
