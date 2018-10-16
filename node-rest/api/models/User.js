@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
+const bcrypt = require('bcrypt-nodejs');
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -9,9 +10,29 @@ const userSchema = mongoose.Schema({
     contact: {type: String, required: true},
     role: {type: Number, required: true},
     password: {type: String, required: true},
-    salt: {type: String, required: true},
-    friendship: {type: [String], required: true, default: []},
+    friendship: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Friend' }],
     cards: {type: [String], required: true, default: []}
+});
+
+// Create encrypted password
+userSchema.pre('save', function (next) {
+    var user = this;
+    if (this.isModified('password') || this.isNew) {
+        bcrypt.genSalt(10, function (err, salt) {
+            if (err) {
+                return next(err);
+            }
+            bcrypt.hash(user.password, salt, null, function (err, hash) {
+                if (err) {
+                    return next(err);
+                }
+                user.password = hash;
+                next();
+            });
+        });
+    } else {
+        return next();
+    }
 });
 module.exports = mongoose.model('User', userSchema);
 

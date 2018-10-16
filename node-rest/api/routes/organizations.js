@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
+const checkAuth = require('../middleware/check-auth');
 const Organization = require('../models/Organization');
 const User = require('../models/User');
+const config = require('../../config/config');
 
 // Handles GET requests (Retrieve all Organization cards)
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Organization.find()
             .select('_id uid name organization email contact jobTitle')
             .exec()
@@ -24,7 +26,7 @@ router.get('/', (req, res, next) => {
                             jobTitle: doc.jobTitle,
                             request: {
                                 type: 'GET',
-                                url: 'http://localhost:3000/organizations/' + doc._id
+                                url: 'http://localhost:'+config.port+'/organizations/' + doc._id
                             }
                         };
                     })
@@ -37,8 +39,9 @@ router.get('/', (req, res, next) => {
                 });
             });
 });
+
 // Handles POST requests (Create an organization name card)
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     // Check if uid exists
     User.findById(req.body.uid)
             .then(user => {
@@ -60,16 +63,16 @@ router.post('/', (req, res, next) => {
             })
             .then(result => {
                 console.log(result);
-                res.status(201).json({
+                return res.status(201).json({
                     message: "Name card successfully created",
                     result: result
                 });
             })
-            .catch(err => {
+        .catch(err => {
                 console.log(err);
-                res.status(500).json({
+                return res.status(500).json({
                     error: err
-                });
+                });                
             });
 
 });
