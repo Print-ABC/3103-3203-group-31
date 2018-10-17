@@ -27,6 +27,7 @@ app.use(passport.initialize());
 
 const usersRoutes = require('./api/routes/users');
 const organizationsRoutes = require('./api/routes/organizations');
+const schoolsRoutes = require('./api/routes/schools');
 const friendsRoutes = require('./api/routes/friends');
 
 // DB connection
@@ -43,6 +44,7 @@ app.use(bodyParser.json());
 // Forwards requests with different endpoints to different files
 app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
+app.use('/schools', schoolsRoutes);
 // TODO: uncomment and implement friends
 //app.use('/friends', friendsRoutes);
 
