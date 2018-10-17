@@ -27,6 +27,7 @@ app.use(passport.initialize());
 
 const usersRoutes = require('./api/routes/users');
 const organizationsRoutes = require('./api/routes/organizations');
+const friendsRoutes = require('./api/routes/friends');
 
 // DB connection
 mongoose.connect('mongodb://xjustus:' + process.env.MONGO_ATLAS_PW +
@@ -42,6 +43,8 @@ app.use(bodyParser.json());
 // Forwards requests with different endpoints to different files
 app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
+// TODO: uncomment and implement friends
+//app.use('/friends', friendsRoutes);
 
 // Requests error handling
 app.use((req, res, next) => {
