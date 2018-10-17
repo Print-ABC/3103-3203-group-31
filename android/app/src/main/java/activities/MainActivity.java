@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
 
-
         if (Utils.isOrganization(session)){
             friendsMenu.setVisibility(View.GONE);
         } else {

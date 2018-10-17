@@ -1,5 +1,6 @@
 package services;
 
+import models.Login;
 import models.Result;
 import models.User;
 import retrofit2.Call;
@@ -17,7 +18,7 @@ public interface UserService {
     Call<Result> addUser(@Body User body);
 
     @POST("users/login")
-    Call<User> login(@Body User body);
+    Call<Login> login(@Body User body);
 
     @POST("users/user")
     Call<User> retrieve(@Query("id") String user_id);

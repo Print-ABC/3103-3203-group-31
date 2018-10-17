@@ -10,6 +10,18 @@ public class Result {
     @SerializedName("success")
     @Expose
     private Boolean success;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("role")
+    @Expose
+    private String role;
+    @SerializedName("uid")
+    @Expose
+    private String uid;
+
+    public Result() {
+    }
 
     public String getMessage() {
         return message;
@@ -27,4 +39,19 @@ public class Result {
         this.success = success;
     }
 
+    public String getUid() { return uid; }
+
+    public void setUid(String uid) { this.uid = uid; }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) { this.role = role; }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
