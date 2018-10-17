@@ -120,7 +120,7 @@ exports.users_login = (req, res, next) => {
                 }
                 if (result) {
                     const token = jwt.sign({
-                        email: user[0].username,
+                        username: user[0].username,
                         uid: user[0]._id
                     }, config.secret, {
                             expiresIn: "1h"
@@ -128,6 +128,8 @@ exports.users_login = (req, res, next) => {
                     return res.status(200).json({
                         message: 'Login successful',
                         token: token,
+                        uid: user[0]._id,
+                        role: user[0].role,
                         success: true
                     });
                 }

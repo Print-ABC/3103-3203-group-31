@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const checkAuth = require('../middleware/check-auth');
+
 const UserController = require('../controllers/user-controller');
 
 // Handles GET requests (Retrieve all Users)
@@ -16,9 +18,9 @@ router.post('/login', UserController.users_login);
 router.get('/:uid', UserController.users_get_one);
 
 // Handles DELETE requests (Deletes one user)
-router.delete('/:uid', UserController.users_delete_one);
+router.delete('/:uid', checkAuth, UserController.users_delete_one);
 
 // Handles PATCH requests (Update)
-router.patch("/:uid", UserController.users_update_one);
+router.patch("/:uid", checkAuth, UserController.users_update_one);
 
 module.exports = router;
