@@ -9,8 +9,9 @@ exports.org_create_card = (req, res, next) => {
     User.findById(req.body.uid)
         .then(user => {
             if (!user) {
-                return res.status(404).json({
-                    message: "User does not exists"
+                return res.status(201).json({
+                    message: "User does not exists",
+                    success: false
                 });
             }
             const organization = new Organization({
@@ -28,13 +29,21 @@ exports.org_create_card = (req, res, next) => {
             console.log(result);
             return res.status(201).json({
                 message: "Name card successfully created",
-                result: result
+                result: result,
+                success: true
             });
         })
         .catch(err => {
             console.log(err);
-            return res.status(500).json({
-                error: err
+            if (err.errmsg.includes("duplicate")) {
+                return res.status(201).json({
+                    success: false,
+                    message: "Card already exists"
+                });
+            }            
+            return res.status(201).json({
+                success: false,
+                message: "Failed to create name card"
             });
         });
 

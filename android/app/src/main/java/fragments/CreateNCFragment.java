@@ -25,7 +25,7 @@ import retrofit2.Response;
 import services.RetrofitClient;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment for creating student/organization name cards
  */
 public class CreateNCFragment extends Fragment {
 
@@ -62,6 +62,7 @@ public class CreateNCFragment extends Fragment {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                displayLoader();
                 name = etName.getText().toString();
                 contact = etContact.getText().toString();
                 email = etEmail.getText().toString();
@@ -85,15 +86,17 @@ public class CreateNCFragment extends Fragment {
                         org.setJobTitle(jobTitle);
                         org.setName(name);
                         org.setOrganization(orgName);
-//                        org.setOrgUserId(session.getUserDetails().getUid());
+                        org.setUid(session.getUserDetails().getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getOrganizationApi()
-                                .addCard(org);
+                                .addCard(session.getUserDetails().getToken(), org);
                         call.enqueue(new Callback<Result>() {
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
+                                pDialog.dismiss();
                                 btnCreate.setEnabled(true);
+                                Log.e(TAG, response.body().getMessage());
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getSuccess()){
                                     getActivity().getSupportFragmentManager()
@@ -105,7 +108,8 @@ public class CreateNCFragment extends Fragment {
 
                             @Override
                             public void onFailure(Call<Result> call, Throwable t) {
-
+                                pDialog.dismiss();
+                                btnCreate.setEnabled(true);
                             }
                         });
                     } else {
