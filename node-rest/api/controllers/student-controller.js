@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
-const School = require('../models/School');
+const Student = require('../models/Student');
 const config = require('../../config/config');
 
-exports.sch_create_card = (req, res, next) => {
+exports.stu_create_card = (req, res, next) => {
     // Check if uid exists
     User.findById(req.body.uid)
         .then(user => {
             if (!user) {
-                return res.status(404).json({
+                return res.status(201).json({
                     message: "User does not exists"
                 });
             }
-            const school = new School({
+            const student = new Student({
                 _id: new mongoose.Types.ObjectId(),
                 uid: req.body.uid,
                 name: req.body.name,
@@ -21,32 +21,42 @@ exports.sch_create_card = (req, res, next) => {
                 email: req.body.email,
                 contact: req.body.contact,
             });
-            return school.save();
+            return student.save();
         })
         .then(result => {
             console.log(result);
             return res.status(201).json({
                 message: "Name card successfully created",
-                result: result
+                success: true
             });
         })
         .catch(err => {
             console.log(err);
-            return res.status(500).json({
-                error: err
-            });
+            if (err.errmsg.includes("duplicate")) {
+                return res.status(201).json({
+                    message: 'Name card already exists',
+                    success: false
+                });
+            } else {
+                return res.status(201).json({
+                    message: 'Failed to create name card',
+                    success: false
+                });
+            }
+            
+            
         });
 
 }
 
-exports.sch_get_all = (req, res, next) => {
-    School.find()
+exports.stu_get_all = (req, res, next) => {
+    Student.find()
         .select('_id uid name email contact course')
         .exec()
         .then(docs => {
             res.status(200).json({
                 count: docs.length,
-                sch_cards: docs.map(doc => {
+                stu_cards: docs.map(doc => {
                     return {
                         _id: doc._id,
                         name: doc.name,
@@ -56,7 +66,7 @@ exports.sch_get_all = (req, res, next) => {
                         contact: doc.contact,
                         request: {
                             type: 'GET',
-                            url: 'http://localhost:' + config.port + '/schools/' + doc._id
+                            url: 'http://localhost:' + config.port + '/students/' + doc._id
                         }
                     };
                 })
@@ -70,18 +80,18 @@ exports.sch_get_all = (req, res, next) => {
         });
 }
 
-exports.sch_get_one = (req, res, next) => {
-    School.findById(req.params.cardId)
+exports.stu_get_one = (req, res, next) => {
+    Student.findById(req.params.cardId)
         .select('_id uid name course email contact')
         .exec()
-        .then(school => {
-            if (!school) {
+        .then(student => {
+            if (!student) {
                 return res.status(404).json({
                     message: 'Name card not found'
                 });
             }
             res.status(200).json({
-                school: school
+                student: student
             });
         })
         .catch(err => {
@@ -91,9 +101,9 @@ exports.sch_get_one = (req, res, next) => {
         });
 }
 
-exports.sch_delete_one = (req, res, next) => {
+exports.stu_delete_one = (req, res, next) => {
     const id = req.params.cardId;
-    School.deleteOne({ _id: id })
+    Student.deleteOne({ _id: id })
         .exec()
         .then(result => {
             res.status(200).json({

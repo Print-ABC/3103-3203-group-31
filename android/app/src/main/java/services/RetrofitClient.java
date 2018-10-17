@@ -1,8 +1,5 @@
 package services;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -41,9 +38,7 @@ public class RetrofitClient {
     public UserService getUserApi() {
         return retrofit.create(UserService.class);
     }
-    public FriendService getRelationshipApi() {
-        return retrofit.create(FriendService.class);
-    }
-    public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);
-    }
+    public FriendService getRelationshipApi() { return retrofit.create(FriendService.class);}
+    public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);}
+    public StudentService getStudentApi() { return retrofit.create(StudentService.class);}
 }

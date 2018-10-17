@@ -2,10 +2,8 @@ package fragments;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import common.SessionHandler;
 import common.Utils;
 import models.Organization;
 import models.Result;
+import models.Student;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,13 +73,12 @@ public class CreateNCFragment extends Fragment {
                             etOrgName.setError(view.getContext().getString(R.string.empty_org_name_error));
                             return;
                         }
-                        if (jobTitle.isEmpty()){
+                        if (jobTitle.isEmpty()) {
                             etJobTitle.setError(view.getContext().getString(R.string.empty_job_title_error));
                             return;
                         }
-                        //TODO: insert values into org table
+
                         Organization org = new Organization();
-//                        Log.e(TAG, session.getUserDetails().getUid());
                         org.setContact(contact);
                         org.setEmail(email);
                         org.setJobTitle(jobTitle);
@@ -96,9 +94,8 @@ public class CreateNCFragment extends Fragment {
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
                                 btnCreate.setEnabled(true);
-                                Log.e(TAG, response.body().getMessage());
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                if (response.body().getSuccess()){
+                                if (response.body().getSuccess()) {
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())
@@ -113,7 +110,42 @@ public class CreateNCFragment extends Fragment {
                             }
                         });
                     } else {
+                        course = etCourse.getText().toString();
+                        if (course.isEmpty()){
+                            etCourse.setError("Please enter your course");
+                            return;
+                        }
 
+                        Student student = new Student();
+                        student.setCourse(course);
+                        student.setContact(contact);
+                        student.setEmail(email);
+                        student.setName(name);
+                        student.setUid(session.getUserDetails().getUid());
+                        Call<Result> call = RetrofitClient
+                                .getInstance()
+                                .getStudentApi()
+                                .addCard(session.getUserDetails().getToken(), student);
+                        call.enqueue(new Callback<Result>() {
+                            @Override
+                            public void onResponse(Call<Result> call, Response<Result> response) {
+                                pDialog.dismiss();
+                                btnCreate.setEnabled(true);
+                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                if (response.body().getSuccess()) {
+                                    getActivity().getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .replace(R.id.fragment_container, new HomeFragment())
+                                            .commit();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Result> call, Throwable t) {
+                                pDialog.dismiss();
+                                btnCreate.setEnabled(true);
+                            }
+                        });
                     }
                 }
             }

@@ -65,21 +65,21 @@ exports.users_register_user = (req, res, next) => {
             // Success response
             res.status(201).json({
                 message: 'User created successfully',
-                success: true,
-                createdUser: {
-                    _id: result._id,
-                    name: result.name,
-                    email: result.email,
-                    contact: result.contact,
-                    role: result.role,
-                    password: result.password,
-                    friendship: result.friendship,
-                    cards: result.cards,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:' + config.port + '/users/' + result._id
-                    }
-                }
+                success: true
+                //createdUser: {
+                //    _id: result._id,
+                //    name: result.name,
+                //    email: result.email,
+                //    contact: result.contact,
+                //    role: result.role,
+                //    password: result.password,
+                //    friendship: result.friendship,
+                //    cards: result.cards,
+                //    request: {
+                //        type: 'GET',
+                //        url: 'http://localhost:' + config.port + '/users/' + result._id
+                //    }
+                //}
             });
         })
         .catch(err => {

@@ -29,7 +29,6 @@ exports.org_create_card = (req, res, next) => {
             console.log(result);
             return res.status(201).json({
                 message: "Name card successfully created",
-                result: result,
                 success: true
             });
         })
@@ -38,7 +37,7 @@ exports.org_create_card = (req, res, next) => {
             if (err.errmsg.includes("duplicate")) {
                 return res.status(201).json({
                     success: false,
-                    message: "Card already exists"
+                    message: "Name card already exists"
                 });
             }            
             return res.status(201).json({
