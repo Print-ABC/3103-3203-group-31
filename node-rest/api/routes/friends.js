@@ -12,4 +12,6 @@ const FriendController = require('../controllers/friend-controller');
 
 //TODO: friends API calls
 // Retrieve all friends of a specified user
-//router.get('/', FriendController.users_get_friends);
+router.get('/:uid', FriendController.users_get_friends);
+
+module.exports = router;

@@ -46,7 +46,7 @@ app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
 app.use('/schools', schoolsRoutes);
 // TODO: uncomment and implement friends
-//app.use('/friends', friendsRoutes);
+app.use('/friends', friendsRoutes);
 
 // Requests error handling
 app.use((req, res, next) => {
@@ -65,4 +65,3 @@ app.use((error, req, res, next) => {
 });
 
 module.exports = app;
-

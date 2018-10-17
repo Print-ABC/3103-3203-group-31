@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     contact: {type: String, required: true},
     role: {type: Number, required: true},
     password: {type: String, required: true},
-    friendship: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Friend' }],
+    friendship: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     cards: {type: [String], required: true, default: []}
 });
 
@@ -35,4 +35,3 @@ userSchema.pre('save', function (next) {
     }
 });
 module.exports = mongoose.model('User', userSchema);
-
