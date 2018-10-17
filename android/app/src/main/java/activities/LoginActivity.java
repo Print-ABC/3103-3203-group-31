@@ -98,14 +98,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {
                 Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
+                btnLogin.setEnabled(true);
                 if(response.body().getSuccess()){
-                    pDialog.dismiss();
                     tvLoginError.setVisibility(View.INVISIBLE);
                     session.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole());
                     directToMain();
                 } else {
-                    btnLogin.setEnabled(true);
-                    pDialog.dismiss();
                     tvLoginError.setText(response.body().getMessage());
                 }
             }
@@ -113,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 pDialog.dismiss();
+                btnLogin.setEnabled(true);
             }
         });
     }

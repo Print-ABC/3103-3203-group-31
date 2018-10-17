@@ -3,6 +3,7 @@ package common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.ncshare.ncshare.R;
@@ -16,8 +17,8 @@ import activities.MainActivity;
 public class Utils {
     public static final String STUDENT = "Student";
     public static final String ORGANIZATION = "Organization";
-    public static final String STUDENT_ROLE = "0";
-    public static final String ORGANIZATION_ROLE = "1";
+    public static final int STUDENT_ROLE = 0;
+    public static final int ORGANIZATION_ROLE = 1;
 
     /**
      * Check if user is logged in, redirect to LoginActivity if not logged in
@@ -39,7 +40,7 @@ public class Utils {
      * @return
      */
     public static boolean isOrganization(SessionHandler session){
-        if (session.getUserDetails().getRole().equals(ORGANIZATION_ROLE)){
+        if (session.getUserDetails().getRole() == ORGANIZATION_ROLE){
             return true;
         } else {
             return false;

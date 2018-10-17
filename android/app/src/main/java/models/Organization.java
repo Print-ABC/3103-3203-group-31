@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Organization {
 
+    @SerializedName("_id")
+    @Expose
+    private String cardId;
     @SerializedName("uid")
     @Expose
     private String uid;
@@ -24,6 +27,14 @@ public class Organization {
     @SerializedName("jobTitle")
     @Expose
     private String jobTitle;
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
 
     public String getUid() {
         return uid;
@@ -72,5 +83,6 @@ public class Organization {
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
+
 
 }
