@@ -9,9 +9,16 @@ const config = require('../../config/config');
 
 const FriendController = require('../controllers/friend-controller');
 
+// Handles GET requests (Retrieve all requests with a given requester uid)
+router.get('/req/:uid', FriendController.friend_get_requests_requester);
 
-//TODO: friends API calls
-// Retrieve all friends of a specified user
-router.get('/:uid', FriendController.users_get_friends);
+// Handles GET requests (Retrieve all requests with a given recipient uid)
+router.get('/recp/:uid', FriendController.friend_get_requests_recipient);
+
+// Handles POST requests (Create a new friend request)
+router.post('/', FriendController.friend_post_request);
+
+// Handles DELETE requests (Delete a request with a given recipient uid)
+router.delete('/:uid', FriendController.friend_delete_request);
 
 module.exports = router;

@@ -4,35 +4,71 @@ const User = require('../models/User');
 const Friend = require('../models/Friend');
 const config = require('../../config/config');
 
-//GET: Retrieve list of friends [username, name, school] when given a uid
-exports.users_get_friends = (req, res, next) => {
-  const id = req.params.uid;
-  Friend.find( {$or: [{ requester: id, status: 3 }, { recipient: id, status: 3 }]})
-        .populate('requester', 'name username')
-        .populate('recipient', 'name username')
-        .exec()
-        .then(docs => {
-          const response = {
-            count: docs.length,
-            friends: docs.map(doc => {
-              return {
-                _id: doc._id,
-                name: doc.name,
-                username: doc.username
-              }
-            })
-          };
-          res.status(200).json(response);
-        })
-      .catch(err => {
-          console.log(err);
-          res.status(500).json({
-              error: err
-          });
-      });
+//GET: Retrieve requests with the given requester uid
+exports.friend_get_requests_requester = (req, res, next) => {
+  Friend.find( {'requester': req.params.uid}, function (err, docs){
+    if(err) {
+      console.log(err);
+      res.status(500).json( {error: err} );
+    }
+    res.status(200).json(docs);
+  });
 }
 
-//TODO: Friends services
-exports.friend_get_friends = (req, res, next) => {
-  // Friend.findById()
+//GET: Retrieve requests with the given recipient uid
+exports.friend_get_requests_recipient = (req, res, next) => {
+  Friend.find( {'recipient': req.params.uid}, function (err, docs){
+    if(err) {
+      console.log(err);
+      res.status(500).json( {error: err} );
+    }
+    res.status(200).json(docs);
+  });
+}
+
+//POST: Make a new friend request
+exports.friend_post_request = (req, res, next) => {
+  const request = new Friend({
+      _id: new mongoose.Types.ObjectId(),
+      requester: req.body.requester,
+      recipient: req.body.recipient
+    }
+  );
+  request.save()
+        .then(result => {
+          console.log(result);
+          res.status(201).json({
+            message: 'User created successfully',
+            success: true});
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(201).json({
+            error: err,
+            message: "Failed to create user",
+            success: false
+          });
+        });
+}
+
+
+//TODO UPDATE: Add uid to list of friends of an existing user
+
+//TODO UPDATE: Remove a uid from list of friends of an existing user
+
+//DELETE: Delete an existing friend request
+exports.friend_delete_request = (req, res, next) => {
+    Friend.deleteOne({ recipient: req.params.uid })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Friend request deleted'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 }
