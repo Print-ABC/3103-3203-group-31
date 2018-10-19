@@ -3,17 +3,13 @@ package common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
 
 import activities.LoginActivity;
-import models.Result;
 import models.User;
-import retrofit2.Call;
-import services.RetrofitClient;
+
 
 public class Session {
     private User user;
@@ -62,6 +58,8 @@ public class Session {
         user.setToken(token);
         user.setRole(role);
         user.setCardId(cardId);
+        user.setFriendship(friends);
+        user.setCards(cards);
         Date date = new Date();
 
         //Set user session for next 30 minutes
