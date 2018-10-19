@@ -11,6 +11,9 @@ router.get('/', UserController.users_get_all);
 // Handles POST requests (Register a user)
 router.post('/register', UserController.users_register_user);
 
+////Retrieve all namecards of a user, return username, name and organization/school
+//router.post('/:uid', UserController.users._get_card_owned);
+
 // User Login
 router.post('/login', UserController.users_login);
 
@@ -22,5 +25,8 @@ router.delete('/:uid', checkAuth, UserController.users_delete_one);
 
 // Handles PATCH requests (Update)
 router.patch("/:uid", checkAuth, UserController.users_update_one);
+
+// Gets username of a specific user
+router.get("/username/:uid", checkAuth, UserController.users_get_username);
 
 module.exports = router;

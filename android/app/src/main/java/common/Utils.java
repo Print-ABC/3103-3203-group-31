@@ -3,7 +3,6 @@ package common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.EditText;
 
 import com.ncshare.ncshare.R;
@@ -12,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import activities.LoginActivity;
-import activities.MainActivity;
 
 public class Utils {
     public static final String STUDENT = "Student";
@@ -26,7 +24,7 @@ public class Utils {
      * @param session
      * @param context
      */
-    public static void redirectToLogin(SessionHandler session, Context context){
+    public static void redirectToLogin(Session session, Context context){
         if (!session.isLoggedIn()){
             Intent intent = new Intent(context, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -40,14 +38,13 @@ public class Utils {
      * @param session
      * @return
      */
-    public static boolean isOrganization(SessionHandler session){
+    public static boolean isOrganization(Session session){
         if (session.getUserDetails().getRole() == ORGANIZATION_ROLE){
             return true;
         } else {
             return false;
         }
     }
-
 
     /**
      * Checks for a valid name input

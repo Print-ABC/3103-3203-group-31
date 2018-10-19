@@ -4,7 +4,6 @@ package fragments;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
-import common.SessionHandler;
+import common.Session;
 import common.Utils;
 import models.Organization;
 import models.Result;
@@ -30,7 +29,7 @@ import services.RetrofitClient;
 public class CreateNCFragment extends Fragment {
 
     private static final String TAG = "CreateNCFragment";
-    private SessionHandler session;
+    private Session session;
     private EditText etName, etOrgName, etJobTitle, etContact, etEmail, etCourse;
     private Button btnCreate;
     private String name, orgName, jobTitle, contact, email, course;
@@ -40,7 +39,7 @@ public class CreateNCFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Check if user is logged in
-        session = new SessionHandler(getActivity().getApplicationContext());
+        session = Session.getSession();
         Utils.redirectToLogin(session, this.getContext());
 
         View view;

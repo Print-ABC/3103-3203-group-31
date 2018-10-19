@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (validateInputs()) {
                     User user = new User();
-                    user.setRole(roleNum.toString());
+                    user.setRole(roleNum);
                     user.setPassword(password);
                     user.setEmail(email);
                     user.setContact(contact);

@@ -48,6 +48,30 @@ exports.users_get_all = (req, res, next) => {
         });
 }
 
+exports.users_get_username = (req, res, next) => {
+    const id = req.params.uid;
+    User.findById(id)
+        .select('username')
+        .exec()
+        .then(doc => {
+            console.log("From database", doc);
+            if (doc) {
+                // Success response
+                res.status(200).json({
+                    username: doc.username,
+                    success: true
+                });
+            } else {
+                // ID does not exist
+                res.status(200).json({ success: false });
+            }
+        }).catch(err => {
+            console.log(err);
+            // Failure response
+            res.status(200).json({ success: false });
+        });
+}
+
 exports.users_register_user = (req, res, next) => {
     const user = new User({
         _id: new mongoose.Types.ObjectId(),
@@ -134,6 +158,9 @@ exports.users_login = (req, res, next) => {
                             message: 'Login successful',
                             token: token,
                             cardId: cardId,
+                            username: user[0].username,
+                            friendship: user[0].friendship,
+                            cards: user[0].cards,
                             uid: user[0]._id,
                             role: user[0].role,
                             success: true
@@ -177,6 +204,27 @@ exports.users_get_one = (req, res, next) => {
             res.status(500).json({ error: err });
         });
 }
+
+//exports.users_get_card_owned = (req, res, next) => {
+//    const id = req.params.uid;
+//    User.findById(id)
+//        .select('_id name username email contact role password friendship cards')
+//        .exec()
+//        .then(doc => {
+//            console.log("From database", doc);
+//            if (doc) {
+//                // Success response
+//                res.status(200).json({ doc });
+//            } else {
+//                // ID does not exist
+//                res.status(404).json({ message: 'No valid entry found for provided ID' });
+//            }
+//        }).catch(err => {
+//            console.log(err);
+//            // Failure response
+//            res.status(500).json({ error: err });
+//        });
+//}
 
 exports.users_delete_one = (req, res, next) => {
     const id = req.params.uid;

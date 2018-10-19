@@ -7,15 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
-import common.SessionHandler;
+import common.Session;
 import common.Utils;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
@@ -27,7 +24,7 @@ import com.ncshare.ncshare.R;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private SessionHandler session;
+    private Session session;
     private BottomNavigationItemView friendsMenu;
 
     /* Reference for bottom Navigation
@@ -65,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = new SessionHandler(getApplicationContext());
+        session = Session.getSession();
 
         Utils.redirectToLogin(session, this);
         setContentView(R.layout.activity_main);
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
-                session.logoutUser();
+                session.logoutUser(this.getBaseContext());
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;

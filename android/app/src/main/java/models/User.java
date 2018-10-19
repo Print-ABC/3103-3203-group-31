@@ -1,15 +1,28 @@
 
 package models;
 
+import java.util.Date;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
 
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("uid")
+    @Expose
+    private String uid;
     @SerializedName("username")
     @Expose
     private String username;
@@ -21,7 +34,10 @@ public class User {
     private String contact;
     @SerializedName("role")
     @Expose
-    private String role;
+    private Integer role;
+    @SerializedName("cardId")
+    @Expose
+    private String cardId;
     @SerializedName("password")
     @Expose
     private String password;
@@ -31,6 +47,24 @@ public class User {
     @SerializedName("cards")
     @Expose
     private List<String> cards = null;
+
+    public String getMessage() { return message; }
+
+    public void setMessage(String message) { this.message = message; }
+
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
+
+    public Boolean getSuccess() { return success; }
+
+    public void setSuccess(Boolean success) { this.success = success; }
+
+    public Date getSessionExpiryDate() { return sessionExpiryDate; }
+
+    public void setSessionExpiryDate(Date sessionExpiryDate) { this.sessionExpiryDate = sessionExpiryDate; }
+
+    private Date sessionExpiryDate;
 
     public String getName() {
         return name;
@@ -64,11 +98,11 @@ public class User {
         this.contact = contact;
     }
 
-    public String getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Integer role) {
         this.role = role;
     }
 
@@ -96,4 +130,11 @@ public class User {
         this.cards = cards;
     }
 
+    public String getUid() { return uid; }
+
+    public void setUid(String uid) { this.uid = uid; }
+
+    public String getCardId() { return cardId; }
+
+    public void setCardId(String cardId) { this.cardId = cardId; }
 }

@@ -1,12 +1,7 @@
 package fragments;
 
-import android.content.Context;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ncshare.ncshare.R;
-
-import org.w3c.dom.Text;
 
 import models.User;
 import retrofit2.Call;
@@ -57,7 +50,7 @@ public class FriendSearchFragment extends Fragment {
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .retrieveUsername(etUsername.getText().toString());
+                        .retrieveByUsername(etUsername.getText().toString());
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

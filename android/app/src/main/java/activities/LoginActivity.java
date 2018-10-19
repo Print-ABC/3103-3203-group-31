@@ -13,8 +13,7 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
-import common.SessionHandler;
-import models.Login;
+import common.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,12 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     String username, password;
     TextView tvForgetPW, tvRegister, tvLoginError;
     private ProgressDialog pDialog;
-    private SessionHandler session;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = new SessionHandler(getApplicationContext());
+        session = Session.getSession();
 
         // Check if user is logged in
         if (session.isLoggedIn()){
@@ -90,20 +89,20 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User();
         user.setPassword(password);
         user.setUsername(username);
-        Call<Login> call = RetrofitClient
+        Call<User> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
                 .login(user);
-        call.enqueue(new Callback<Login>() {
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<Login> call, Response<Login> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
                 if(response.body().getSuccess()){
                     tvLoginError.setVisibility(View.INVISIBLE);
                     session.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole(),
-                            response.body().getCardId());
+                            response.body().getCardId(), response.body().getFriendship(), response.body().getCards());
                     directToMain();
                 } else {
                     tvLoginError.setText(response.body().getMessage());
@@ -111,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Login> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
             }
