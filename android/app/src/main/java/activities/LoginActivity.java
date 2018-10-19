@@ -13,7 +13,8 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
-import common.Session;
+import common.SessionHandler;
+import models.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,10 +34,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = Session.getSession();
+        session = SessionHandler.getSession();
 
         // Check if user is logged in
-        if (session.isLoggedIn()){
+        if (SessionHandler.isLoggedIn()){
             directToMain();
         }
         setContentView(R.layout.activity_login);
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 if(response.body().getSuccess()){
                     tvLoginError.setVisibility(View.INVISIBLE);
-                    session.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole(),
+                    SessionHandler.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole(),
                             response.body().getCardId(), response.body().getFriendship(), response.body().getCards());
                     directToMain();
                 } else {

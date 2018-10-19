@@ -10,8 +10,9 @@ import android.widget.Button;
 
 import com.ncshare.ncshare.R;
 
-import common.Session;
+import common.SessionHandler;
 import common.Utils;
+import models.Session;
 
 public class HomeFragment extends Fragment {
 
@@ -24,8 +25,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Check if user is logged in
-        session = Session.getSession();
-        Utils.redirectToLogin(session, this.getContext());
+        session = SessionHandler.getSession();
+        Utils.redirectToLogin(this.getContext());
 
         // Initialize views
         btnCreateNc = (Button)view.findViewById(R.id.btnCreateNc);

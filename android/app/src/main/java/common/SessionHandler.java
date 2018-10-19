@@ -3,23 +3,18 @@ package common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
 
 import activities.LoginActivity;
+import models.Session;
 import models.User;
 
 
-public class Session {
-    private User user;
-    private String cardId;
+public class SessionHandler {
     private static Session session;
-    private long millis = 0;
-
-    private Session(){
-        user = new User();
-    }
 
     public static Session getSession() {
         if (session == null) {
@@ -28,12 +23,24 @@ public class Session {
         return session;
     }
 
+    public static void setSession(Session session) {
+        SessionHandler.session = session;
+    }
+
+    public static void setSessionUserObj(User user){
+        SessionHandler.session.setUser(user);
+    }
+
+    public static User getSessionUserObj(){
+        return SessionHandler.session.getUser();
+    }
+
     /**
      * Add card ID to session
      * @param cardId
      */
-    public void addCardToSession(String cardId){
-        this.cardId = cardId;
+    public void addCardToSession(String cardId) {
+        SessionHandler.session.setCardId(cardId);
     }
 
     /**
@@ -45,7 +52,7 @@ public class Session {
         if (!isLoggedIn()) {
             return null;
         }
-        return user.getCardId();
+        return SessionHandler.session.getCardId();
     }
 
 
@@ -53,17 +60,18 @@ public class Session {
      * Logs in the user by saving user details and setting session
      * @param role
      */
-    public void loginUser(String uid, String token, Integer role, String cardId, List<String>friends, List<String> cards) {
+    public static void loginUser(String uid, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
+        User user = new User();
         user.setUid(uid);
         user.setToken(token);
         user.setRole(role);
         user.setCardId(cardId);
         user.setFriendship(friends);
         user.setCards(cards);
+        setSessionUserObj(user);
         Date date = new Date();
-
         //Set user session for next 30 minutes
-        millis = date.getTime() + (1 * 1 * 30 * 60 * 1000);
+        SessionHandler.session.setMillis(date.getTime() + (1 * 1 * 30 * 60 * 1000));
     }
 
     /**
@@ -71,19 +79,19 @@ public class Session {
      *
      * @return
      */
-    public boolean isLoggedIn() {
+    public static boolean isLoggedIn() {
         Date currentDate = new Date();
 
         /* If millis does not have a value
          then user is not logged in
          */
-        if (millis == 0) {
+        if (SessionHandler.session.getMillis() == 0) {
             return false;
         }
-        Date expiryTime = new Date(millis);
+        Date expiryTime = new Date(SessionHandler.session.getMillis());
 
         /* Check if millis is expired by comparing
-        current date and Session expiry date
+        current date and SessionHandler expiry date
         */
         return currentDate.before(expiryTime);
     }
@@ -98,18 +106,20 @@ public class Session {
         if (!isLoggedIn()) {
             return null;
         }
-        return user;
+        return getSessionUserObj();
     }
 
     /**
      * Logs out user by clearing the session
      */
-    public void logoutUser(Context context){
+    public static void logoutUser(Context context){
         session = null;
+        SessionHandler.session.deleteSession();
         // redirect user to Login activity
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+        Log.e("context", context.toString());
         ((Activity)context).finish();
     }
 }

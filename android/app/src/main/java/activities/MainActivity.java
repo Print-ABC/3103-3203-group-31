@@ -12,13 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import common.Session;
+import common.SessionHandler;
 import common.Utils;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NFCFragment;
 import fragments.NamecardsFragment;
 import fragments.ProfileFragment;
+import models.Session;
+
 import com.ncshare.ncshare.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = Session.getSession();
+        session = SessionHandler.getSession();
 
-        Utils.redirectToLogin(session, this);
+        Utils.redirectToLogin(this);
         setContentView(R.layout.activity_main);
 
         friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
-                session.logoutUser(this.getBaseContext());
+                SessionHandler.logoutUser(this);
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;

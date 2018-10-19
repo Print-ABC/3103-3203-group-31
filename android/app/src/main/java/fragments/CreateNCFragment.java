@@ -13,10 +13,11 @@ import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
-import common.Session;
+import common.SessionHandler;
 import common.Utils;
 import models.Organization;
 import models.Result;
+import models.Session;
 import models.Student;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,8 +40,8 @@ public class CreateNCFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Check if user is logged in
-        session = Session.getSession();
-        Utils.redirectToLogin(session, this.getContext());
+        session = SessionHandler.getSession();
+        Utils.redirectToLogin(this.getContext());
 
         View view;
         if (Utils.isOrganization(session)) {
@@ -84,11 +85,11 @@ public class CreateNCFragment extends Fragment {
                         org.setJobTitle(jobTitle);
                         org.setName(name);
                         org.setOrganization(orgName);
-                        org.setUid(session.getUserDetails().getUid());
+                        org.setUid(session.getUser().getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getOrganizationApi()
-                                .addCard(session.getUserDetails().getToken(), org);
+                                .addCard(session.getUser().getToken(), org);
                         call.enqueue(new Callback<Result>() {
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -96,7 +97,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getSuccess()) {
-                                    session.addCardToSession(response.body().getCardId());
+                                    session.setCardId(response.body().getCardId());
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())
@@ -122,11 +123,11 @@ public class CreateNCFragment extends Fragment {
                         student.setContact(contact);
                         student.setEmail(email);
                         student.setName(name);
-                        student.setUid(session.getUserDetails().getUid());
+                        student.setUid(session.getUser().getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getStudentApi()
-                                .addCard(session.getUserDetails().getToken(), student);
+                                .addCard(session.getUser().getToken(), student);
                         call.enqueue(new Callback<Result>() {
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -134,7 +135,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getSuccess()) {
-                                    session.addCardToSession(response.body().getCardId());
+                                    session.setCardId(response.body().getCardId());
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())

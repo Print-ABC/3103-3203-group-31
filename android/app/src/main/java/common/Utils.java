@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import activities.LoginActivity;
+import models.Session;
 
 public class Utils {
     public static final String STUDENT = "Student";
@@ -21,11 +22,10 @@ public class Utils {
 
     /**
      * Check if user is logged in, redirect to LoginActivity if not logged in
-     * @param session
      * @param context
      */
-    public static void redirectToLogin(Session session, Context context){
-        if (!session.isLoggedIn()){
+    public static void redirectToLogin(Context context){
+        if (!SessionHandler.isLoggedIn()){
             Intent intent = new Intent(context, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
@@ -39,7 +39,7 @@ public class Utils {
      * @return
      */
     public static boolean isOrganization(Session session){
-        if (session.getUserDetails().getRole() == ORGANIZATION_ROLE){
+        if (session.getUser().getRole() == ORGANIZATION_ROLE){
             return true;
         } else {
             return false;
