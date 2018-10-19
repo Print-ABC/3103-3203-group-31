@@ -19,6 +19,7 @@ public class Utils {
     public static final String ORGANIZATION = "Organization";
     public static final int STUDENT_ROLE = 0;
     public static final int ORGANIZATION_ROLE = 1;
+    public static final String NO_CARD = "none";
 
     /**
      * Check if user is logged in, redirect to LoginActivity if not logged in

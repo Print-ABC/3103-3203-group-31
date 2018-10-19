@@ -23,6 +23,9 @@ public class Login {
     @SerializedName("success")
     @Expose
     private Boolean success;
+    @SerializedName("cardId")
+    @Expose
+    private String cardId;
 
     private Date sessionExpiryDate;
 
@@ -69,4 +72,8 @@ public class Login {
     public Date getSessionExpiryDate() { return sessionExpiryDate; }
 
     public void setSessionExpiryDate(Date sessionExpiryDate) { this.sessionExpiryDate = sessionExpiryDate; }
+
+    public String getCardId() { return cardId; }
+
+    public void setCardId(String cardId) { this.cardId = cardId; }
 }

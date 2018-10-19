@@ -102,7 +102,8 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 if(response.body().getSuccess()){
                     tvLoginError.setVisibility(View.INVISIBLE);
-                    session.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole());
+                    session.loginUser(response.body().getUid(), response.body().getToken(), response.body().getRole(),
+                            response.body().getCardId());
                     directToMain();
                 } else {
                     tvLoginError.setText(response.body().getMessage());

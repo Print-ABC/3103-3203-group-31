@@ -7,7 +7,10 @@ import android.util.Log;
 import java.util.Date;
 
 import models.Login;
+import models.Result;
 import models.User;
+import retrofit2.Call;
+import services.RetrofitClient;
 
 public class SessionHandler {
     private static final String PREF_NAME = "UserSession";
@@ -38,6 +41,8 @@ public class SessionHandler {
 
     /**
      * Retrieve card ID from session
+     * Output may be null if user is not logged in
+     * Output is "none" if user has not created a card
      */
     public String getCardFromSession(){
         if (!isLoggedIn()) {
@@ -51,10 +56,11 @@ public class SessionHandler {
      * Logs in the user by saving user details and setting session
      * @param role
      */
-    public void loginUser(String uid, String token, Integer role) {
+    public void loginUser(String uid, String token, Integer role, String cardId) {
         mEditor.putString(KEY_UID, uid);
         mEditor.putInt(KEY_ROLE, role);
         mEditor.putString(KEY_TOKEN, token);
+        mEditor.putString(KEY_CARD_ID, cardId);
         Date date = new Date();
 
         //Set user session for next 1 hour

@@ -12,7 +12,7 @@ router.get('/', checkAuth, StudentController.stu_get_all);
 router.post('/create', checkAuth, StudentController.stu_create_card);
 
 // Handles GET requests for an student card(Retrieve info from one card)
-router.get('/:cardId', StudentController.stu_get_one);
+router.get('/cid/:cardId', StudentController.stu_get_one);
 
 // Handles DELETE requests (Deletes one student card)
 router.delete('/:cardId', StudentController.stu_delete_one);

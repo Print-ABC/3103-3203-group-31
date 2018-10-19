@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
 
 const User = require('../models/User');
+const Organization = require('../models/Organization');
 const config = require('../../config/config');
 
 exports.users_get_all = (req, res, next) => {
@@ -113,25 +114,32 @@ exports.users_login = (req, res, next) => {
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
+                    console.log(err);
                     return res.status(201).json({
-                        messsage: 'Login failed',
+                        messsage: 'Login failedadsa',
                         success: false
                     });
                 }
                 if (result) {
+                    console.log(result);
                     const token = jwt.sign({
                         username: user[0].username,
                         uid: user[0]._id
                     }, config.secret, {
                             expiresIn: "1h"
                         });
-                    return res.status(200).json({
-                        message: 'Login successful',
-                        token: token,
-                        uid: user[0]._id,
-                        role: user[0].role,
-                        success: true
-                    });
+                    // Get card ID of user if available
+                    const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
+                        res.status(200).json({
+                            message: 'Login successful',
+                            token: token,
+                            cardId: cardId,
+                            uid: user[0]._id,
+                            role: user[0].role,
+                            success: true
+                        });
+                    })
+                    return;
                 }
                 res.status(201).json({
                     message: 'Login failed',
@@ -208,4 +216,23 @@ exports.users_update_one = (req, res, next) => {
                 error: err
             });
         });
+}
+
+function getCardIdByUid(role, uid, callback) {
+    // If organization
+    if (role == 1) {
+        Organization.findOne({ uid: uid })
+            .select('_id')
+            .exec()
+            .then(result => {
+                if (result) {
+                    callback(result._id);
+                } else {
+                    return callback("none");
+                }
+            })
+            .catch(err => {
+                return callback("none");
+        })
+    }
 }
