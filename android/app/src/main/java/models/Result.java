@@ -19,6 +19,9 @@ public class Result {
     @SerializedName("uid")
     @Expose
     private String uid;
+    @SerializedName("cardId")
+    @Expose
+    private String cardId;
 
     public Result() {
     }
@@ -54,4 +57,8 @@ public class Result {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getCardId() { return cardId; }
+
+    public void setCardId(String cardId) { this.cardId = cardId; }
 }

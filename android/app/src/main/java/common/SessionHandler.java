@@ -14,6 +14,7 @@ public class SessionHandler {
     private static final String KEY_ROLE = "role";
     private static final String KEY_TOKEN = "token";
     private static final String KEY_EXPIRES = "expires";
+    private static final String KEY_CARD_ID = "cardId";
     private static final String KEY_UID = "userID";
     private static final String KEY_EMPTY = "";
     private Context mContext;
@@ -24,6 +25,25 @@ public class SessionHandler {
         this.mContext = mContext;
         mPreferences = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.mEditor = mPreferences.edit();
+    }
+
+    /**
+     * Add card ID to session
+     * @param cardId
+     */
+    public void addCardToSession(String cardId){
+        mEditor.putString(KEY_CARD_ID, cardId);
+        mEditor.commit();
+    }
+
+    /**
+     * Retrieve card ID from session
+     */
+    public String getCardFromSession(){
+        if (!isLoggedIn()) {
+            return null;
+        }
+        return mPreferences.getString(KEY_UID, KEY_EMPTY);
     }
 
 

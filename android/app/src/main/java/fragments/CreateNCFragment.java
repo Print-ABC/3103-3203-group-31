@@ -4,6 +4,7 @@ package fragments;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getSuccess()) {
+                                    session.addCardToSession(response.body().getCardId());
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())
@@ -133,6 +135,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 if (response.body().getSuccess()) {
+                                    session.addCardToSession(response.body().getCardId());
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.fragment_container, new HomeFragment())

@@ -27,6 +27,7 @@ exports.stu_create_card = (req, res, next) => {
             console.log(result);
             return res.status(201).json({
                 message: "Name card successfully created",
+                cardId: result._id,
                 success: true
             });
         })
