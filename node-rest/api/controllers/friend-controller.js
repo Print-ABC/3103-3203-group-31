@@ -51,10 +51,39 @@ exports.friend_post_request = (req, res, next) => {
         });
 }
 
+//UPDATE: Add uid to list of friends of an existing user
+exports.update_friendlist_add = (req, res, next) => {
+  User.update(
+    { "_id": req.params.uid },
+    { $push: {"friendship": req.params.fuid} },
+    function (err, docs) {
+      if(err) {
+        console.log(err);
+        res.status(500).json( {error: err} );
+      }
+      res.status(200).json({
+        message: 'Update: New friend added to friendlist'
+      });
+    }
+  );
+}
 
-//TODO UPDATE: Add uid to list of friends of an existing user
-
-//TODO UPDATE: Remove a uid from list of friends of an existing user
+//UPDATE: Remove a uid from list of friends of an existing user
+exports.update_friendlist_remove = (req, res, next) => {
+  User.update(
+    { "_id": req.params.uid },
+    { $pull: {"friendship": req.params.fuid} },
+    function (err, docs) {
+      if(err) {
+        console.log(err);
+        res.status(500).json( {error: err} );
+      }
+      res.status(200).json({
+        message: 'Update: Friend was removed from friendlist'
+      });
+    }
+  );
+}
 
 //DELETE: Delete an existing friend request
 exports.friend_delete_request = (req, res, next) => {

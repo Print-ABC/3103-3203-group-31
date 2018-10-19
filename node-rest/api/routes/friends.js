@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 
 const checkAuth = require('../middleware/check-auth');
-const Friend = require('../models/Friend');
-const User = require('../models/User');
-const config = require('../../config/config');
 
 const FriendController = require('../controllers/friend-controller');
 
@@ -17,6 +13,12 @@ router.get('/recp/:uid', FriendController.friend_get_requests_recipient);
 
 // Handles POST requests (Create a new friend request)
 router.post('/', FriendController.friend_post_request);
+
+// Handles PUT requests (Adds a new friend to friendlist)
+router.patch("/:uid/add/:fuid", FriendController.update_friendlist_add);
+
+// Handles PUT requests (Removes an existing friend from friendlist)
+router.patch("/:uid/del/:fuid", FriendController.update_friendlist_remove);
 
 // Handles DELETE requests (Delete a request with a given recipient uid)
 router.delete('/:uid', FriendController.friend_delete_request);
