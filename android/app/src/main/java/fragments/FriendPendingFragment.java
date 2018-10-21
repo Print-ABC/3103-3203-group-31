@@ -1,54 +1,106 @@
 package fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ncshare.ncshare.FriendsModel;
 import com.ncshare.ncshare.R;
+import com.ncshare.ncshare.SimpleDividerItemDecoration;
+
+import java.util.ArrayList;
 
 public class FriendPendingFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
+            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
 
-    public FriendPendingFragment() {
-        // Required empty public constructor
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static FriendPendingFragment newInstance(String param1, String param2) {
-        FriendPendingFragment fragment = new FriendPendingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
+            "RP","NTU","SIT","SIT"};
+    private ArrayList<FriendsModel> mFriends;
+    private RecyclerView mSFriendsRecyclerView;
+    private FriendPendingFragment.FriendsAdapter mAdapter;
+    public String user_friend_id = "";
+    public String user_friends;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        mFriends = new ArrayList<>();
+        for(int i =0;i<friendNames.length;i++){
+            FriendsModel friends = new FriendsModel();
+            friends.setName(friendNames[i]);
+            friends.setSchool(schools[i]);
+            mFriends.add(friends);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_pending, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
+        mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
+        mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
+        return view;
     }
 
+    private void updateUI(){
+        mAdapter = new FriendPendingFragment.FriendsAdapter(mFriends);
+        mSFriendsRecyclerView.setAdapter(mAdapter);
+    }
 
+    private class FriendsHolder extends RecyclerView.ViewHolder{
+
+        private FriendsModel mFriends;
+        public TextView mNameTextView, mSchoolTextView;
+        public FriendsHolder(View itemView){
+            super(itemView);
+
+            mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
+            mSchoolTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(),
+                            mFriends.getName() + " clicked!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
+        }
+        public void bindData(FriendsModel s){
+            mFriends = s;
+            mNameTextView.setText(s.getName());
+            mSchoolTextView.setText(s.getSchool());
+        }
+    }
+    private class FriendsAdapter extends RecyclerView.Adapter<FriendPendingFragment.FriendsHolder>{
+        private ArrayList<FriendsModel> mFriends;
+        public FriendsAdapter(ArrayList<FriendsModel> Friends){
+            mFriends = Friends;
+        }
+        @Override
+        public FriendPendingFragment.FriendsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.friendlist_requests_items,parent,false);
+            return new FriendPendingFragment.FriendsHolder(view);
+
+        }
+        @Override
+        public void onBindViewHolder(FriendPendingFragment.FriendsHolder holder, int position) {
+            FriendsModel s = mFriends.get(position);
+            holder.bindData(s);
+        }
+        @Override
+        public int getItemCount() {
+            return mFriends.size();
+        }
+    }
 }

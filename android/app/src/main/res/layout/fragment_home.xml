@@ -5,33 +5,43 @@
     android:layout_height="match_parent"
     android:background="@drawable/whitebackground"
     android:gravity="center_vertical|center_horizontal|center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <Button
         android:id="@+id/btnCreateNc"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Create Name Card" />
+        android:layout_marginTop="20dp"
+        android:background="#0c0c0c"
+        android:text="Create Name Card"
+        android:textColor="#fff" />
 
     <Button
         android:id="@+id/btnExchageNc"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnCreateNc"
-        android:layout_centerHorizontal="true"
-        android:text="Exchange Name Card" />
+        android:layout_marginTop="20dp"
+        android:background="#0c0c0c"
+        android:text="Exchange Name Card"
+        android:textColor="#fff" />
 
     <Button
         android:id="@+id/btnViewCards"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#0c0c0c"
         android:text="View Cards"
-        tools:text="View Cards" />
+        android:textColor="#fff" />
 
     <Button
         android:id="@+id/btnFriendList"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Friend List" />
+        android:layout_marginTop="20dp"
+        android:background="#0c0c0c"
+        android:text="Friend List"
+        android:textColor="#fff" />
 
 </LinearLayout>

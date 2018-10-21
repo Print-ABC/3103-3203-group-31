@@ -2,7 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
     <TextView
         android:paddingTop="10dp"
         android:paddingLeft="10dp"
@@ -19,23 +21,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/friends_name"/>
 
-
     <ImageButton
-        android:id="@+id/btnDelete"
-        android:layout_width="44dp"
-        android:layout_height="38dp"
+        android:id="@+id/btnCfm"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/btnSend"
+        android:layout_toStartOf="@+id/btnRej"
         android:layout_weight="1"
-        android:src="@android:drawable/ic_menu_delete" />
+        android:src="@android:drawable/ic_input_add" />
 
     <ImageButton
-        android:id="@+id/btnSend"
-        android:layout_width="44dp"
-        android:layout_height="38dp"
+        android:id="@+id/btnRej"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="0dp"
         android:layout_weight="1"
-        android:src="@android:drawable/ic_menu_send" />
+        android:src="@drawable/ic_rej" />
 
 </RelativeLayout>
