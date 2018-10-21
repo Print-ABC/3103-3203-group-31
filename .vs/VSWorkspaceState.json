@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\node-rest",
+    "\\node-rest\\api",
+    "\\node-rest\\api\\models",
+    "\\node-rest\\api\\routes"
+  ],
+  "SelectedNode": "\\node-rest\\api\\routes\\organizations.js",
+  "PreviewInSolutionExplorer": false
+}
