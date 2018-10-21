@@ -11,8 +11,8 @@ router.get('/', UserController.users_get_all);
 // Handles POST requests (Register a user)
 router.post('/register', UserController.users_register_user);
 
-////Retrieve all namecards of a user, return username, name and organization/school
-//router.post('/:uid', UserController.users._get_card_owned);
+//Retrieve all namecards of a user, return username, name and organization/school
+router.post('/cards', checkAuth, UserController.users_get_cards_info);
 
 // User Login
 router.post('/login', UserController.users_login);

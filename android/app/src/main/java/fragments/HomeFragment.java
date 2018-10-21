@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         btnViewCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewCardsFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NameCardListFragment()).commit();
             }
         });
 

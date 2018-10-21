@@ -28,8 +28,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Username"
+            android:inputType="textPersonName"
             android:maxLength="30"
-            android:inputType="textPersonName"/>
+            android:text="randomUser2" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -44,8 +45,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Email Address"
+            android:inputType="textEmailAddress"
             android:maxLength="40"
-            android:inputType="textEmailAddress"/>
+            android:text="email@random.com" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -60,8 +62,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Password"
+            android:inputType="textPassword"
             android:maxLength="30"
-            android:inputType="textPassword"/>
+            android:text="Tsd677%fffffffff" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -75,9 +78,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:maxLength="30"
             android:hint="Confirm Password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLength="30"
+            android:text="Tsd677%fffffffff" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -92,8 +96,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Name"
+            android:inputType="textPersonName"
             android:maxLength="30"
-            android:inputType="textPersonName"/>
+            android:text="Mr Foo Bar" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -109,7 +114,8 @@
             android:ems="10"
             android:hint="Contact Number"
             android:inputType="phone"
-            android:maxLength="8"/>
+            android:maxLength="8"
+            android:text="89287485" />
     </android.support.design.widget.TextInputLayout>
 
     <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner

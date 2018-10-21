@@ -2,19 +2,16 @@ package services;
 
 import models.Result;
 import models.User;
-import models.ViewCard;
+import models.CardList;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface UserService {
-    @GET("users/username/{uid}")
-    Call<ViewCard> getUsername(@Header("Authorization") String token,  @Path("uid") String uid);
+    @POST("users/cards")
+    Call<CardList> getCards(@Header("Authorization") String token, @Body CardList cards);
 
     @POST("users/register")
     Call<Result> addUser(@Body User body);

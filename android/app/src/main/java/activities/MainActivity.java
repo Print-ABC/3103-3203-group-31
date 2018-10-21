@@ -17,7 +17,7 @@ import common.Utils;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NFCFragment;
-import fragments.NamecardsFragment;
+import fragments.NameCardListFragment;
 import fragments.ProfileFragment;
 import models.Session;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportActionBar().setTitle("Home");
                     break;
                 case R.id.nav_cards:
-                    selectedFragment = new NamecardsFragment();
+                    selectedFragment = new NameCardListFragment();
                     getSupportActionBar().setTitle("Name Cards");
                     break;
                 case R.id.nav_nfc:

@@ -4,7 +4,47 @@ const bcrypt = require('bcrypt-nodejs');
 
 const User = require('../models/User');
 const Organization = require('../models/Organization');
+const Student = require('../models/Student');
 const config = require('../../config/config');
+
+
+exports.users_get_cards_info = (req, res) => {
+    if (req.body.cards) {
+        //Loop through each card that a user owns
+        console.log(req.body.cards.length);
+        const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
+        const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
+        Promise.all([p1, p2])
+            .then(result => {
+                console.log(result);
+                res.status(200).json({
+                    success: true,
+                    orgCards: result[0],
+                    stuCards:result[1]
+                })
+            }
+            )
+            .catch(err => {
+                console.log(err);
+                res.status(200).json({
+                    success: false
+                })
+            })
+    } else {
+        res.status(200).json({
+            success: false
+        })
+    }
+}
+function checkOrgCard(cardId) {
+    const promise = Organization.findById(cardId).exec();
+    return promise;
+}
+
+function checkStudentCard(cardId) {
+    const promise = Student.findById(cardId).exec();
+    return promise;
+}
 
 exports.users_get_all = (req, res, next) => {
     User.find()
@@ -36,7 +76,7 @@ exports.users_get_all = (req, res, next) => {
             res.status(200).json(response);
             //        } else {
             //            res.status(404).json({
-            //               message: 'No entries found' 
+            //               message: 'No entries found'
             //            });
             //        }
         })
@@ -140,12 +180,12 @@ exports.users_login = (req, res, next) => {
                 if (err) {
                     console.log(err);
                     return res.status(201).json({
-                        messsage: 'Login failedadsa',
+                        messsage: 'Login failed',
                         success: false
                     });
                 }
                 if (result) {
-                    console.log(result);
+                    console.log(user[0]);
                     const token = jwt.sign({
                         username: user[0].username,
                         uid: user[0]._id
@@ -260,6 +300,20 @@ function getCardIdByUid(role, uid, callback) {
             })
             .catch(err => {
                 return callback("none");
-        })
+            })
+    } else {
+        Student.findOne({ uid: uid })
+            .select('_id')
+            .exec()
+            .then(result => {
+                if (result) {
+                    callback(result._id);
+                } else {
+                    return callback("none");
+                }
+            })
+            .catch(err => {
+                return callback("none");
+            })
     }
 }
