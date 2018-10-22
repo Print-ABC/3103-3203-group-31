@@ -7,6 +7,11 @@
         android:title="@string/title_home" />
 
     <item
+        android:id="@+id/nav_create_nc"
+        android:icon="@drawable/ic_createnc"
+        android:title="Create NameCard" />
+
+    <item
         android:id="@+id/nav_cards"
         android:icon="@drawable/ic_credit_card_black_24dp"
         android:title="@string/title_namecards" />

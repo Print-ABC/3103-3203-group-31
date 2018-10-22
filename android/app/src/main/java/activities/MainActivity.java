@@ -14,6 +14,7 @@ import android.view.View;
 
 import common.SessionHandler;
 import common.Utils;
+import fragments.CreateNCFragment;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NFCFragment;
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_home:
                     selectedFragment = new HomeFragment();
                     getSupportActionBar().setTitle("Home");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    break;
+                case R.id.nav_create_nc:
+                    selectedFragment = new CreateNCFragment();
+                    getSupportActionBar().setTitle("Create Name Card");
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_cards:

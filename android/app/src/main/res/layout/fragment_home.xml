@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,40 +9,10 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnCreateNc"
-        android:layout_width="fill_parent"
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#0c0c0c"
-        android:text="Create Name Card"
-        android:textColor="#fff" />
-
-    <Button
-        android:id="@+id/btnExchageNc"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#0c0c0c"
-        android:text="Exchange Name Card"
-        android:textColor="#fff" />
-
-    <Button
-        android:id="@+id/btnViewCards"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#0c0c0c"
-        android:text="View Cards"
-        android:textColor="#fff" />
-
-    <Button
-        android:id="@+id/btnFriendList"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#0c0c0c"
-        android:text="Friend List"
-        android:textColor="#fff" />
+        app:srcCompat="@drawable/ncsharelogo" />
 
 </LinearLayout>
