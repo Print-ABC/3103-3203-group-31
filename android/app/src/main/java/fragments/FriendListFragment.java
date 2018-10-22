@@ -14,13 +14,18 @@ import com.ncshare.ncshare.R;
 import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import common.SessionHandler;
 
 public class FriendListFragment extends Fragment {
-    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
-            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
+    private List<String> friendUID = SessionHandler.getSessionUserObj().getFriendship();
 
-    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
-            "RP","NTU","SIT","SIT"};
+//    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
+//            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
+//
+//    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
+//            "RP","NTU","SIT","SIT"};
     private ArrayList<FriendsModel> mFriends;
     private RecyclerView mSFriendsRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
@@ -31,10 +36,16 @@ public class FriendListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFriends = new ArrayList<>();
-        for(int i =0;i<friendNames.length;i++){
+//        for(int i =0;i<friendNames.length;i++){
+//            FriendsModel friends = new FriendsModel();
+//            friends.setName(friendNames[i]);
+//            friends.setSchool(schools[i]);
+//            mFriends.add(friends);
+//        }
+        for(int i=0; i < friendUID.size(); i++){
             FriendsModel friends = new FriendsModel();
-            friends.setName(friendNames[i]);
-            friends.setSchool(schools[i]);
+            friends.setName(friendUID.get(i));
+            friends.setSchool("Test School");
             mFriends.add(friends);
         }
     }
