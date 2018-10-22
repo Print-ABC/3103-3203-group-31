@@ -29,4 +29,9 @@ router.patch("/:uid", checkAuth, UserController.users_update_one);
 // Gets username of a specific user
 router.get("/username/:uid", checkAuth, UserController.users_get_username);
 
+// Check if card exists for that user, if not then update to array
+router.get("/findcards/:uid/:cardtocheck", UserController.users_find_cards);
+
+
+
 module.exports = router;

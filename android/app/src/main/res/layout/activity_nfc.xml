@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="123dp"
         android:layout_marginTop="124dp"
-        android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +23,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/tvUsername"
         android:layout_marginTop="198dp"
-        android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/tvUsername"
         app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
@@ -35,7 +33,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/tvUsername"
         android:layout_marginBottom="219dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/tvRole"
         app:layout_constraintTop_toBottomOf="@+id/tvRole" />
 
@@ -46,7 +43,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/tvUsername"
         android:layout_marginBottom="176dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/tvCardID"
         app:layout_constraintTop_toBottomOf="@+id/tvCardID" />
 

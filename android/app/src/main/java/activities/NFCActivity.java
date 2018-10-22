@@ -9,9 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,23 +23,31 @@ import com.ncshare.ncshare.R;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import common.SessionHandler;
 import fragments.CreateNCFragment;
+import fragments.FriendsFragment;
+import fragments.HomeFragment;
+import fragments.NameCardListFragment;
+import models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.RetrofitClient;
 
 public class NFCActivity extends AppCompatActivity
         implements NfcAdapter.OnNdefPushCompleteCallback, NfcAdapter.CreateNdefMessageCallback {
-    //The array lists to hold our messages
     //The array lists to hold our messages
     private ArrayList<String> messagesToSendArray = new ArrayList<>();
     private ArrayList<String> messagesReceivedArray = new ArrayList<>();
 
     public TextView tvUsername, tvRole, tvCardID, tvMsg;
-    private String sUsername, myUsername, sRole, myRole, sCard, myCard;
+    private String sUid, myUid, sRole, myRole, sCard, myCard;
     private NfcAdapter mNfcAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvRole =  (TextView) findViewById(R.id.tvRole);
@@ -44,25 +55,50 @@ public class NFCActivity extends AppCompatActivity
         tvMsg =  (TextView) findViewById(R.id.tvMsg);
 
         //Change this for the connected phone
-        myUsername = "Usernameeeeee";
+        myUid = "5bcc85ebfff1c22a2a3f1ca8";
         myRole = "Org";
-        myCard = "";
+        myCard = "thisisfortestingpurposes";
 
-        messagesToSendArray.add(myUsername);
+        messagesToSendArray.add(myUid);
         messagesToSendArray.add(myRole);
         messagesToSendArray.add(myCard);
 
+        //TODO Change myCard to sCard
+
+        //After Receiving
+        //This is to check if the card exist in user's collection
+        //If not, then straight update to DB.
+
+        Call<User> call = RetrofitClient
+                .getInstance()
+                .getUserApi()
+                .checkForCard(myUid, myCard);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Toast.makeText(NFCActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                if(response.body().getSuccess()){
+                    Log.i("onResponseeeee","Card Exist!");
+                } else {
+                    Log.i("onResponseeeee","Card NOT Exist!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.i("onFailure","ERROR!");
+            }
+        });
+/*
         tvUsername.setText(messagesToSendArray.get(0));
         tvRole.setText(messagesToSendArray.get(1));
         tvCardID.setText(messagesToSendArray.get(2));
-        tvMsg.setText("Sending");
-
+*/
         //Check if the user has a Card ID
         //If dont have, bring to create name card fragment.
         if(messagesToSendArray.get(2).isEmpty() || messagesToSendArray.get(2)==""){
             Toast.makeText(this, "No card id detected!", Toast.LENGTH_SHORT).show();
             Fragment createNC = new CreateNCFragment();
-            getSupportActionBar().setTitle("Create Namemcard");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, createNC).commit();
 
         }
@@ -105,7 +141,7 @@ public class NFCActivity extends AppCompatActivity
     @Override
     public void onNdefPushComplete(NfcEvent event) {
         //This is called when the system detects that our NdefMessage was
-        //Successfully sent.\
+        //Successfully sent.
     }
 
     @Override
@@ -167,31 +203,26 @@ public class NFCActivity extends AppCompatActivity
                     messagesReceivedArray.add(string);
                 }
 
-                sUsername = messagesReceivedArray.get(0);
+                sUid = messagesReceivedArray.get(0);
                 sRole = messagesReceivedArray.get(1);
                 sCard = messagesReceivedArray.get(2);
-
+/*
                 tvUsername.setText(sUsername);
                 tvRole.setText(sRole);
                 tvCardID.setText(sCard);
-                tvMsg.setText("Received");
-
+*/
                 Toast.makeText(this, "Received " + messagesReceivedArray.size() +
                         " Messages", Toast.LENGTH_LONG).show();
 
+
                 //Check if the other person is opposite role of user
                 if (myRole.equals(sRole)) {
-                    //  Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
                     Log.i("Received - Role:", "Cannot NFC with same role");
-                    tvMsg.setText("NOT OPPOSITE USER!!");
                 }
-                //Check for duplicates?
-                else if (sCard.equals("Card ID")) {
-                    //  Toast.makeText(this, "Already has the card!", Toast.LENGTH_SHORT).show();
-                    Log.i("Received - CARDID:", "Already has the card!");
-                    tvMsg.setText("CARD ID ALR EXISTED!!");
-                } else {
-                    tvMsg.setText("Card Successfully Added!");
+                else {
+                    //Add the RETROFIT HERE
+                    Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
                 }
             }
             else {

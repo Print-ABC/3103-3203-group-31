@@ -42,21 +42,28 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_home:
                     selectedFragment = new HomeFragment();
                     getSupportActionBar().setTitle("Home");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_cards:
                     selectedFragment = new NameCardListFragment();
                     getSupportActionBar().setTitle("Name Cards");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    selectedFragment = new NFCFragment();
+                   /* selectedFragment = new NFCFragment();
                     getSupportActionBar().setTitle("NFC");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+*/
+                    Intent intent = new Intent(MainActivity.this, NFCActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.nav_friends:
                     selectedFragment = new FriendsFragment();
                     getSupportActionBar().setTitle("Friends");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
             return true;
         }
     };

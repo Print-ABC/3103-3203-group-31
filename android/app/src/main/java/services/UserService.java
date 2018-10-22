@@ -5,8 +5,11 @@ import models.User;
 import models.CardList;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
@@ -27,4 +30,8 @@ public interface UserService {
 
     @POST("users/retrieveByUsername")
     Call<User> retrieveByUsername(@Query("id") String user_username);
+
+    @GET("users/findcards/{uid}/{card}")
+    //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
+    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
 }

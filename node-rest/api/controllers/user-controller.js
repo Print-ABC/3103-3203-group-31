@@ -317,3 +317,49 @@ function getCardIdByUid(role, uid, callback) {
             })
     }
 }
+
+exports.users_find_cards = (req, res, next) => {
+  const id = req.params.uid;
+  const cardToCheck = req.params.cardtocheck;
+  console.log(id);
+  User.findById(id)
+  .select('cards')
+  .exec()
+  .then(doc => {
+      console.log("From database", doc);
+      if (doc) {
+          // Success response
+        //  res.status(200).json({ doc });
+          console.log(doc.cards);
+          if (doc.cards.indexOf(cardToCheck) > -1) {
+            //Card already exist in collection, end.
+            console.log("EXIST!");
+            res.status(200).json({ message: 'Card already exist in collection', success: true });
+          } else {
+            //Card does not exist, proceed to add into database
+            console.log("NOT EXIST!");
+            User.update(
+               { "_id": id },
+               { $push: { "cards": cardToCheck } },
+               function (err, docs) {
+                 if(err) {
+                   console.log(err);
+                   res.status(500).json( {error: err} );
+                 }
+                 res.status(200).json({
+                   message: 'New card added to collection!'
+                 });
+               }
+            );
+          }
+      } else {
+          // ID does not exist
+          res.status(404).json({ message: 'No valid entry found for provided ID' });
+      }
+  }).catch(err => {
+      console.log(err);
+      // Failure response
+      res.status(500).json({ error: err });
+  });
+
+}
