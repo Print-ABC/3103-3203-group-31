@@ -338,16 +338,17 @@ exports.users_find_cards = (req, res, next) => {
           } else {
             //Card does not exist, proceed to add into database
             console.log("NOT EXIST!");
-            User.update(
+            User.updateOne(
                { "_id": id },
                { $push: { "cards": cardToCheck } },
                function (err, docs) {
                  if(err) {
                    console.log(err);
-                   res.status(500).json( {error: err} );
+                   res.status(500).json( {error: err, success: false} );
                  }
                  res.status(200).json({
-                   message: 'New card added to collection!'
+                   message: 'New card added to collection!',
+                   success: true
                  });
                }
             );
