@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,31 +8,17 @@
     android:gravity="center_vertical|center_horizontal|center"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ncsharelogo" />
+
     <Button
         android:id="@+id/btnCreateNc"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Create Name Card" />
-
-    <Button
-        android:id="@+id/btnExchageNc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnCreateNc"
-        android:layout_centerHorizontal="true"
-        android:text="Exchange Name Card" />
-
-    <Button
-        android:id="@+id/btnViewCards"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Cards"
-        tools:text="View Cards" />
-
-    <Button
-        android:id="@+id/btnFriendList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Friend List" />
 
 </LinearLayout>
