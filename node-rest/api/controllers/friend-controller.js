@@ -30,7 +30,9 @@ exports.friend_get_requests_recipient = (req, res, next) => {
 exports.friend_post_request = (req, res, next) => {
   const request = new Friend({
       _id: new mongoose.Types.ObjectId(),
+      requester_id: req.body.requester_id,
       requester: req.body.requester,
+      recipient_id: req.body.recipient_id,
       recipient: req.body.recipient
     }
   );

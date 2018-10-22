@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const friendSchema = mongoose.Schema({
-    requester: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    requester_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    requester: {type: String, required: true},
+    recipient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    recipient: {type: String, required: true}
 })
 module.exports = mongoose.model('Friend', friendSchema)
