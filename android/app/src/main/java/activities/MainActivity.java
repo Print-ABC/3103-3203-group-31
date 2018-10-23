@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                   /* selectedFragment = new NFCFragment();
-                    getSupportActionBar().setTitle("NFC");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-*/
                     Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                     startActivity(intent);
                     break;
@@ -107,6 +103,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Fragment selectedFragment = null;
         switch (item.getItemId()) {
+            case R.id.nav_home:
+                selectedFragment = new HomeFragment();
+                getSupportActionBar().setTitle("Home");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                break;
+
             case R.id.nav_profile:
                 selectedFragment = new ProfileFragment();
                 getSupportActionBar().setTitle("My Profile");
