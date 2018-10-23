@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     contact: {type: String, required: true},
     role: {type: Number, required: true},
     password: {type: String, required: true},
-    friendship: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    friendship: {type: [String], required: true, default: []},
     cards: {type: [String], required: true, default: []}
 });
 

@@ -19,8 +19,7 @@ import java.util.List;
 import common.SessionHandler;
 
 public class FriendListFragment extends Fragment {
-    private List<String> friendUID = SessionHandler.getSessionUserObj().getFriendship();
-
+    private List<String> friend = SessionHandler.getSessionUserObj().getFriendship();
 //    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
 //            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
 //
@@ -35,6 +34,7 @@ public class FriendListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mFriends = new ArrayList<>();
 //        for(int i =0;i<friendNames.length;i++){
 //            FriendsModel friends = new FriendsModel();
@@ -42,9 +42,9 @@ public class FriendListFragment extends Fragment {
 //            friends.setSchool(schools[i]);
 //            mFriends.add(friends);
 //        }
-        for(int i=0; i < friendUID.size(); i++){
+        for(int i = 0; i < friend.size(); i++){
             FriendsModel friends = new FriendsModel();
-            friends.setName(friendUID.get(i));
+            friends.setName(friend.get(i));
             friends.setSchool("Test School");
             mFriends.add(friends);
         }

@@ -57,7 +57,7 @@ exports.friend_post_request = (req, res, next) => {
 exports.update_friendlist_add = (req, res, next) => {
   User.update(
     { "_id": req.params.uid },
-    { $push: {"friendship": req.params.fuid} },
+    { $push: {"friendship": req.params.friend} },
     function (err, docs) {
       if(err) {
         console.log(err);
@@ -74,7 +74,7 @@ exports.update_friendlist_add = (req, res, next) => {
 exports.update_friendlist_remove = (req, res, next) => {
   User.update(
     { "_id": req.params.uid },
-    { $pull: {"friendship": req.params.fuid} },
+    { $pull: {"friendship": req.params.friend} },
     function (err, docs) {
       if(err) {
         console.log(err);

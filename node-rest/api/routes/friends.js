@@ -15,10 +15,10 @@ router.get('/recp/:uid', FriendController.friend_get_requests_recipient);
 router.post('/', FriendController.friend_post_request);
 
 // Handles PUT requests (Adds a new friend to friendlist)
-router.patch("/:uid/add/:fuid", FriendController.update_friendlist_add);
+router.patch("/:uid/add/:friend", FriendController.update_friendlist_add);
 
 // Handles PUT requests (Removes an existing friend from friendlist)
-router.patch("/:uid/del/:fuid", FriendController.update_friendlist_remove);
+router.patch("/:uid/del/:friend", FriendController.update_friendlist_remove);
 
 // Handles DELETE requests (Delete a request with a given recipient uid)
 router.delete('/:uid', FriendController.friend_delete_request);
