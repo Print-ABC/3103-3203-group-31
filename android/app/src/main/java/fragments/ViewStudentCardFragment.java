@@ -1,6 +1,7 @@
 package fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.ncshare.ncshare.SimpleDividerItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
+import activities.ViewCardActivity;
 import common.SessionHandler;
 import common.Utils;
 import models.CardList;
@@ -125,7 +127,7 @@ public class ViewStudentCardFragment extends Fragment {
         public TextView tvStudentRowCourse;
         public TextView tvStudentRowSchool;
 
-        public StudentCardViewHolder(View itemView) {
+        public StudentCardViewHolder(final View itemView) {
             super(itemView);
 
             tvStudentRowName = (TextView) itemView.findViewById(R.id.tvStudentRowName);
@@ -135,9 +137,17 @@ public class ViewStudentCardFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    itemView.setClickable(false);
                     Toast.makeText(getActivity(),
                             student.getName() + " clicked!", Toast.LENGTH_SHORT)
                             .show();
+                    Intent intent = new Intent(view.getContext(), ViewCardActivity.class);
+                    intent.putExtra(Utils.CONTACT, student.getContact());
+                    intent.putExtra(Utils.COURSE, student.getCourse());
+                    intent.putExtra(Utils.EMAIL, student.getEmail());
+                    intent.putExtra(Utils.NAME, student.getName());
+                    intent.putExtra(Utils.USER_ROLE, Utils.STUDENT_ROLE);
+                    startActivity(intent);
                 }
             });
         }

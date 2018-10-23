@@ -19,6 +19,14 @@ public class Utils {
     public static final int STUDENT_ROLE = 0;
     public static final int ORGANIZATION_ROLE = 1;
     public static final String NO_CARD = "none";
+    public static final String CONTACT = "contact";
+    public static final String COURSE = "course";
+    public static final String EMAIL = "email";
+    public static final String NAME = "name";
+    public static final String JOB_TITLE = "job title";
+    public static final String USER_ROLE = "user role";
+    public static final String ORGANIZATION_NAME = "organization name";
+
 
     /**
      * Check if user is logged in, redirect to LoginActivity if not logged in

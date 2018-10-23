@@ -1,6 +1,7 @@
 package fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.ncshare.ncshare.SimpleDividerItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
+import activities.ViewCardActivity;
 import common.SessionHandler;
 import common.Utils;
 import models.CardList;
@@ -123,7 +125,7 @@ public class ViewOrgCardFragment extends Fragment {
         public TextView tvOrgRowJobTitle;
         public TextView tvOrgRowOrganization;
 
-        public OrgCardViewHolder(View itemView) {
+        public OrgCardViewHolder(final View itemView) {
             super(itemView);
 
             tvOrgRowName = (TextView) itemView.findViewById(R.id.tvOrgRowName);
@@ -133,9 +135,15 @@ public class ViewOrgCardFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(),
-                            org.getName() + " clicked!", Toast.LENGTH_SHORT)
-                            .show();
+                    itemView.setClickable(false);
+                    Intent intent = new Intent(view.getContext(), ViewCardActivity.class);
+                    intent.putExtra(Utils.CONTACT, org.getContact());
+                    intent.putExtra(Utils.ORGANIZATION_NAME, org.getOrganization());
+                    intent.putExtra(Utils.EMAIL, org.getEmail());
+                    intent.putExtra(Utils.NAME, org.getName());
+                    intent.putExtra(Utils.JOB_TITLE, org.getJobTitle());
+                    intent.putExtra(Utils.USER_ROLE, Utils.ORGANIZATION_ROLE);
+                    startActivity(intent);
                 }
             });
         }

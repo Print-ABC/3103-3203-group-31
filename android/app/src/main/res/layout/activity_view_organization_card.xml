@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context="com.ncshare.ncshare.activities.ViewCardActivity"
+    tools:context="activities.ViewCardActivity"
     tools:layout_editor_absoluteY="73dp">
 
     <TextView
@@ -23,8 +23,8 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tvContact"
-        app:layout_constraintStart_toEndOf="@+id/tvContact" />
+        app:layout_constraintEnd_toEndOf="@+id/tvOrgContact"
+        app:layout_constraintStart_toEndOf="@+id/tvOrgContact" />
 
     <TextView
         android:id="@+id/tvName"
@@ -43,12 +43,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="29dp"
-        android:layout_marginLeft="41dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvOrgJobTitle"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:text="Marketing Director"
@@ -57,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <TextView
-        android:id="@+id/tvContact"
+        android:id="@+id/tvOrgContact"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="516dp"
@@ -65,7 +63,7 @@
         android:text="98765432"
         android:textAlignment="viewStart"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tvEmail"
+        app:layout_constraintBottom_toTopOf="@+id/tvOrgEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/tvOrganization"
@@ -77,11 +75,11 @@
         android:layout_height="wrap_content"
         android:text="Email: "
         android:textColor="@android:color/white"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvEmail"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvOrgEmail"
         app:layout_constraintStart_toStartOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/tvEmail"
+        android:id="@+id/tvOrgEmail"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginTop="2dp"
@@ -112,7 +110,7 @@
         android:layout_marginStart="41dp"
         android:text="Tel: +65"
         android:textColor="@android:color/white"
-        app:layout_constraintEnd_toStartOf="@+id/tvContact"
+        app:layout_constraintEnd_toStartOf="@+id/tvOrgContact"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvOrganization"
         android:layout_marginLeft="41dp"
