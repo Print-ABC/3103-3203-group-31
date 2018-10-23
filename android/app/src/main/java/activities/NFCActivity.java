@@ -218,17 +218,40 @@ public class NFCActivity extends AppCompatActivity
                         public void onResponse(Call<User> call, Response<User> response) {
                             Toast.makeText(NFCActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             if(response.body().getSuccess()){
-                                Log.i("onResponseeeee","Card Exist!");
+                                Log.i("onResponseeeee","Card Added!");
+
+                                //If nfc only sends from one device then include this whole chunk
+                                Call<User> callA = RetrofitClient
+                                        .getInstance()
+                                        .getUserApi()
+                                        .checkForCard(sUid, myCard);
+                                callA.enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> callA, Response<User> responseA) {
+                                        Toast.makeText(NFCActivity.this, responseA.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        if(responseA.body().getSuccess()){
+                                            Log.i("onResponseeeee -1","Card Exist!");
+                                        } else {
+                                            Log.i("onResponseeeee -1","Card NOT Exist!");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<User> callA, Throwable t) {
+                                        Log.i("onFailure","ERROR!");
+                                    }
+                                });
                             } else {
-                                Log.i("onResponseeeee","Card NOT Exist!");
+                                Log.i("onResponseeeee","Card NOT Added!");
                             }
                         }
-
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
                             Log.i("onFailure","ERROR!");
                         }
                     });
+
+
                     Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
                 }
             }
