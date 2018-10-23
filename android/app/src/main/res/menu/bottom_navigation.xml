@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/nav_create_nc"
-        android:icon="@drawable/ic_createnc"
+        android:icon="@drawable/ic_add_box_black_24dp"
         android:title="Create NameCard" />
 
     <item

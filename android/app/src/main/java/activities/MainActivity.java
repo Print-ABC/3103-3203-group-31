@@ -17,9 +17,7 @@ import common.Utils;
 import fragments.CreateNCFragment;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
-import fragments.NFCFragment;
 import fragments.NameCardListFragment;
-import fragments.ProfileFragment;
 import models.Session;
 
 import com.ncshare.ncshare.R;
@@ -106,12 +104,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_home:
                 selectedFragment = new HomeFragment();
                 getSupportActionBar().setTitle("Home");
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                break;
-
-            case R.id.nav_profile:
-                selectedFragment = new ProfileFragment();
-                getSupportActionBar().setTitle("My Profile");
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
