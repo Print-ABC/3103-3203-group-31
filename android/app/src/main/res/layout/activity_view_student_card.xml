@@ -5,7 +5,7 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ncshare.ncshare.activities.ViewCardActivity"
+    tools:context="activities.ViewCardActivity"
     tools:layout_editor_absoluteY="73dp">
 
     <TextView
@@ -61,22 +61,22 @@
         android:gravity="start" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvOrgJobTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="MOBILE   +65"
-        app:layout_constraintBottom_toTopOf="@+id/tvEmail"
+        app:layout_constraintBottom_toTopOf="@+id/tvOrgEmail"
         app:layout_constraintStart_toStartOf="@+id/tvOrganization" />
 
     <TextView
-        android:id="@+id/tvContact"
+        android:id="@+id/tvOrgContact"
         android:layout_width="67dp"
         android:layout_height="21dp"
         android:layout_marginStart="10dp"
         android:text="98765432"
         android:textAlignment="viewStart"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvOrgJobTitle"
+        app:layout_constraintStart_toEndOf="@+id/tvOrgJobTitle"
         android:layout_marginLeft="10dp"
         android:gravity="start" />
 
@@ -86,14 +86,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
         android:text="EMAIL"
-        app:layout_constraintEnd_toStartOf="@+id/tvEmail"
+        app:layout_constraintEnd_toStartOf="@+id/tvOrgEmail"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/tvOrgJobTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrgJobTitle"
         android:layout_marginRight="6dp" />
 
     <TextView
-        android:id="@+id/tvEmail"
+        android:id="@+id/tvOrgEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -101,7 +101,7 @@
         android:text="1602400@SIT.SingaporeTech.edu.sg"
         android:textAlignment="viewStart"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/tvOrgJobTitle"
         android:layout_marginLeft="56dp"
         android:gravity="start" />
 

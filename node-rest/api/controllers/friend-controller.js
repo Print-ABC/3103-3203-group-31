@@ -30,7 +30,9 @@ exports.friend_get_requests_recipient = (req, res, next) => {
 exports.friend_post_request = (req, res, next) => {
   const request = new Friend({
       _id: new mongoose.Types.ObjectId(),
+      requester_id: req.body.requester_id,
       requester: req.body.requester,
+      recipient_id: req.body.recipient_id,
       recipient: req.body.recipient
     }
   );
@@ -55,7 +57,7 @@ exports.friend_post_request = (req, res, next) => {
 exports.update_friendlist_add = (req, res, next) => {
   User.update(
     { "_id": req.params.uid },
-    { $push: {"friendship": req.params.fuid} },
+    { $push: {"friendship": req.params.friend} },
     function (err, docs) {
       if(err) {
         console.log(err);
@@ -72,7 +74,7 @@ exports.update_friendlist_add = (req, res, next) => {
 exports.update_friendlist_remove = (req, res, next) => {
   User.update(
     { "_id": req.params.uid },
-    { $pull: {"friendship": req.params.fuid} },
+    { $pull: {"friendship": req.params.friend} },
     function (err, docs) {
       if(err) {
         console.log(err);

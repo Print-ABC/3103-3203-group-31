@@ -25,11 +25,21 @@ exports.stu_create_card = (req, res, next) => {
         })
         .then(result => {
             console.log(result);
-            return res.status(201).json({
-                message: "Name card successfully created",
-                cardId: result._id,
-                success: true
-            });
+            User.update(
+                { "_id": req.body.uid },
+                { $push: { "cards": result._id } },
+                function (err, docs) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({ error: err });
+                    }
+                    return res.status(201).json({
+                        message: "Name card successfully created",
+                        cardId: result._id,
+                        success: true
+                    });
+                })
+            
         })
         .catch(err => {
             console.log(err);
@@ -44,8 +54,8 @@ exports.stu_create_card = (req, res, next) => {
                     success: false
                 });
             }
-            
-            
+
+
         });
 
 }

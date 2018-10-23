@@ -1,19 +1,29 @@
 package com.ncshare.ncshare;
 
 public class FriendsModel {
-    private String mName, mSchool;
+    private String mUID, mName, mUsername;
+
+    public String getUID() {
+        return mUID;
+    }
+
+    public void setUID(String mUID) {
+        this.mUID = mUID;
+    }
+
     public String getName() {
         return mName;
     }
+
     public void setName(String mName) {
         this.mName = mName;
     }
 
-    public String getSchool() {
-        return mSchool;
+    public String getUsername() {
+        return mUsername;
     }
 
-    public void setSchool(String mSchool) {
-        this.mSchool = mSchool;
+    public void setUsername(String mUsername) {
+        this.mUsername = mUsername;
     }
 }

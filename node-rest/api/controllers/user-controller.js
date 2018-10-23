@@ -112,6 +112,30 @@ exports.users_get_username = (req, res, next) => {
         });
 }
 
+exports.users_get_name = (req, res, next) => {
+    User.findById(req.params.uid)
+        .select('_id name')
+        .exec()
+        .then(doc => {
+            console.log("From database", doc);
+            if (doc) {
+                // Success response
+                res.status(200).json({
+                    _id: doc._id,
+                    username: doc.name,
+                    success: true
+                });
+            } else {
+                // ID does not exist
+                res.status(200).json({ success: false });
+            }
+        }).catch(err => {
+            console.log(err);
+            // Failure response
+            res.status(200).json({ success: false });
+        });
+}
+
 exports.users_register_user = (req, res, next) => {
     const user = new User({
         _id: new mongoose.Types.ObjectId(),
@@ -172,7 +196,7 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             if (user.length < 1) {
                 return res.status(201).json({
-                    messsage: 'Login failed',
+                    message: 'Login failed',
                     success: false
                 });
             }
@@ -180,7 +204,7 @@ exports.users_login = (req, res, next) => {
                 if (err) {
                     console.log(err);
                     return res.status(201).json({
-                        messsage: 'Login failed',
+                        message: 'Login failed',
                         success: false
                     });
                 }

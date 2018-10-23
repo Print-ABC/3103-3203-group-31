@@ -21,30 +21,27 @@ import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import common.SessionHandler;
 
 public class FriendListFragment extends Fragment {
-    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
-            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla","Albert Einstein","Michael Faraday","Galileo Galilei",
-            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
-
-    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
-            "RP","NTU","SIT","SIT","NYP","SIT","SMU",
-            "RP","NTU","SIT","SIT"};
+    private List<String> friend = SessionHandler.getSessionUserObj().getFriendship();
     private ArrayList<FriendsModel> mFriends;
     private RecyclerView mSFriendsRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
     private ListView lvNC;
-
     ArrayAdapter<String> adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mFriends = new ArrayList<>();
-        for(int i =0;i<friendNames.length;i++){
+        for(int i = 0; i < friend.size(); i++){
+            String str[] = friend.get(i).split(",");
             FriendsModel friends = new FriendsModel();
-            friends.setName(friendNames[i]);
-            friends.setSchool(schools[i]);
+            friends.setUID(str[0]);
+            friends.setName(str[1]);
+            friends.setUsername(str[2]);
             mFriends.add(friends);
         }
     }
@@ -66,9 +63,9 @@ public class FriendListFragment extends Fragment {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
         View row = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_row_items, null);
         lvNC = (ListView)row.findViewById(R.id.lvNamecards);
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, friendNames);
-        lvNC.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        //adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, friendNames);
+        //lvNC.setAdapter(adapter);
+        //adapter.notifyDataSetChanged();
         alertDialog.setView(row);
         AlertDialog dialog = alertDialog.create();
         dialog.show();
@@ -89,16 +86,17 @@ public class FriendListFragment extends Fragment {
     private class FriendsHolder extends RecyclerView.ViewHolder{
 
         private FriendsModel mFriends;
-        public TextView mNameTextView, mSchoolTextView;
         public ImageButton btnSend, btnDelete;
+        public TextView mNameTextView, mUsernameTextView;
 
         public FriendsHolder(View itemView){
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
-            mSchoolTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_school);
             btnSend = (ImageButton) itemView.findViewById(R.id.btnSend);
             btnDelete = (ImageButton) itemView.findViewById(R.id.btnDelete);
+
 /*
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,7 +120,7 @@ public class FriendListFragment extends Fragment {
         public void bindData(FriendsModel s){
             mFriends = s;
             mNameTextView.setText(s.getName());
-            mSchoolTextView.setText(s.getSchool());
+            mUsernameTextView.setText("Username : " + s.getUsername());
         }
     }
     private class FriendsAdapter extends RecyclerView.Adapter<FriendListFragment.FriendsHolder>{

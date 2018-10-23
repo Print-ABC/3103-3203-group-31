@@ -16,6 +16,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_profile">Profile</string>
     <string name="title_logout">Logout</string>
+    <string name="title_card_list">Card List</string>
 
     <!-- Register Error Messages -->
     <string name="empty_email_error">Please enter an email address</string>
@@ -38,6 +39,7 @@
     <!-- XML attributes -->
     <color name="black">#000000</color>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Strings -->
+    <string name="sit_name">Singapore Institute of Technology</string>
+
 </resources>

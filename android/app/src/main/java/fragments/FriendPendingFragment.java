@@ -36,7 +36,7 @@ public class FriendPendingFragment extends Fragment {
         for(int i =0;i<friendNames.length;i++){
             FriendsModel friends = new FriendsModel();
             friends.setName(friendNames[i]);
-            friends.setSchool(schools[i]);
+            friends.setUsername(schools[i]);
             mFriends.add(friends);
         }
     }
@@ -78,7 +78,7 @@ public class FriendPendingFragment extends Fragment {
         public void bindData(FriendsModel s){
             mFriends = s;
             mNameTextView.setText(s.getName());
-            mSchoolTextView.setText(s.getSchool());
+            mSchoolTextView.setText(s.getUsername());
         }
     }
     private class FriendsAdapter extends RecyclerView.Adapter<FriendPendingFragment.FriendsHolder>{

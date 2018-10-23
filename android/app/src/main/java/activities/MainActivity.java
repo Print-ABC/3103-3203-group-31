@@ -1,16 +1,18 @@
 package activities;
 
 import android.content.Intent;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.ncshare.ncshare.R;
 
 import common.SessionHandler;
 import common.Utils;
@@ -19,8 +21,6 @@ import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NameCardListFragment;
 import models.Session;
-
-import com.ncshare.ncshare.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_cards:
                     selectedFragment = new NameCardListFragment();
-                    getSupportActionBar().setTitle("Name Cards");
+                    getSupportActionBar().setTitle("View Name Cards");
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
