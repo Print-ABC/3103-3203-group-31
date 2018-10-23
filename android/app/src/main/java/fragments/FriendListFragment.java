@@ -20,32 +20,21 @@ import common.SessionHandler;
 
 public class FriendListFragment extends Fragment {
     private List<String> friend = SessionHandler.getSessionUserObj().getFriendship();
-//    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
-//            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
-//
-//    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
-//            "RP","NTU","SIT","SIT"};
     private ArrayList<FriendsModel> mFriends;
     private RecyclerView mSFriendsRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
-    public String user_friend_id = "";
-    public String user_friends;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mFriends = new ArrayList<>();
-//        for(int i =0;i<friendNames.length;i++){
-//            FriendsModel friends = new FriendsModel();
-//            friends.setName(friendNames[i]);
-//            friends.setSchool(schools[i]);
-//            mFriends.add(friends);
-//        }
         for(int i = 0; i < friend.size(); i++){
+            String str[] = friend.get(i).split(",");
             FriendsModel friends = new FriendsModel();
-            friends.setName(friend.get(i));
-            friends.setSchool("Test School");
+            friends.setUID(str[0]);
+            friends.setName(str[1]);
+            friends.setUsername(str[2]);
             mFriends.add(friends);
         }
     }
@@ -69,12 +58,12 @@ public class FriendListFragment extends Fragment {
     private class FriendsHolder extends RecyclerView.ViewHolder{
 
         private FriendsModel mFriends;
-        public TextView mNameTextView, mSchoolTextView;
+        public TextView mNameTextView, mUsernameTextView;
         public FriendsHolder(View itemView){
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
-            mSchoolTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_school);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,7 +76,7 @@ public class FriendListFragment extends Fragment {
         public void bindData(FriendsModel s){
             mFriends = s;
             mNameTextView.setText(s.getName());
-            mSchoolTextView.setText(s.getSchool());
+            mUsernameTextView.setText("Username : " + s.getUsername());
         }
     }
     private class FriendsAdapter extends RecyclerView.Adapter<FriendListFragment.FriendsHolder>{
