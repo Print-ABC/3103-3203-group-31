@@ -196,7 +196,7 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             if (user.length < 1) {
                 return res.status(201).json({
-                    messsage: 'Login failed',
+                    message: 'Login failed',
                     success: false
                 });
             }
@@ -204,7 +204,7 @@ exports.users_login = (req, res, next) => {
                 if (err) {
                     console.log(err);
                     return res.status(201).json({
-                        messsage: 'Login failed',
+                        message: 'Login failed',
                         success: false
                     });
                 }
