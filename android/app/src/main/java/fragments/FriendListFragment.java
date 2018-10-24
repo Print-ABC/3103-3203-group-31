@@ -137,7 +137,7 @@ public class FriendListFragment extends Fragment {
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
-            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_username);
             btnSend = (ImageButton) itemView.findViewById(R.id.btnSend);
             btnDelete = (ImageButton) itemView.findViewById(R.id.btnDelete);
 

@@ -11,14 +11,15 @@
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:textStyle="bold"/>
+
+
     <TextView
-        android:id="@+id/friends_school"
-        android:paddingLeft="10dp"
-        android:textSize="16dp"
+        android:id="@+id/friends_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friends_name"/>
-
+        android:layout_below="@id/friends_name"
+        android:paddingLeft="10dp"
+        android:textSize="16dp" />
 
     <ImageButton
         android:id="@+id/btnDelete"

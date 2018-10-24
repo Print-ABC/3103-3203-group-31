@@ -37,6 +37,7 @@ exports.users_get_cards_info = (req, res) => {
         })
     }
 }
+
 function checkOrgCard(cardId) {
     const promise = Organization.findById(cardId).exec();
     return promise;

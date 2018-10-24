@@ -6,7 +6,7 @@ const config = require('../../config/config');
 
 //GET: Retrieve requests with the given requester uid
 exports.friend_get_requests_requester = (req, res, next) => {
-  Friend.find( {'requester': req.params.uid}, function (err, docs){
+  Friend.find( {'requester_id': req.params.uid}, function (err, docs){
     if(err) {
       console.log(err);
       res.status(500).json( {error: err} );
@@ -17,7 +17,7 @@ exports.friend_get_requests_requester = (req, res, next) => {
 
 //GET: Retrieve requests with the given recipient uid
 exports.friend_get_requests_recipient = (req, res, next) => {
-  Friend.find( {'recipient': req.params.uid}, function (err, docs){
+  Friend.find( {'recipient_id': req.params.uid}, function (err, docs){
     if(err) {
       console.log(err);
       res.status(500).json( {error: err} );
@@ -32,22 +32,24 @@ exports.friend_post_request = (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       requester_id: req.body.requester_id,
       requester: req.body.requester,
+	  requester_username: req.body.requester_username,
       recipient_id: req.body.recipient_id,
-      recipient: req.body.recipient
+      recipient: req.body.recipient,
+	  recipient_username: req.body.recipient_username
     }
   );
   request.save()
         .then(result => {
           console.log(result);
           res.status(201).json({
-            message: 'User created successfully',
+            message: 'Friend request created successfully',
             success: true});
         })
         .catch(err => {
           console.log(err);
           res.status(201).json({
             error: err,
-            message: "Failed to create user",
+            message: "Failed to create friend request",
             success: false
           });
         });

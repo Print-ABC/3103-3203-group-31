@@ -1,6 +1,7 @@
 package fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,31 +15,45 @@ import com.ncshare.ncshare.FriendsModel;
 import com.ncshare.ncshare.R;
 import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import common.SessionHandler;
+import models.FriendRequest;
+import models.Session;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.RetrofitClient;
 
 public class FriendPendingFragment extends Fragment {
-
-    private String[] friendNames = {"Marie Curie","Thomas Edison","Albert Einstein","Michael Faraday","Galileo Galilei",
-            "Stephen Hawking","Johannes Kepler","Issac Newton","Nikola Tesla"};
-
-    private String[] schools = {"SIT","TP","NYP","SIT","SMU",
-            "RP","NTU","SIT","SIT"};
     private ArrayList<FriendsModel> mFriends;
     private RecyclerView mSFriendsRecyclerView;
     private FriendPendingFragment.FriendsAdapter mAdapter;
-    public String user_friend_id = "";
-    public String user_friends;
+    private Session mSession;
+    private List<FriendRequest> requests;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSession = SessionHandler.getSession();
+
+        Call<List<FriendRequest>> call = RetrofitClient
+                .getInstance()
+                .getFriendRequestApi()
+                .getByRecipientID(mSession.getUser().getUid());
+        call.enqueue(new Callback<List<FriendRequest>>() {
+            @Override
+            public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
+                requests = response.body();
+            }
+            @Override
+            public void onFailure(Call<List<FriendRequest>> call, Throwable t) {}
+        });
+
         mFriends = new ArrayList<>();
-        for(int i =0;i<friendNames.length;i++){
-            FriendsModel friends = new FriendsModel();
-            friends.setName(friendNames[i]);
-            friends.setUsername(schools[i]);
-            mFriends.add(friends);
-        }
     }
 
     @Override
@@ -48,24 +63,37 @@ public class FriendPendingFragment extends Fragment {
         mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateUI();
+            }
+        }, 1500);
         return view;
     }
 
-    private void updateUI(){
+    private void updateUI() {
+        for (int i = 0; i < requests.size(); i++) {
+            FriendsModel friends = new FriendsModel();
+            friends.setName(requests.get(i).getRequester());
+            friends.setUsername(requests.get(i).getRequester_username());
+            mFriends.add(friends);
+        }
+
         mAdapter = new FriendPendingFragment.FriendsAdapter(mFriends);
         mSFriendsRecyclerView.setAdapter(mAdapter);
     }
 
-    private class FriendsHolder extends RecyclerView.ViewHolder{
+    private class FriendsHolder extends RecyclerView.ViewHolder {
 
         private FriendsModel mFriends;
-        public TextView mNameTextView, mSchoolTextView;
-        public FriendsHolder(View itemView){
+        public TextView mNameTextView, mUsernameTextView;
+
+        public FriendsHolder(View itemView) {
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
-            mSchoolTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_username);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,29 +103,35 @@ public class FriendPendingFragment extends Fragment {
                 }
             });
         }
-        public void bindData(FriendsModel s){
+
+        public void bindData(FriendsModel s) {
             mFriends = s;
             mNameTextView.setText(s.getName());
-            mSchoolTextView.setText(s.getUsername());
+            mUsernameTextView.setText(s.getUsername());
         }
     }
-    private class FriendsAdapter extends RecyclerView.Adapter<FriendPendingFragment.FriendsHolder>{
+
+    private class FriendsAdapter extends RecyclerView.Adapter<FriendPendingFragment.FriendsHolder> {
         private ArrayList<FriendsModel> mFriends;
-        public FriendsAdapter(ArrayList<FriendsModel> Friends){
+
+        public FriendsAdapter(ArrayList<FriendsModel> Friends) {
             mFriends = Friends;
         }
+
         @Override
         public FriendPendingFragment.FriendsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.friendlist_requests_items,parent,false);
+            View view = layoutInflater.inflate(R.layout.friendlist_requests_items, parent, false);
             return new FriendPendingFragment.FriendsHolder(view);
 
         }
+
         @Override
         public void onBindViewHolder(FriendPendingFragment.FriendsHolder holder, int position) {
             FriendsModel s = mFriends.get(position);
             holder.bindData(s);
         }
+
         @Override
         public int getItemCount() {
             return mFriends.size();
