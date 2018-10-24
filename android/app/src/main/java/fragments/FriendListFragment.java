@@ -18,8 +18,10 @@ import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import common.SessionHandler;
 import common.Utils;
+import models.Organization;
 import models.Session;
 import models.User;
 import retrofit2.Call;
@@ -29,11 +31,13 @@ import services.RetrofitClient;
 
 public class FriendListFragment extends Fragment {
     private List<String> friend = SessionHandler.getSessionUserObj().getFriendship();
+    private List<String> cards = SessionHandler.getSessionUserObj().getCards();
     private ArrayList<FriendsModel> mFriends;
+    private ArrayList<Organization> mCards;
     private RecyclerView mSFriendsRecyclerView, mSNCRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
     private FriendListFragment.NCAdapter mNCAdapter;
-    private String friendUID, OrgCardID, myUID;
+    private String friendUID, OrgCardID, myCardId; //Selected friend's uid, the selected card's id, and my card Id.
     private Session session;
 
     @Override
@@ -42,9 +46,8 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = SessionHandler.getSession();
         Utils.redirectToLogin(this.getContext());
-
-        myUID = session.getUser().getUid();
-
+        myCardId = session.getUser().getCardId();
+        Log.i("MyCardID", myCardId);
         mFriends = new ArrayList<>();
         for(int i = 0; i < friend.size(); i++){
             String str[] = friend.get(i).split(",");
@@ -53,6 +56,44 @@ public class FriendListFragment extends Fragment {
             friends.setName(str[1]);
             friends.setUsername(str[2]);
             mFriends.add(friends);
+        }
+        mCards = new ArrayList<>();
+        for(int i = 0; i < cards.size(); i++){
+            String cardId = cards.get(i);
+            Log.i("CARD LIST --------", cardId);
+            if (!cardId.equals(myCardId)){
+                Log.i("Compare CardID", "NOPE!");
+                //CALL to get card details by card ID
+                Call<Organization> call = RetrofitClient
+                        .getInstance()
+                        .getOrganizationApi()
+                        .getcardinfo(cardId);
+                call.enqueue(new Callback<Organization>() {
+                    @Override
+                    public void onResponse(Call<Organization> call, Response<Organization> response) {
+                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if(response.body().getSuccess()) {
+                            Log.i("CALL RESPONSE ---------", response.body().getName());
+                            Organization cards = new Organization();
+                            cards.setCardId(response.body().getCardId());
+                            cards.setName(response.body().getName());
+                            cards.setOrganization(response.body().getOrganization());
+                            mCards.add(cards);
+                        }
+                        else{
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Organization> call, Throwable t) {
+                        Log.i("onFailure",t.getMessage());
+                    }
+                });
+                Log.i("CARDS", mCards.toString());
+            }
+            else{
+                Log.i("Compare CardID", "it's my card id!");
+            }
         }
     }
 
@@ -99,13 +140,14 @@ public class FriendListFragment extends Fragment {
             mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_school);
             btnSend = (ImageButton) itemView.findViewById(R.id.btnSend);
             btnDelete = (ImageButton) itemView.findViewById(R.id.btnDelete);
+
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     friendUID = mFriends.getUID();
                     Log.i("Want to send to", friendUID);
-                    Toast.makeText(getActivity(),
-                            mFriends.getName() + " this is clicked!", Toast.LENGTH_SHORT)
+                    Toast.makeText(getActivity(), "You're sending to " +
+                            mFriends.getName(), Toast.LENGTH_SHORT)
                             .show();
                     open_dialog(v);
                 }
@@ -141,14 +183,14 @@ public class FriendListFragment extends Fragment {
     }
 
     private void updateUICard(){
-        mNCAdapter = new FriendListFragment.NCAdapter(mFriends);
+        mNCAdapter = new FriendListFragment.NCAdapter(mCards);
         mSNCRecyclerView.setAdapter(mNCAdapter);
         mNCAdapter.notifyDataSetChanged();
     }
 
     private class NCHolder extends RecyclerView.ViewHolder{
 
-        private FriendsModel mFriends;
+        private Organization mCards;
         public TextView mNameTextView, mOrgTextView;
 
         public NCHolder(View itemView){
@@ -159,8 +201,11 @@ public class FriendListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO get the cardID
-                    OrgCardID = "thisisfortestingpurposes";
+
+                    //get the cardID from the clicked item
+                    OrgCardID = mCards.getCardId();
+
+                    //Update the receiver user's cards array
                     Call<User> callA = RetrofitClient
                             .getInstance()
                             .getUserApi()
@@ -170,9 +215,9 @@ public class FriendListFragment extends Fragment {
                         public void onResponse(Call<User> callA, Response<User> responseA) {
                             Toast.makeText(getContext(), responseA.body().getMessage(), Toast.LENGTH_SHORT).show();
                             if(responseA.body().getSuccess()){
-                                Log.i("onResponseeeee -1","Card SEnt to Friend!");
+                                Log.i("onResponseeeee ------","Card SEnt to Friend!");
                             } else {
-                                Log.i("onResponseeeee -1","Card NOT sent to friend!");
+                                Log.i("onResponseeeee --------","Card NOT sent to friend!");
                             }
                         }
                         @Override
@@ -183,16 +228,16 @@ public class FriendListFragment extends Fragment {
                 }
             });
         }
-        public void bindData(FriendsModel s){
-            mFriends = s;
+        public void bindData(Organization s){
+            mCards = s;
             mNameTextView.setText(s.getName());
-            mOrgTextView.setText("Username : " + s.getUsername());
+            mOrgTextView.setText(s.getOrganization());
         }
     }
     private class NCAdapter extends RecyclerView.Adapter<FriendListFragment.NCHolder>{
-        private ArrayList<FriendsModel> mFriends;
-        public NCAdapter(ArrayList<FriendsModel> Friends){
-            mFriends = Friends;
+        private ArrayList<Organization> mCards;
+        public NCAdapter(ArrayList<Organization> Cards){
+            mCards = Cards;
         }
         @Override
         public FriendListFragment.NCHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -203,12 +248,13 @@ public class FriendListFragment extends Fragment {
         }
         @Override
         public void onBindViewHolder(FriendListFragment.NCHolder holder, int position) {
-            FriendsModel s = mFriends.get(position);
+            Organization s = mCards.get(position);
             holder.bindData(s);
         }
         @Override
         public int getItemCount() {
-            return mFriends.size();
+            Log.i("ITEM count ------", String.valueOf(mCards.size()));
+            return mCards.size();
         }
     }
 }

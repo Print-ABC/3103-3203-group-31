@@ -41,7 +41,7 @@ exports.org_create_card = (req, res, next) => {
                     success: true
                 });
               }
-            )    
+            )
         })
         .catch(err => {
             console.log(err);
@@ -102,11 +102,21 @@ exports.org_get_one = (req, res, next) => {
                 });
             }
             res.status(200).json({
-                organization: organization
+                message: 'From collections',
+                success: true,
+                organization: organization.organization,
+                _id: organization._id,
+                uid: organization.uid,
+                name: organization.name,
+                email: organization.email,
+                contact: organization.contact,
+                jobTitle: organization.jobTitle
             });
         })
         .catch(err => {
             res.status(500).json({
+                success : false,
+                message: 'error retrieving from collections',
                 error: err
             });
         });
