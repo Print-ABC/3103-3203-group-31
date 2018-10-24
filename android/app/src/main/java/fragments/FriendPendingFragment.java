@@ -49,8 +49,10 @@ public class FriendPendingFragment extends Fragment {
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
                 mFriendRequestList.addAll(response.body());
             }
+
             @Override
-            public void onFailure(Call<List<FriendRequest>> call, Throwable t) {}
+            public void onFailure(Call<List<FriendRequest>> call, Throwable t) {
+            }
         });
     }
 
@@ -77,7 +79,7 @@ public class FriendPendingFragment extends Fragment {
 
     private class FriendsHolder extends RecyclerView.ViewHolder {
 
-        private FriendRequest mFriendRequests;
+        private FriendRequest mFriendRequest;
         public TextView mNameTextView, mUsernameTextView;
         public ImageButton mConfirmBtn, mRejectBtn;
 
@@ -92,46 +94,86 @@ public class FriendPendingFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getActivity(),
-                            mFriendRequests.getRequester() + " clicked!", Toast.LENGTH_SHORT)
+                            mFriendRequest.getRequester() + " clicked!", Toast.LENGTH_SHORT)
                             .show();
                 }
             });
         }
 
-        public void bindData(FriendRequest s) {
-            mFriendRequests = s;
-            mNameTextView.setText(s.getRequester());
-            mUsernameTextView.setText("Username : " + s.getRequester_username());
-            btnRejectOnClickListener(s, s.get_id());
+        public void bindData(FriendRequest req) {
+            mFriendRequest = req;
+            mNameTextView.setText(req.getRequester());
+            mUsernameTextView.setText("Username : " + req.getRequester_username());
+            btnConfirmOnClickListener(req);
+            btnRejectOnClickListener(req);
         }
 
-        public void btnConfirmOnClickListener(FriendRequest request){
+        public void btnConfirmOnClickListener(final FriendRequest req) {
             mConfirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //
+                    // Add requester to friend list
+                    Call<FriendRequest> call = RetrofitClient
+                            .getInstance()
+                            .getFriendRequestApi()
+                            .addFriend(req.getRecipient_id(),
+                                    req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
+                    call.enqueue(new Callback<FriendRequest>() {
+                        @Override
+                        public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
+                        }
+
+                        @Override
+                        public void onFailure(Call<FriendRequest> call, Throwable t) {
+                        }
+                    });
+                    // Add yourself to requester's friend list
+                    Call<FriendRequest> call2 = RetrofitClient
+                            .getInstance()
+                            .getFriendRequestApi()
+                            .addFriend(req.getRequester_id(),
+                                    req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username());
+                    call2.enqueue(new Callback<FriendRequest>() {
+                        @Override
+                        public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
+                            Toast.makeText(getActivity(), "Friend added", Toast.LENGTH_SHORT).show();
+                            mFriendRequestList.remove(req);
+                            mAdapter.notifyDataSetChanged();
+                            removeReqCall(req);
+                        }
+
+                        @Override
+                        public void onFailure(Call<FriendRequest> call, Throwable t) {
+                        }
+                    });
                 }
             });
         }
 
-        public void btnRejectOnClickListener(final FriendRequest request, final String id){
+        public void btnRejectOnClickListener(final FriendRequest req) {
             mRejectBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Call<FriendRequest> call = RetrofitClient
-                            .getInstance()
-                            .getFriendRequestApi()
-                            .deleteRequest(id);
-                    call.enqueue(new Callback<FriendRequest>() {
-                        @Override
-                        public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
-                            Toast.makeText(getActivity(), "Friend request deleted", Toast.LENGTH_SHORT).show();
-                            mFriendRequestList.remove(request);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                        @Override
-                        public void onFailure(Call call, Throwable t) {}
-                    });
+                    removeReqCall(req);
+                    Toast.makeText(getActivity(), "Friend request deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        public void removeReqCall(final FriendRequest req) {
+            Call<FriendRequest> call = RetrofitClient
+                    .getInstance()
+                    .getFriendRequestApi()
+                    .deleteRequest(req.get_id());
+            call.enqueue(new Callback<FriendRequest>() {
+                @Override
+                public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
+                    mFriendRequestList.remove(req);
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
                 }
             });
         }
