@@ -1,5 +1,6 @@
 package services;
 
+import models.DummyResponse;
 import models.Result;
 import models.User;
 import models.CardList;
@@ -30,7 +31,7 @@ public interface UserService {
     Call<Result> addUser(@Body User body);
 
     @POST("users/login")
-    Call<User> login(@Body User body);
+    Call<DummyResponse> login(@Body User body);
 
     @POST("users/user")
     Call<User> retrieve(@Query("id") String user_id);

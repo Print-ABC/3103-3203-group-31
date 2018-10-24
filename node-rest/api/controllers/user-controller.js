@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Organization = require('../models/Organization');
 const Student = require('../models/Student');
 const config = require('../../config/config');
+const utils = require('../../common/Utils');
 
 
 exports.users_get_cards_info = (req, res) => {
@@ -180,25 +181,33 @@ exports.users_login = (req, res, next) => {
                     });
                 }
                 if (result) {
-                    console.log(user[0]);
-                    const token = jwt.sign({
-                        username: user[0].username,
-                        uid: user[0]._id
-                    }, config.secret, {
-                            expiresIn: "1h"
-                        });
                     // Get card ID of user if available
                     const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
-                        res.status(200).json({
-                            message: 'Login successful',
-                            token: token,
+                        var token = jwt.sign({
                             cardId: cardId,
-							name: user[0].name,
+                            name: user[0].name,
                             username: user[0].username,
                             friendship: user[0].friendship,
                             cards: user[0].cards,
                             uid: user[0]._id,
-                            role: user[0].role,
+                            role: user[0].role
+                        }, config.secret, {
+                                expiresIn: "1h"
+                        });
+
+                        const fakeToken = utils.manipulateToken(token);
+                        const parts = fakeToken.split('.');
+                        headerLength = parts[0].length;
+                        payLoadLength = parts[1].length;
+                        signatureLength = parts[2].length;
+
+                        res.status(200).json({
+                            message: 'Login successful',
+                            token: token,
+                            welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                            to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                            team: fakeToken,
+                            thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                             success: true
                         });
                     })
@@ -359,4 +368,20 @@ exports.users_find_cards = (req, res, next) => {
       res.status(500).json({ error: err });
   });
 
+}
+
+/**
+     * {JSDoc}
+     *
+     * The splice() method changes the content of a string by removing a range of
+     * characters and/or adding new characters.
+     *
+     * @this {String}
+     * @param {number} start Index at which to start changing the string.
+     * @param {number} delCount An integer indicating the number of old chars to remove.
+     * @param {string} newSubStr The String that is spliced in.
+     * @return {string} A new string with the spliced substring.
+     */
+String.prototype.splice = function (idx, rem, str) {
+    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
 }

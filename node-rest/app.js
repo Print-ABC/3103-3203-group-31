@@ -31,11 +31,17 @@ const studentsRoutes = require('./api/routes/students');
 const friendsRoutes = require('./api/routes/friends');
 
 // DB connection
+//mongoose.connect('mongodb://127.0.0.1:27017',
+//    {
+//        useNewUrlParser: true
+//    });
+
+// Atlas Connection
 mongoose.connect('mongodb://xjustus:' + process.env.MONGO_ATLAS_PW +
-        '@ncshare-shard-00-00-ng4qy.mongodb.net:27017,ncshare-shard-00-01-ng4qy.mongodb.net:27017,ncshare-shard-00-02-ng4qy.mongodb.net:27017/test?ssl=true&replicaSet=ncshare-shard-0&authSource=admin&retryWrites=true',
-        {
-            useNewUrlParser: true
-        });
+    '@ncshare-shard-00-00-ng4qy.mongodb.net:27017,ncshare-shard-00-01-ng4qy.mongodb.net:27017,ncshare-shard-00-02-ng4qy.mongodb.net:27017/test?ssl=true&replicaSet=ncshare-shard-0&authSource=admin&retryWrites=true',
+    {
+        useNewUrlParser: true
+    });
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));

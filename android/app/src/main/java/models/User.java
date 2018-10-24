@@ -3,6 +3,7 @@ package models;
 
 import java.util.Date;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -47,6 +48,30 @@ public class User {
     @SerializedName("cards")
     @Expose
     private List<String> cards = null;
+    @SerializedName("iat")
+    @Expose
+    private String iat;
+
+    public String getIat() {
+        return iat;
+    }
+
+    public void setIat(String iat) {
+        this.iat = iat;
+    }
+
+    public String getExp() {
+        return exp;
+    }
+
+    public void setExp(String exp) {
+        this.exp = exp;
+    }
+
+    @SerializedName("exp")
+    @Expose
+
+    private String exp;
 
     public String getMessage() { return message; }
 

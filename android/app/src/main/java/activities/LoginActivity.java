@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ncshare.ncshare.R;
 
+import common.SecurityUtils;
 import common.SessionHandler;
+import models.DummyResponse;
 import models.Session;
 import models.User;
 import retrofit2.Call;
@@ -90,28 +93,36 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User();
         user.setPassword(password);
         user.setUsername(username);
-        Call<User> call = RetrofitClient
+        Call<DummyResponse> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
                 .login(user);
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<DummyResponse>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
                 Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
-                if(response.body().getSuccess()){
+                if (response.body().getSuccess()) {
                     tvLoginError.setVisibility(View.INVISIBLE);
-                    SessionHandler.loginUser(response.body().getUid(), response.body().getName(), response.body().getUsername(), response.body().getToken(), response.body().getRole(),
-                            response.body().getCardId(), response.body().getFriendship(), response.body().getCards());
-                    directToMain();
+                    try {
+                        String jsonResponse = SecurityUtils.decoded(SecurityUtils.manipulateToken(response.body().getToken()));
+                        Gson g = new Gson();
+                        User user = g.fromJson(jsonResponse, User.class);
+                        SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), user.getToken(), user.getRole(),
+                                user.getCardId(), user.getFriendship(), user.getCards());
+                        directToMain();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     tvLoginError.setText(response.body().getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<DummyResponse> call, Throwable t) {
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
             }
