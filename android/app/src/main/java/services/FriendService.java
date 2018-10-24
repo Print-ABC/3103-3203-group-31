@@ -11,25 +11,25 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface FriendService {
-    @GET(".")
+    @GET("friends/")
     Call<List<FriendRequest>> getAllRequests();
 
-    @GET("req/{uid}")
+    @GET("friends/req/{uid}")
     Call<List<FriendRequest>> getByRequesterID(@Path("uid") String uid);
 
-    @GET("recp/{uid}")
+    @GET("friends/recp/{uid}")
     Call<List<FriendRequest>> getByRecipientID(@Path("uid") String uid);
 
-    @POST(".")
+    @POST("friends/")
     Call<FriendRequest> createRequest(@Body FriendRequest body);
 
-    @PATCH("{uid}/add/{friend}")
+    @PATCH("friends/{uid}/add/{friend}")
     Call<FriendRequest> addFriend(@Path("uid") String uid, @Path("friend") String friend);
 
-    @PATCH("{uid}/del/{friend}")
+    @PATCH("friends/{uid}/del/{friend}")
     Call<FriendRequest> deleteFriend(@Path("uid") String uid, @Path("friend") String friend);
 
-    @DELETE("{uid}")
+    @DELETE("friends/{uid}")
     Call<FriendRequest> deleteRequest(@Path("uid") String uid);
 
 //    @POST("relationship/relationship")

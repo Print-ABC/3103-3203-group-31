@@ -20,12 +20,15 @@ public class FriendRequest {
     @SerializedName("recipient")
     @Expose
     private String recipient;
-//    @SerializedName("friend_status")
-//    @Expose
-//    private String friendStatus;
-//    @SerializedName("friend_action_uid")
-//    @Expose
-//    private String friendActionUid;
+
+    public FriendRequest() {}
+
+    public FriendRequest(String requester_id, String requester, String recipient_id, String recipient) {
+        this.requester_id = requester_id;
+        this.requester = requester;
+        this.recipient_id = recipient_id;
+        this.recipient = recipient;
+    }
 
     public String getRequester_id() {
         return requester_id;

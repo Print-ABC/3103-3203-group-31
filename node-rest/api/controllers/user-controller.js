@@ -71,14 +71,7 @@ exports.users_get_all = (req, res, next) => {
                     };
                 })
             };
-            // May return empty array if no data, uncomment if need a response
-            //        if (docs.length >= 0){
             res.status(200).json(response);
-            //        } else {
-            //            res.status(404).json({
-            //               message: 'No entries found'
-            //            });
-            //        }
         })
         .catch(err => {
             console.log(err);
@@ -89,27 +82,19 @@ exports.users_get_all = (req, res, next) => {
 }
 
 exports.users_get_username = (req, res, next) => {
-    const id = req.params.uid;
-    User.findById(id)
-        .select('username')
-        .exec()
-        .then(doc => {
-            console.log("From database", doc);
-            if (doc) {
-                // Success response
-                res.status(200).json({
-                    username: doc.username,
-                    success: true
-                });
-            } else {
-                // ID does not exist
-                res.status(200).json({ success: false });
-            }
-        }).catch(err => {
-            console.log(err);
-            // Failure response
-            res.status(200).json({ success: false });
-        });
+    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") }, function(err, doc) {
+      if(err) {
+        console.log(err);
+        res.status(500).json( {error: err} );
+      }
+      res.status(200).json({
+		  uid: doc._id,
+		  name: doc.name,
+		  username: doc.username,
+		  role: doc.role,
+		  email: doc.email
+		  });
+    });
 }
 
 exports.users_get_name = (req, res, next) => {
@@ -155,20 +140,6 @@ exports.users_register_user = (req, res, next) => {
             res.status(201).json({
                 message: 'User created successfully',
                 success: true
-                //createdUser: {
-                //    _id: result._id,
-                //    name: result.name,
-                //    email: result.email,
-                //    contact: result.contact,
-                //    role: result.role,
-                //    password: result.password,
-                //    friendship: result.friendship,
-                //    cards: result.cards,
-                //    request: {
-                //        type: 'GET',
-                //        url: 'http://localhost:' + config.port + '/users/' + result._id
-                //    }
-                //}
             });
         })
         .catch(err => {
@@ -222,6 +193,7 @@ exports.users_login = (req, res, next) => {
                             message: 'Login successful',
                             token: token,
                             cardId: cardId,
+							name: user[0].name,
                             username: user[0].username,
                             friendship: user[0].friendship,
                             cards: user[0].cards,

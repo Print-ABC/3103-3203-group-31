@@ -13,6 +13,16 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
+    @GET("name/{uid}")
+    Call<User> retrieveName(@Path("uid") String user_id);
+
+    @GET("users/username/{username}")
+    Call<User> searchByUsername(@Path("username") String user_username);
+
+    @GET("users/findcards/{uid}/{card}")
+        //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
+    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
+
     @POST("users/cards")
     Call<CardList> getCards(@Header("Authorization") String token, @Body CardList cards);
 
@@ -27,14 +37,4 @@ public interface UserService {
 
     @POST("users/retrieveFUID")
     Call<User> retrieveFUID(@Query("id") String user_friend_id);
-
-    @POST("users/retrieveByUsername")
-    Call<User> retrieveByUsername(@Query("id") String user_username);
-
-    @GET("users/findcards/{uid}/{card}")
-    //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
-    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
-
-    @GET("name/{uid}")
-    Call<User> retrieveName(@Path("uid") String user_id);
 }

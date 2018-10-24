@@ -9,9 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
+import common.SessionHandler;
+import models.FriendRequest;
+import models.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +28,7 @@ public class FriendSearchFragment extends Fragment {
     private TextView tvName, tvEmail;
     private Button btnAdd;
     private ImageButton btnSearch;
+    private Session session;
 
     public FriendSearchFragment() {
     }
@@ -43,6 +48,7 @@ public class FriendSearchFragment extends Fragment {
         tvEmail = (TextView) view.findViewById(R.id.tvFEmail);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
+        session = SessionHandler.getSession();
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,17 +56,19 @@ public class FriendSearchFragment extends Fragment {
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .retrieveByUsername(etUsername.getText().toString());
+                        .searchByUsername(etUsername.getText().toString());
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        response.body();
-                        String user_name = response.body().getName();
-                        String user_email = response.body().getEmail();
-                        tvName.setText(user_name);
-                        tvEmail.setText(user_email);
-                        btnAdd.setVisibility(View.VISIBLE);
-                        //TODO need check if already added or not
+                        try{
+                            tvName.setText(response.body().getName());
+                            tvEmail.setText(response.body().getEmail());
+                            btnAdd.setVisibility(View.VISIBLE);
+                            btnAddOnClickListener(response.body().getUid(), response.body().getName());
+                            //TODO need check if already added or not
+                        } catch (NullPointerException ex) {
+                            Toast.makeText(getActivity(), "User is not found", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -70,6 +78,29 @@ public class FriendSearchFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void btnAddOnClickListener(final String fuid, final String friendName){
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<FriendRequest> call = RetrofitClient
+                        .getInstance()
+                        .getFriendRequestApi()
+                        .createRequest(new FriendRequest(session.getUser().getUid(), session.getUser().getName(), fuid, friendName));
+                call.enqueue(new Callback<FriendRequest>() {
+                    @Override
+                    public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
+                        Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<FriendRequest> call, Throwable t) {
+                        Toast.makeText(getActivity(), "Error. Please try again", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
 }

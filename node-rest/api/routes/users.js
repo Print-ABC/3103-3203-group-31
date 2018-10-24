@@ -27,7 +27,7 @@ router.delete('/:uid', checkAuth, UserController.users_delete_one);
 router.patch("/:uid", checkAuth, UserController.users_update_one);
 
 // Gets username of a specific user
-router.get("/username/:uid", checkAuth, UserController.users_get_username);
+router.get("/username/:username", UserController.users_get_username);
 
 // Gets name of a specific user
 router.get('/name/:uid', UserController.users_get_name);

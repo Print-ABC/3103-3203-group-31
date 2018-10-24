@@ -60,9 +60,11 @@ public class SessionHandler {
      * Logs in the user by saving user details and setting session
      * @param role
      */
-    public static void loginUser(String uid, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
+    public static void loginUser(String uid, String name, String username, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
         User user = new User();
         user.setUid(uid);
+        user.setName(name);
+        user.setUsername(username);
         user.setToken(token);
         user.setRole(role);
         user.setCardId(cardId);
