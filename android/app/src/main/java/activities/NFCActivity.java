@@ -61,7 +61,7 @@ public class NFCActivity extends AppCompatActivity
         myCard = session.getCardId();
 
         if (myCard == null){
-            myCard = "thisisfortestingpurposes";
+            myCard = "";
         }
 
         Log.i("myUid", myUid);
@@ -73,11 +73,11 @@ public class NFCActivity extends AppCompatActivity
         messagesToSendArray.add(myCard);
 
         //Check if the user has a Card ID
-        //If don't have, bring to create name card fragment.
-        if(messagesToSendArray.size()<3){
+        //If don't have, bring back to home fragment(main activity)
+        if(messagesToSendArray.get(2)==""){
             Toast.makeText(this, "No card id detected!", Toast.LENGTH_SHORT).show();
-            Fragment createNC = new CreateNCFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, createNC).commit();
+            Intent intent = new Intent(NFCActivity.this, MainActivity.class);
+            startActivity(intent);
 
         }
 

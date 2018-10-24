@@ -104,7 +104,7 @@
                 android:id="@+id/tvLoginError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="center"
                 android:paddingTop="5dp"
                 android:textColor="#800000"/>
         </LinearLayout>
