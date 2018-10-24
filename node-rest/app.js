@@ -62,11 +62,14 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500);
+    res.status(201);
+    //TODO: remove before production
+    console.log(error.message);
     res.json({
         error: {
-            message: error.message,
-            sucess: false
+            welcome: 'to',
+            team : 31,
+            success: false
         }
     });
 });
