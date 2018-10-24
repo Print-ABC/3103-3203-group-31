@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class FriendRequest {
 
+    @SerializedName("_id")
+    @Expose
+    private String _id;
     @SerializedName("requester_id")
     @Expose
     private String requester_id;
@@ -34,6 +37,14 @@ public class FriendRequest {
         this.recipient_id = recipient_id;
         this.recipient = recipient;
         this.recipient_username = recipient_username;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getRequester_id() {

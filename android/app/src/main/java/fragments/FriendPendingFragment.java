@@ -8,14 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ncshare.ncshare.FriendsModel;
 import com.ncshare.ncshare.R;
 import com.ncshare.ncshare.SimpleDividerItemDecoration;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +27,18 @@ import retrofit2.Response;
 import services.RetrofitClient;
 
 public class FriendPendingFragment extends Fragment {
-    private ArrayList<FriendsModel> mFriends;
+    private ArrayList<FriendRequest> mFriendRequestList;
     private RecyclerView mSFriendsRecyclerView;
     private FriendPendingFragment.FriendsAdapter mAdapter;
     private Session mSession;
-    private List<FriendRequest> requests;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mSession = SessionHandler.getSession();
+        mFriendRequestList = new ArrayList<>();
+        mFriendRequestList.clear();
 
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
@@ -47,13 +47,11 @@ public class FriendPendingFragment extends Fragment {
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
-                requests = response.body();
+                mFriendRequestList.addAll(response.body());
             }
             @Override
             public void onFailure(Call<List<FriendRequest>> call, Throwable t) {}
         });
-
-        mFriends = new ArrayList<>();
     }
 
     @Override
@@ -73,49 +71,77 @@ public class FriendPendingFragment extends Fragment {
     }
 
     private void updateUI() {
-        for (int i = 0; i < requests.size(); i++) {
-            FriendsModel friends = new FriendsModel();
-            friends.setName(requests.get(i).getRequester());
-            friends.setUsername(requests.get(i).getRequester_username());
-            mFriends.add(friends);
-        }
-
-        mAdapter = new FriendPendingFragment.FriendsAdapter(mFriends);
+        mAdapter = new FriendPendingFragment.FriendsAdapter(mFriendRequestList);
         mSFriendsRecyclerView.setAdapter(mAdapter);
     }
 
     private class FriendsHolder extends RecyclerView.ViewHolder {
 
-        private FriendsModel mFriends;
+        private FriendRequest mFriendRequests;
         public TextView mNameTextView, mUsernameTextView;
+        public ImageButton mConfirmBtn, mRejectBtn;
 
         public FriendsHolder(View itemView) {
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
             mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_username);
+            mConfirmBtn = (ImageButton) itemView.findViewById(R.id.btnCfm);
+            mRejectBtn = (ImageButton) itemView.findViewById(R.id.btnRej);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getActivity(),
-                            mFriends.getName() + " clicked!", Toast.LENGTH_SHORT)
+                            mFriendRequests.getRequester() + " clicked!", Toast.LENGTH_SHORT)
                             .show();
                 }
             });
         }
 
-        public void bindData(FriendsModel s) {
-            mFriends = s;
-            mNameTextView.setText(s.getName());
-            mUsernameTextView.setText(s.getUsername());
+        public void bindData(FriendRequest s) {
+            mFriendRequests = s;
+            mNameTextView.setText(s.getRequester());
+            mUsernameTextView.setText("Username : " + s.getRequester_username());
+            btnRejectOnClickListener(s, s.get_id());
+        }
+
+        public void btnConfirmOnClickListener(FriendRequest request){
+            mConfirmBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //
+                }
+            });
+        }
+
+        public void btnRejectOnClickListener(final FriendRequest request, final String id){
+            mRejectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Call<FriendRequest> call = RetrofitClient
+                            .getInstance()
+                            .getFriendRequestApi()
+                            .deleteRequest(id);
+                    call.enqueue(new Callback<FriendRequest>() {
+                        @Override
+                        public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
+                            Toast.makeText(getActivity(), "Friend request deleted", Toast.LENGTH_SHORT).show();
+                            mFriendRequestList.remove(request);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        @Override
+                        public void onFailure(Call call, Throwable t) {}
+                    });
+                }
+            });
         }
     }
 
     private class FriendsAdapter extends RecyclerView.Adapter<FriendPendingFragment.FriendsHolder> {
-        private ArrayList<FriendsModel> mFriends;
+        private ArrayList<FriendRequest> mFriendRequests;
 
-        public FriendsAdapter(ArrayList<FriendsModel> Friends) {
-            mFriends = Friends;
+        public FriendsAdapter(ArrayList<FriendRequest> requests) {
+            mFriendRequests = requests;
         }
 
         @Override
@@ -123,18 +149,17 @@ public class FriendPendingFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.friendlist_requests_items, parent, false);
             return new FriendPendingFragment.FriendsHolder(view);
-
         }
 
         @Override
         public void onBindViewHolder(FriendPendingFragment.FriendsHolder holder, int position) {
-            FriendsModel s = mFriends.get(position);
+            FriendRequest s = mFriendRequests.get(position);
             holder.bindData(s);
         }
 
         @Override
         public int getItemCount() {
-            return mFriends.size();
+            return mFriendRequests.size();
         }
     }
 }
