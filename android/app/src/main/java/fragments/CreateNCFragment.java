@@ -95,13 +95,21 @@ public class CreateNCFragment extends Fragment {
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
                                 btnCreate.setEnabled(true);
-                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                if (response.body().getSuccess()) {
-                                    session.setCardId(response.body().getCardId());
-                                    getActivity().getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .replace(R.id.fragment_container, new HomeFragment())
-                                            .commit();
+                                switch (response.code()) {
+                                    case 201:
+                                        Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
+                                        session.setCardId(response.body().getCardId());
+                                        getActivity().getSupportFragmentManager()
+                                                .beginTransaction()
+                                                .replace(R.id.fragment_container, new HomeFragment())
+                                                .commit();
+                                        break;
+                                    case 406:
+                                        Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        Toast.makeText(getActivity(), "Failed to create name card", Toast.LENGTH_SHORT).show();
+                                        break;
                                 }
                             }
 
@@ -113,7 +121,7 @@ public class CreateNCFragment extends Fragment {
                         });
                     } else {
                         course = etCourse.getText().toString();
-                        if (course.isEmpty()){
+                        if (course.isEmpty()) {
                             etCourse.setError("Please enter your course");
                             return;
                         }
@@ -133,13 +141,22 @@ public class CreateNCFragment extends Fragment {
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
                                 btnCreate.setEnabled(true);
-                                Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                if (response.body().getSuccess()) {
-                                    session.setCardId(response.body().getCardId());
-                                    getActivity().getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .replace(R.id.fragment_container, new HomeFragment())
-                                            .commit();
+                                switch (response.code()){
+                                    case 201:
+                                        Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
+                                        if (response.body().getSuccess()) {
+                                            session.setCardId(response.body().getCardId());
+                                            getActivity().getSupportFragmentManager()
+                                                    .beginTransaction()
+                                                    .replace(R.id.fragment_container, new HomeFragment())
+                                                    .commit();
+                                        }
+                                        break;
+                                    case 406:
+                                        Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();
+                                    default:
+                                        Toast.makeText(getActivity(), "Failed to create card", Toast.LENGTH_SHORT).show();
+                                        break;
                                 }
                             }
 

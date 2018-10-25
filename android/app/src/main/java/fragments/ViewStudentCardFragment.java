@@ -66,7 +66,6 @@ public class ViewStudentCardFragment extends Fragment {
         // Initialize card list array list
         CardList cardList = new CardList();
         cardList.setCards(session.getUser().getCards());
-        Log.e("Justus", session.getUser().getCards().toString());
 
         // Retrieve user's username
         Call<CardList> call = RetrofitClient
@@ -76,27 +75,29 @@ public class ViewStudentCardFragment extends Fragment {
         call.enqueue(new Callback<CardList>() {
             @Override
             public void onResponse(Call<CardList> call, Response<CardList> response) {
-                if (response.body().getSuccess()) {
-                    CardList cardInfo = response.body();
+                switch (response.code()){
+                    case 200:
+                        CardList cardInfo = response.body();
 
-                    if (cardInfo != null) {
-                        toggleListOn();
+                        if (cardInfo != null) {
+                            toggleListOn();
 
-                        // Get card lists
-                        List<Student> studentCards = cardInfo.getStuCards();
+                            // Get card lists
+                            List<Student> studentCards = cardInfo.getStuCards();
 
-                        if (studentCards == null){
+                            if (studentCards == null){
+                                toggleListOff();
+                                return;
+                            }
+                            updateUI((ArrayList<Student>) studentCards);
+
+                        } else {
                             toggleListOff();
-                            return;
                         }
-
-                        updateUI((ArrayList<Student>) studentCards);
-
-                    } else {
+                        break;
+                    default:
                         toggleListOff();
-                    }
-                } else {
-                    toggleListOff();
+                        break;
                 }
             }
 

@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static okhttp3.logging.HttpLoggingInterceptor.*;
 
 public class RetrofitClient {
+    //TODO: change base URL
     private static final String BASE_URL = "http://10.0.2.2:3000/";
     private Retrofit retrofit;
     private static RetrofitClient retrofitClient;
@@ -34,6 +35,8 @@ public class RetrofitClient {
         }
         return retrofitClient;
         }
+
+
 
     public UserService getUserApi() {
         return retrofit.create(UserService.class);

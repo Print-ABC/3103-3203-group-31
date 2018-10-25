@@ -3,6 +3,7 @@ const config = require('../../config/config');
 
 module.exports = (req, res, next) => {
     try {
+        //TODO: check if token exists in db, return a message to logout user
         const token = req.headers.authorization;
         console.log(token);
         console.log(config.secret);
@@ -11,7 +12,7 @@ module.exports = (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        return res.status(401).json({
+        return res.status(403).json({
             message: 'Auth Failed',
             success: false
         });

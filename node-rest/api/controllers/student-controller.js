@@ -31,28 +31,18 @@ exports.stu_create_card = (req, res, next) => {
                 function (err, docs) {
                     if (err) {
                         console.log(err);
-                        res.status(500).json({ error: err });
+                        res.status(400);
                     }
-                    return res.status(201).json({
-                        message: "Name card successfully created",
-                        cardId: result._id,
-                        success: true
-                    });
+                    return res.status(201);
                 })
 
         })
         .catch(err => {
             console.log(err);
             if (err.errmsg.includes("duplicate")) {
-                return res.status(201).json({
-                    message: 'Name card already exists',
-                    success: false
-                });
+                return res.status(406);
             } else {
-                return res.status(201).json({
-                    message: 'Failed to create name card',
-                    success: false
-                });
+                return res.status(400);
             }
 
 
