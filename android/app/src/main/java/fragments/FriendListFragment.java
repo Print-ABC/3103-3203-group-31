@@ -57,6 +57,7 @@ public class FriendListFragment extends Fragment {
         mFriends = new ArrayList<>();
         mFriends.clear();
         mCards = new ArrayList<>();
+        mCards.clear();
         for(int i = 0; i < cards.size(); i++){
             String cardId = cards.get(i);
             Log.i("CARD LIST --------", cardId);

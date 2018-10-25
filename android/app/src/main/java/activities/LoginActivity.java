@@ -17,6 +17,7 @@ import com.ncshare.ncshare.R;
 
 import common.SecurityUtils;
 import common.SessionHandler;
+import common.Utils;
 import models.DummyResponse;
 import models.Session;
 import models.User;
@@ -111,15 +112,12 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Verification code sent!", Toast.LENGTH_SHORT).show();
                         tvLoginError.setVisibility(View.INVISIBLE);
                         try {
-
-                            //directToMain();
                             open_dialog(v);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        break;
                     default:
-                        Toast.makeText(LoginActivity.this, "Code not sent!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this, "Code not sent!", Toast.LENGTH_SHORT).show();
                         tvLoginError.setText("Login failed");
                         break;
                 }

@@ -28,10 +28,10 @@ exports.users_get_cards_info = (req, res) => {
             )
             .catch(err => {
                 console.log(err);
-                return res.status(400);
+                return res.status(400).json({});
             })
     } else {
-        return res.status(400);
+        return res.status(400).json({});
     }
 }
 
@@ -81,19 +81,18 @@ exports.users_get_all = (req, res, next) => {
 }
 
 exports.users_get_username = (req, res, next) => {
-    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") }, function (err, doc) {
-        if (err) {
-            console.log(err);
-            res.status(500).json({ error: err });
-        }
-        res.status(200).json({
-            uid: doc._id,
-            name: doc.name,
-            username: doc.username,
-            role: doc.role,
-            email: doc.email
-        });
-    });
+    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") })
+		.select('_id name username role')
+		.exec()
+		.then(doc => {
+			if(!doc) {
+				res.status(404).json( doc );
+			}
+			res.status(200).json(doc);
+		})
+		.catch(err => {
+			res.status(500).json(err);
+		});
 }
 
 exports.users_get_name = (req, res, next) => {
@@ -136,16 +135,14 @@ exports.users_register_user = (req, res, next) => {
         .then(result => {
             console.log(result);
             // Success response
-            return res.status(201);
+            return res.status(201).json({});
         })
         .catch(err => {
             console.log(err);
-            if (err.errmsg.includes("duplicate")) {                // Anything other than 201 will crash the client
-                res.status(201).json({
-                    message: 'Username/email already exists',
-                    success: falsec
-                });
-                return res.status(400);
+            if (err.errmsg.includes("duplicate")) {
+                return res.status(409).json({});
+            } else {
+                return res.status(400).json({});
             }
 
         });
@@ -156,6 +153,8 @@ const userArr = new Array();
 
 exports.users_login = (req, res, next) => {
     // check if username exist in User collection
+   tokenArr.pop();
+   userArr.pop();
     const twoFA = rand({alphanumeric: true, length: 10});
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
@@ -164,7 +163,7 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             // If username not found
             if (user.length < 1) {
-                return res.status(401);
+                return res.status(401).json({});
             }
             // Compare input password with stored password
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
@@ -202,12 +201,12 @@ exports.users_login = (req, res, next) => {
                         }
                       });
                 }
-                return res.status(401);
             });
+            return res.status(200).json({});
         })
         .catch(err => {
-            console.log(err);
-            return res.status(401);
+            // console.log(err);
+            return res.status(401).json({});
         });
 }
 
