@@ -72,8 +72,8 @@ public class SessionHandler {
         user.setCards(cards);
         setSessionUserObj(user);
         Date date = new Date();
-        //Set user session for next 30 minutes
-        SessionHandler.session.setMillis(date.getTime() + (1 * 1 * 30 * 60 * 1000));
+        //Set user session for next 20 minutes
+        SessionHandler.session.setMillis(date.getTime() + (1200000));
     }
 
     /**
@@ -90,11 +90,9 @@ public class SessionHandler {
         if (SessionHandler.session.getMillis() == 0) {
             return false;
         }
+
         Date expiryTime = new Date(SessionHandler.session.getMillis());
 
-        /* Check if millis is expired by comparing
-        current date and SessionHandler expiry date
-        */
         return currentDate.before(expiryTime);
     }
 
@@ -121,7 +119,6 @@ public class SessionHandler {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-        Log.e("context", context.toString());
         ((Activity)context).finish();
     }
 }

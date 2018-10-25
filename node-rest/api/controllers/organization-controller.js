@@ -9,10 +9,7 @@ exports.org_create_card = (req, res, next) => {
     User.findById(req.body.uid)
         .then(user => {
             if (!user) {
-                return res.status(201).json({
-                    message: "User does not exists",
-                    success: false
-                });
+                return res.status(400);
             }
             const organization = new Organization({
                 _id: new mongoose.Types.ObjectId(),
@@ -33,12 +30,10 @@ exports.org_create_card = (req, res, next) => {
               function(err, docs) {
                 if (err){
                   console.log(err);
-                  res.status(500).json( {error: err} );
+                  return res.status(400);
                 }
                 return res.status(201).json({
-                    message: "Name card successfully created",
-                    cardId: result._id,
-                    success: true
+                    cardId: result._id
                 });
               }
             )
@@ -46,15 +41,9 @@ exports.org_create_card = (req, res, next) => {
         .catch(err => {
             console.log(err);
             if (err.errmsg.includes("duplicate")) {
-                return res.status(201).json({
-                    success: false,
-                    message: "Name card already exists"
-                });
+                return res.status(406);
             }
-            return res.status(201).json({
-                success: false,
-                message: "Failed to create name card"
-            });
+            return res.status(400);
         });
 
 }

@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 const User = require('../models/User');
 const Organization = require('../models/Organization');
+const ActiveUser = require('../models/ActiveUser');
 const Student = require('../models/Student');
 const config = require('../../config/config');
 const utils = require('../../common/Utils');
@@ -18,23 +19,18 @@ exports.users_get_cards_info = (req, res) => {
         Promise.all([p1, p2])
             .then(result => {
                 console.log(result);
-                res.status(200).json({
-                    success: true,
+                return res.status(200).json({
                     orgCards: result[0],
-                    stuCards:result[1]
+                    stuCards: result[1]
                 })
             }
             )
             .catch(err => {
                 console.log(err);
-                res.status(200).json({
-                    success: false
-                })
+                return res.status(400);
             })
     } else {
-        res.status(200).json({
-            success: false
-        })
+        return res.status(400);
     }
 }
 
@@ -84,18 +80,18 @@ exports.users_get_all = (req, res, next) => {
 }
 
 exports.users_get_username = (req, res, next) => {
-    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") }, function(err, doc) {
-      if(err) {
-        console.log(err);
-        res.status(500).json( {error: err} );
-      }
-      res.status(200).json({
-		  uid: doc._id,
-		  name: doc.name,
-		  username: doc.username,
-		  role: doc.role,
-		  email: doc.email
-		  });
+    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") }, function (err, doc) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: err });
+        }
+        res.status(200).json({
+            uid: doc._id,
+            name: doc.name,
+            username: doc.username,
+            role: doc.role,
+            email: doc.email
+        });
     });
 }
 
@@ -139,50 +135,37 @@ exports.users_register_user = (req, res, next) => {
         .then(result => {
             console.log(result);
             // Success response
-            res.status(201).json({
-                message: 'User created successfully',
-                success: true
-            });
+            return res.status(201);
         })
         .catch(err => {
             console.log(err);
             if (err.errmsg.includes("duplicate")) {
-                // Anything other than 201 will crash the client
-                res.status(201).json({
-                    message: 'Username/email already exists',
-                    success: false
-                });
+                return res.status(409);
             } else {
-                res.status(201).json({
-                    error: err,
-                    message: "Failed to create user",
-                    success: false
-                });
+                return res.status(400);
             }
 
         });
 }
 
 exports.users_login = (req, res, next) => {
+    // check if username exist in User collection
     User.find({ username: req.body.username })
         .exec()
         .then(user => {
+            // If username not found
             if (user.length < 1) {
-                return res.status(201).json({
-                    message: 'Login failed',
-                    success: false
-                });
+                return res.status(401);
             }
+            // Compare input password with stored password
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                // password does not match
                 if (err) {
                     console.log(err);
-                    return res.status(201).json({
-                        message: 'Login failed',
-                        success: false
-                    });
+                    return res.status(401);
                 }
                 if (result) {
-                    // Get card ID of user if available
+                    // Get card ID of user if available, returns "none" if card not created
                     const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
                         var token = jwt.sign({
                             cardId: cardId,
@@ -193,40 +176,67 @@ exports.users_login = (req, res, next) => {
                             uid: user[0]._id,
                             role: user[0].role
                         }, config.secret, {
-                                expiresIn: "1h"
-                        });
+                            // jwt token expires in 20 minutes
+                                expiresIn: config["session-duration"]
+                            });
 
                         const fakeToken = utils.manipulateToken(token);
                         const parts = fakeToken.split('.');
                         headerLength = parts[0].length;
                         payLoadLength = parts[1].length;
                         signatureLength = parts[2].length;
-
-                        res.status(200).json({
-                            message: 'Login successful',
-                            token: token,
+                        // Check if user has logged in before
+                        ActiveUser.findOne({ uid: user[0]._id })
+                            .select('uid token createdAt')
+                            .exec()
+                            .then(active => {
+                                // Has logged in before
+                                if (active) {
+                                    // Check if token has expired
+                                    const diff = Math.abs(new Date() - active.createdAt);
+                                    // Token has expired
+                                    if (diff >= config["session-duration"]) {
+                                        const query = {uid: active.uid};
+                                        // Update current active user field with new token and time
+                                        ActiveUser.update(query, {
+                                            token:token,
+                                            createdAt: new Date()
+                                        }).exec()
+                                        .then()
+                                        .catch(err => {
+                                            console.log(err);
+                                        })
+                                    } else{
+                                        // return current token if token has not expired
+                                        token = active.token;
+                                    }
+                                } else {
+                                    // Add user into ActiveUser collection after first time log in
+                                    const activeUser = new ActiveUser({
+                                        uid:user[0]._id,
+                                        token:token
+                                    });
+                                    activeUser.save()
+                                    .then()
+                                    .catch(err=>{
+                                        console.log(err);
+                                    });
+                                }
+                            })
+                        return res.status(200).json({
                             welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                             to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                             team: fakeToken,
-                            thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                            success: true
+                            thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
                         });
                     })
-                    return;
                 }
-                res.status(201).json({
-                    message: 'Login failed',
-                    success: false
-                });
+                return res.status(401);
             });
         })
         .catch(err => {
             console.log(err);
-            res.status(201).json({
-                message: "Login failed",
-                success: false,
-                error: err
-            });
+            return res.status(401);
         });
 }
 
@@ -291,6 +301,7 @@ exports.users_update_one = (req, res, next) => {
         });
 }
 
+// Retrieve cardId of a user
 function getCardIdByUid(role, uid, callback) {
     // If organization
     if (role == 1) {
@@ -325,49 +336,49 @@ function getCardIdByUid(role, uid, callback) {
 }
 
 exports.users_find_cards = (req, res, next) => {
-  const id = req.params.uid;
-  const cardToCheck = req.params.cardtocheck;
-  console.log(id);
-  User.findById(id)
-  .select('cards')
-  .exec()
-  .then(doc => {
-      console.log("From database", doc);
-      if (doc) {
-          // Success response
-        //  res.status(200).json({ doc });
-          console.log(doc.cards);
-          if (doc.cards.indexOf(cardToCheck) > -1) {
-            //Card already exist in collection, end.
-            console.log("EXIST!");
-            res.status(200).json({ message: 'Card already exist in collection', success: true });
-          } else {
-            //Card does not exist, proceed to add into database
-            console.log("NOT EXIST!");
-            User.updateOne(
-               { "_id": id },
-               { $push: { "cards": cardToCheck } },
-               function (err, docs) {
-                 if(err) {
-                   console.log(err);
-                   res.status(500).json( {error: err, success: false} );
-                 }
-                 res.status(200).json({
-                   message: 'New card added to collection!',
-                   success: true
-                 });
-               }
-            );
-          }
-      } else {
-          // ID does not exist
-          res.status(404).json({ message: 'No valid entry found for provided ID' });
-      }
-  }).catch(err => {
-      console.log(err);
-      // Failure response
-      res.status(500).json({ error: err });
-  });
+    const id = req.params.uid;
+    const cardToCheck = req.params.cardtocheck;
+    console.log(id);
+    User.findById(id)
+        .select('cards')
+        .exec()
+        .then(doc => {
+            console.log("From database", doc);
+            if (doc) {
+                // Success response
+                //  res.status(200).json({ doc });
+                console.log(doc.cards);
+                if (doc.cards.indexOf(cardToCheck) > -1) {
+                    //Card already exist in collection, end.
+                    console.log("EXIST!");
+                    res.status(200).json({ message: 'Card already exist in collection', success: true });
+                } else {
+                    //Card does not exist, proceed to add into database
+                    console.log("NOT EXIST!");
+                    User.updateOne(
+                        { "_id": id },
+                        { $push: { "cards": cardToCheck } },
+                        function (err, docs) {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ error: err, success: false });
+                            }
+                            res.status(200).json({
+                                message: 'New card added to collection!',
+                                success: true
+                            });
+                        }
+                    );
+                }
+            } else {
+                // ID does not exist
+                res.status(404).json({ message: 'No valid entry found for provided ID' });
+            }
+        }).catch(err => {
+            console.log(err);
+            // Failure response
+            res.status(500).json({ error: err });
+        });
 
 }
 

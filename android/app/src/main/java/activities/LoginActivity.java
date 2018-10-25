@@ -100,24 +100,29 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<DummyResponse>() {
             @Override
             public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
-                Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
-                if (response.body().getSuccess()) {
-                    tvLoginError.setVisibility(View.INVISIBLE);
-                    try {
-                        String jsonResponse = SecurityUtils.decoded(SecurityUtils.manipulateToken(response.body().getToken()));
-                        Gson g = new Gson();
-                        User user = g.fromJson(jsonResponse, User.class);
-                        SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), user.getToken(), user.getRole(),
-                                user.getCardId(), user.getFriendship(), user.getCards());
-                        directToMain();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
-                } else {
-                    tvLoginError.setText(response.body().getMessage());
+                switch (response.code()){
+                    case 200:
+                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        tvLoginError.setVisibility(View.INVISIBLE);
+                        try {
+                            String correctToken = SecurityUtils.manipulateToken(response.body().getToken());
+                            String jsonResponse = SecurityUtils.decoded(correctToken);
+                            Gson g = new Gson();
+                            User user = g.fromJson(jsonResponse, User.class);
+                            SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
+                                    user.getCardId(), user.getFriendship(), user.getCards());
+                            directToMain();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    default:
+                        Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        tvLoginError.setText("Login failed");
+                        break;
                 }
             }
 

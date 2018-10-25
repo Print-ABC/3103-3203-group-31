@@ -64,7 +64,7 @@ public class ViewOrgCardFragment extends Fragment {
         // Initialize card list array list
         CardList cardList = new CardList();
         cardList.setCards(session.getUser().getCards());
-        Log.e("Justus", session.getUser().getCards().toString());
+
 
         // Retrieve user's username
         Call<CardList> call = RetrofitClient
@@ -74,30 +74,29 @@ public class ViewOrgCardFragment extends Fragment {
         call.enqueue(new Callback<CardList>() {
             @Override
             public void onResponse(Call<CardList> call, Response<CardList> response) {
-                if (response.body().getSuccess()) {
-                    CardList cardInfo = response.body();
+                switch (response.code()){
+                    case 200:
+                        CardList cardInfo = response.body();
 
-                    if (cardInfo != null) {
-                        toggleListOn();
+                        if (cardInfo != null) {
+                            toggleListOn();
 
-                        // Get card lists
-                        List<Organization> orgCards = cardInfo.getOrgCards();
-
-                        if (orgCards == null){
+                            // Get card lists
+                            List<Organization> orgCards = cardInfo.getOrgCards();
+                            if (orgCards == null){
+                                toggleListOff();
+                                return;
+                            }
+                            updateUI((ArrayList<Organization>) orgCards);
+                        } else {
                             toggleListOff();
-                            return;
                         }
-
-                        updateUI((ArrayList<Organization>) orgCards);
-
-                    } else {
+                        break;
+                    default:
                         toggleListOff();
-                    }
-                } else {
-                    toggleListOff();
+                        break;
                 }
             }
-
             @Override
             public void onFailure(Call<CardList> call, Throwable t) {
                 toggleListOff();
@@ -105,7 +104,6 @@ public class ViewOrgCardFragment extends Fragment {
         });
 
         updateUI(orgArrayList);
-
         return view;
     }
 
