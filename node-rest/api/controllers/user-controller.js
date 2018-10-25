@@ -80,19 +80,18 @@ exports.users_get_all = (req, res, next) => {
 }
 
 exports.users_get_username = (req, res, next) => {
-    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") }, function (err, doc) {
-        if (err) {
-            console.log(err);
-            res.status(500).json({ error: err });
-        }
-        res.status(200).json({
-            uid: doc._id,
-            name: doc.name,
-            username: doc.username,
-            role: doc.role,
-            email: doc.email
-        });
-    });
+    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") })
+		.select('_id name username role')
+		.exec()
+		.then(doc => {
+			if(!doc) {
+				res.status(404).json( doc );
+			}
+			res.status(200).json(doc);
+		})
+		.catch(err => {
+			res.status(500).json(err);
+		});
 }
 
 exports.users_get_name = (req, res, next) => {
