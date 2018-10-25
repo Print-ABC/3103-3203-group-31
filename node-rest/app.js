@@ -25,7 +25,7 @@ const usersRoutes = require('./api/routes/users');
 const organizationsRoutes = require('./api/routes/organizations');
 const studentsRoutes = require('./api/routes/students');
 const friendsRoutes = require('./api/routes/friends');
-const activeUsersRoutes = require('./api/routes/activeusers');
+// const activeUsersRoutes = require('./api/routes/activeusers');
 
 // DB connection
 //mongoose.connect('mongodb://127.0.0.1:27017',
@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Forwards requests with different endpoints to different files
-app.use('/activeusers', activeUsersRoutes);
+// app.use('/activeusers', activeUsersRoutes);
 app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
 app.use('/students', studentsRoutes);
