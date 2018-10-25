@@ -108,22 +108,18 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 switch (response.code()){
                     case 200:
-                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Verification code sent!", Toast.LENGTH_SHORT).show();
                         tvLoginError.setVisibility(View.INVISIBLE);
                         try {
-                            String correctToken = SecurityUtils.manipulateToken(response.body().getToken());
-                            String jsonResponse = SecurityUtils.decoded(correctToken);
-                            Gson g = new Gson();
-                            User user = g.fromJson(jsonResponse, User.class);
-                            SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
-                                    user.getCardId(), user.getFriendship(), user.getCards());
-                            directToMain();
+
+                            //directToMain();
+                            open_dialog(v);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         break;
                     default:
-                        Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Code not sent!", Toast.LENGTH_SHORT).show();
                         tvLoginError.setText("Login failed");
                         break;
                 }
@@ -160,12 +156,48 @@ public class LoginActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10 || etCode.getText().toString().length()>10){
-                    Toast.makeText(LoginActivity.this, "Invalid!", Toast.LENGTH_SHORT).show();
+                if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10){
+                    Toast.makeText(LoginActivity.this, "Cannot be empty!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     //CALL to CHECK 2FA
-                    //TODO CALL FUNCTION FOR NODEJS
+                    Call<DummyResponse> call = RetrofitClient
+                            .getInstance()
+                            .getUserApi()
+                            .check2fa(etCode.getText().toString());
+                    call.enqueue(new Callback<DummyResponse>() {
+                        @Override
+                        public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
+                            switch (response.code()){
+                                case 200:
+                                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    tvLoginError.setVisibility(View.INVISIBLE);
+                                    try {
+                                        String correctToken = SecurityUtils.manipulateToken(response.body().getToken());
+                                        String jsonResponse = SecurityUtils.decoded(correctToken);
+                                        Gson g = new Gson();
+                                        User user = g.fromJson(jsonResponse, User.class);
+                                        SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
+                                                user.getCardId(), user.getFriendship(), user.getCards());
+                                        directToMain();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                default:
+                                    Toast.makeText(LoginActivity.this, "Invalid code!", Toast.LENGTH_SHORT).show();
+                                    tvLoginError.setText("Invalid Code");
+                                    break;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<DummyResponse> call, Throwable t) {
+                            pDialog.dismiss();
+                            btnLogin.setEnabled(true);
+                        }
+                    });
+
                     dialog.dismiss();
                     //directToMain();
                 }

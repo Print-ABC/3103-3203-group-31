@@ -48,9 +48,7 @@ public class FriendListFragment extends Fragment {
         Utils.redirectToLogin(this.getContext());
         myCardId = session.getUser().getCardId();
         myUID = session.getUser().getUid();
-        if (myCardId == null){
-            myCardId = "";
-        }
+
         friendship1 = myUID + "," + session.getUser().getName() + ","+ session.getUser().getUsername();
         Log.i("MyCardID-------", myCardId);
         Log.i("MyUID------", myUID);
@@ -102,6 +100,7 @@ public class FriendListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        mFriends.clear();
         for(int i = 0; i < friend.size(); i++){
             String str[] = friend.get(i).split(",");
             FriendsModel friends = new FriendsModel();

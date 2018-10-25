@@ -41,5 +41,5 @@ public interface UserService {
 
     @GET("users/check2fa/{fatoken}")
         //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
-    Call<User> check2fa(@Path("fatoken") String fatokenInput);
+    Call<DummyResponse> check2fa(@Path("fatoken") String fatokenInput);
 }

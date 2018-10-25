@@ -29,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private Session session;
     private BottomNavigationItemView friendsMenu;
+    private String cardID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = SessionHandler.getSession();
+        cardID = session.getUser().getCardId();
 
         Log.i("CARD ID --------" , session.getUser().getCardId());
         Utils.redirectToLogin(this);
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    if (session.getUser().getCardId() == null || session.getCardId()== null|| session.getCardId()=="none"){
+                    if (cardID == null || cardID =="none" || cardID.isEmpty()){
                         Toast.makeText(getBaseContext(), "No card id detected!", Toast.LENGTH_SHORT).show();
                     }
                     else{
