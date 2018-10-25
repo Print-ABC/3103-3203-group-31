@@ -36,5 +36,4 @@ router.get('/name/:uid', UserController.users_get_name);
 router.get("/findcards/:uid/:cardtocheck", UserController.users_find_cards);
 
 
-
 module.exports = router;

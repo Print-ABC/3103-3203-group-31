@@ -1,5 +1,6 @@
 package activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +22,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import services.RetrofitClient;
 
+import static java.security.AccessController.getContext;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     EditText etUsername, etPassword;
-    Button btnLogin;
+    Button btnLogin, btnSubmit;
     String username, password;
     TextView tvForgetPW, tvRegister, tvLoginError;
+    EditText etCode;
     private ProgressDialog pDialog;
     private Session session;
 
@@ -60,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                     tvLoginError.setText("Fields cannot be blank.");
                 }
                 else {
-                    login();
+                    login(v);
                 }
             }
         });
@@ -85,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void login() {
+    private void login(final View v) {
         displayLoader();
         User user = new User();
         user.setPassword(password);
@@ -104,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                     tvLoginError.setVisibility(View.INVISIBLE);
                     SessionHandler.loginUser(response.body().getUid(), response.body().getName(), response.body().getUsername(), response.body().getToken(), response.body().getRole(),
                             response.body().getCardId(), response.body().getFriendship(), response.body().getCards());
+                    //open_dialog(v);
                     directToMain();
                 } else {
                     tvLoginError.setText(response.body().getMessage());
@@ -128,5 +133,29 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
+    }
+
+    public void open_dialog(View v){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+        View row = this.getLayoutInflater().inflate(R.layout.alert_dialog_2fa, null);
+        alertDialog.setView(row);
+        btnSubmit =  (Button) row.findViewById(R.id.btnSubmit);
+        etCode = (EditText) row.findViewById(R.id.etCode);
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10 || etCode.getText().toString().length()>10){
+                    Toast.makeText(LoginActivity.this, "Invalid!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    //CALL to CHECK 2FA
+                    //TODO CALL FUNCTION FOR NODEJS
+                    dialog.dismiss();
+                    //directToMain();
+                }
+            }
+        });
     }
 }

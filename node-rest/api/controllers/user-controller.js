@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
+const nodemailer = require('nodemailer');
+const rand = require('secure-random-string');
 
 const User = require('../models/User');
 const Organization = require('../models/Organization');
@@ -148,7 +150,7 @@ exports.users_register_user = (req, res, next) => {
                 // Anything other than 201 will crash the client
                 res.status(201).json({
                     message: 'Username/email already exists',
-                    success: false
+                    success: falsec
                 });
             } else {
                 res.status(201).json({
@@ -178,36 +180,63 @@ exports.users_login = (req, res, next) => {
                         message: 'Login failed',
                         success: false
                     });
+                } else {
+                  const transporter = nodemailer.createTransport({
+                      service: 'gmail',
+                      auth: {
+                        user: 'tyrraelizz95@gmail.com',
+                        pass: '02021995lol'
+                      }
+                    });
+                    rand({alphanumeric: true, length: 10}, function(error , TwoFA){
+                      if (error){
+                        console.log(error);
+                      }
+                      console.log('Generated 2FA:', TwoFA);
+                      const mailOptions = {
+                        from: 'admin@mydomain.com',
+                        // to: user[0].email,
+                        to: 'tyrraskye@hotmail.com',
+                        subject: '2FA OTP Verificator (Do Not Reply)',
+                        text: 'Your OTP verificator is: ' + TwoFA
+                      };
+
+                      transporter.sendMail(mailOptions, function(error, info){
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Email sent: ' + info.response);
+                          return res.status(200).json({
+                              message: 'Verificator Sent!',
+                              success: true
+                          });
+                        }
+                      });
+                    });
                 }
-                if (result) {
-                    console.log(user[0]);
-                    const token = jwt.sign({
-                        username: user[0].username,
-                        uid: user[0]._id
-                    }, config.secret, {
-                            expiresIn: "1h"
-                        });
-                    // Get card ID of user if available
-                    const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
-                        res.status(200).json({
-                            message: 'Login successful',
-                            token: token,
-                            cardId: cardId,
-							name: user[0].name,
-                            username: user[0].username,
-                            friendship: user[0].friendship,
-                            cards: user[0].cards,
-                            uid: user[0]._id,
-                            role: user[0].role,
-                            success: true
-                        });
-                    })
-                    return;
-                }
-                res.status(201).json({
-                    message: 'Login failed',
-                    success: false
-                });
+                // TODO After keyed in correct 2FA
+                 console.log(user[0]);
+                  const token = jwt.sign({
+                      username: user[0].username,
+                      uid: user[0]._id
+                  }, config.secret, {
+                          expiresIn: "1h"
+                      });
+                  // Get card ID of user if available
+                  const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
+                      res.status(200).json({
+                          message: 'Login successful',
+                          token: token,
+                          cardId: cardId,
+						              name: user[0].name,
+                          username: user[0].username,
+                          friendship: user[0].friendship,
+                          cards: user[0].cards,
+                          uid: user[0]._id,
+                          role: user[0].role,
+                          success: true
+                      });
+                  }) 
             });
         })
         .catch(err => {
@@ -218,6 +247,45 @@ exports.users_login = (req, res, next) => {
                 error: err
             });
         });
+}
+
+exports.users_2fa = (req, res, next) => {
+  const userInputToken = req.params.TwoFaToken;
+  bcrypt.compare(userInputToken, TwoFA, (err, result) => {
+      console.log(TwoFA);
+      console.log(userInputToken);
+      if (err) {
+          console.log(err);
+          return res.status(201).json({
+              messsage: 'Two FA Failed',
+              success: false
+          });
+      }
+      if (result) {
+        console.log(user[0]);
+        const token = jwt.sign({
+            username: user[0].username,
+            uid: user[0]._id
+        }, config.secret, {
+                expiresIn: "1h"
+            });
+        // Get card ID of user if available
+        const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
+            res.status(200).json({
+                message: 'Login successful',
+                token: token,
+                cardId: cardId,
+                username: user[0].username,
+                friendship: user[0].friendship,
+                cards: user[0].cards,
+                uid: user[0]._id,
+                role: user[0].role,
+                success: true
+            });
+        })
+        return;
+      }
+    });
 }
 
 exports.users_get_one = (req, res, next) => {

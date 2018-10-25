@@ -72,17 +72,19 @@ exports.update_friendlist_add = (req, res, next) => {
 
 //UPDATE: Remove a uid from list of friends of an existing user
 exports.update_friendlist_remove = (req, res, next) => {
-  User.update(
+  User.updateOne(
     { "_id": req.params.uid },
     { $pull: {"friendship": req.params.friend} },
     function (err, docs) {
       if(err) {
         console.log(err);
-        res.status(500).json( {error: err} );
+        res.status(500).json( { error: err, success: false } );
       }
       res.status(200).json({
-        message: 'Update: Friend was removed from friendlist'
+        message: 'Update: Friend was removed from friendlist',
+        success: true
       });
+      console.log(docs);
     }
   );
 }

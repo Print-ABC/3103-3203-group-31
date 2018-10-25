@@ -11,16 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.ncshare.ncshare.FriendsModel;
 import com.ncshare.ncshare.R;
 import com.ncshare.ncshare.SimpleDividerItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import common.SessionHandler;
 import common.Utils;
+import models.FriendRequest;
 import models.Organization;
 import models.Session;
 import models.User;
@@ -37,7 +35,9 @@ public class FriendListFragment extends Fragment {
     private RecyclerView mSFriendsRecyclerView, mSNCRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
     private FriendListFragment.NCAdapter mNCAdapter;
-    private String friendUID, OrgCardID, myCardId; //Selected friend's uid, the selected card's id, and my card Id.
+    private String friendUID, friendName, friendUname; //Selected friend's uid, name, and username
+    private String OrgCardID, myCardId, myUID; //The selected card's id, my card Id and my UID.
+    private String friendship, friendship1; //Concats
     private Session session;
 
     @Override
@@ -46,22 +46,23 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = SessionHandler.getSession();
         Utils.redirectToLogin(this.getContext());
-        myCardId = session.getUser().getCardId();
-        Log.i("MyCardID", myCardId);
-        mFriends = new ArrayList<>();
-        for(int i = 0; i < friend.size(); i++){
-            String str[] = friend.get(i).split(",");
-            FriendsModel friends = new FriendsModel();
-            friends.setUID(str[0]);
-            friends.setName(str[1]);
-            friends.setUsername(str[2]);
-            mFriends.add(friends);
+        myCardId = session.getCardId();
+        myUID = session.getUser().getUid();
+        if (myCardId == null){
+            myCardId = "";
         }
+        friendship1 = myUID + "," + session.getUser().getName() + ","+ session.getUser().getUsername();
+        Log.i("MyCardID-------", myCardId);
+        Log.i("MyUID------", myUID);
+        Log.i("friendship1 ------", friendship1);
+
+        mFriends = new ArrayList<>();
+        mFriends.clear();
         mCards = new ArrayList<>();
         for(int i = 0; i < cards.size(); i++){
             String cardId = cards.get(i);
             Log.i("CARD LIST --------", cardId);
-            if (!cardId.equals(myCardId)){
+            if (!cardId.equals(myCardId) || myCardId.equals("")){
                 Log.i("Compare CardID", "NOPE!");
                 //CALL to get card details by card ID
                 Call<Organization> call = RetrofitClient
@@ -92,7 +93,7 @@ public class FriendListFragment extends Fragment {
                 Log.i("CARDS", mCards.toString());
             }
             else{
-                Log.i("Compare CardID", "it's my card id!");
+                Log.i("Compare CardID", "it matches my cardId or it does not exist!");
             }
         }
     }
@@ -101,6 +102,14 @@ public class FriendListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        for(int i = 0; i < friend.size(); i++){
+            String str[] = friend.get(i).split(",");
+            FriendsModel friends = new FriendsModel();
+            friends.setUID(str[0]);
+            friends.setName(str[1]);
+            friends.setUsername(str[2]);
+            mFriends.add(friends);
+        }
         mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -152,6 +161,60 @@ public class FriendListFragment extends Fragment {
                     open_dialog(v);
                 }
             });
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    friendUID = mFriends.getUID();
+                    friendName = mFriends.getName();
+                    friendUname = mFriends.getUsername();
+                    friendship = friendUID + "," + friendName + "," + friendUname;
+                    Log.i("friendship ------", friendship);
+                    Toast.makeText(getActivity(), "You're deleting " + mFriends.getName(), Toast.LENGTH_SHORT).show();
+
+                    //Deleting friend from user's list
+                    Call<FriendRequest> callC = RetrofitClient
+                            .getInstance()
+                            .getFriendRequestApi()
+                            .deleteFriend(myUID, friendship);
+                    callC.enqueue(new Callback<FriendRequest>() {
+                        @Override
+                        public void onResponse(Call<FriendRequest> callC, Response<FriendRequest> responseC) {
+                            Toast.makeText(getContext(), responseC.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            if(responseC.body().getSuccess()){
+                                Log.i("onResponseeeee ------","Friend deleted from list");
+                                //Deleting user from friend's list
+                                Call<FriendRequest> callB = RetrofitClient
+                                        .getInstance()
+                                        .getFriendRequestApi()
+                                        .deleteFriend(friendUID, friendship1);
+                                callB.enqueue(new Callback<FriendRequest>() {
+                                    @Override
+                                    public void onResponse(Call<FriendRequest> callB, Response<FriendRequest> responseB) {
+                                        Toast.makeText(getContext(), responseB.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        if(responseB.body().getSuccess()){
+                                            Log.i("onResponseeeee ------","Deleting you from friend's list");
+                                            updateUI();
+                                        } else {
+                                            Log.i("onResponseeeee --------","Error deleting you from friend's list");
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<FriendRequest> callB, Throwable t) {
+                                        Log.i("onFailure","ERROR second round!");
+                                    }
+                                });
+                            } else {
+                                Log.i("onResponseeeee --------","Friend not deleted from list!");
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<FriendRequest> callC, Throwable t) {
+                            Log.i("onFailure","ERROR!");
+                        }
+                    });
+                }
+            });
+
         }
         public void bindData(FriendsModel s){
             mFriends = s;

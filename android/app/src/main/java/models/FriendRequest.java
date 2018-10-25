@@ -21,6 +21,14 @@ public class FriendRequest {
     @Expose
     private String recipient;
 
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
+
+    @SerializedName("message")
+    @Expose
+    private String message;
+
     public FriendRequest() {}
 
     public FriendRequest(String requester_id, String requester, String recipient_id, String recipient) {
@@ -60,6 +68,22 @@ public class FriendRequest {
 
     public void setRecipient(String recipient) {
         this.recipient = recipient;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 //    public String getFriendStatus() {
