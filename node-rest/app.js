@@ -2,9 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const passport = require('passport');
 const config = require('./config/config');
-require('./passport');
 
 // Init App
 const app = express();
@@ -22,13 +20,12 @@ app.use((req, res, next) => {
     next();
 });
 
-//Init passport
-app.use(passport.initialize());
 
 const usersRoutes = require('./api/routes/users');
 const organizationsRoutes = require('./api/routes/organizations');
 const studentsRoutes = require('./api/routes/students');
 const friendsRoutes = require('./api/routes/friends');
+const activeUsersRoutes = require('./api/routes/activeusers');
 
 // DB connection
 //mongoose.connect('mongodb://127.0.0.1:27017',
@@ -48,10 +45,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Forwards requests with different endpoints to different files
+app.use('/activeusers', activeUsersRoutes);
 app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
 app.use('/students', studentsRoutes);
-// TODO: uncomment and implement friends
 app.use('/friends', friendsRoutes);
 
 // Requests error handling
@@ -62,7 +59,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-    res.status(201);
+    res.status(500 || error.status);
     //TODO: remove before production
     console.log(error.message);
     res.json({
