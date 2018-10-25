@@ -87,7 +87,8 @@ exports.org_get_one = (req, res, next) => {
         .then(organization => {
             if (!organization) {
                 return res.status(404).json({
-                    message: 'Name card not found'
+                    message: 'Name card not found',
+                    success: false
                 });
             }
             res.status(200).json({

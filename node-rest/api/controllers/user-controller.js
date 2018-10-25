@@ -186,8 +186,7 @@ exports.users_login = (req, res, next) => {
                       console.log('Generated 2FA:', twoFA);
                       const mailOptions = {
                         from: 'admin@mydomain.com',
-                        // to: user[0].email,
-                        to: 'tyrraskye@hotmail.com',
+                        to: user[0].email,
                         subject: '2FA OTP Verificator (Do Not Reply)',
                         text: 'Your OTP verificator is: ' + twoFA
                       };
@@ -214,6 +213,7 @@ exports.users_login = (req, res, next) => {
 
 exports.users_2fa = (req, res, next) => {
   console.log('in array', tokenArr[0]);
+  console.log('in array', userArr[0]);
   const userInputToken = req.params.fatoken;
   User.find({ username: userArr[0] })
       .exec()
