@@ -28,7 +28,7 @@ public class FriendSearchFragment extends Fragment {
     private TextView tvName, tvEmail;
     private Button btnAdd;
     private ImageButton btnSearch;
-    private Session session;
+    private Session mSession;
 
     public FriendSearchFragment() {
     }
@@ -48,7 +48,7 @@ public class FriendSearchFragment extends Fragment {
         tvEmail = (TextView) view.findViewById(R.id.tvFEmail);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
-        session = SessionHandler.getSession();
+        mSession = SessionHandler.getSession();
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,7 @@ public class FriendSearchFragment extends Fragment {
                             tvName.setText(response.body().getName());
                             tvEmail.setText(response.body().getEmail());
                             btnAdd.setVisibility(View.VISIBLE);
-                            btnAddOnClickListener(response.body().getUid(), response.body().getName());
+                            btnAddOnClickListener(response.body().getUid(), response.body().getName(), response.body().getUsername());
                             //TODO need check if already added or not
                         } catch (NullPointerException ex) {
                             Toast.makeText(getActivity(), "User is not found", Toast.LENGTH_SHORT).show();
@@ -80,14 +80,15 @@ public class FriendSearchFragment extends Fragment {
         return view;
     }
 
-    public void btnAddOnClickListener(final String fuid, final String friendName){
+    public void btnAddOnClickListener(final String f_uid, final String f_name, final String f_username){
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Call<FriendRequest> call = RetrofitClient
                         .getInstance()
                         .getFriendRequestApi()
-                        .createRequest(new FriendRequest(session.getUser().getUid(), session.getUser().getName(), fuid, friendName));
+                        .createRequest(new FriendRequest(mSession.getUser().getUid(), mSession.getUser().getName(),
+                                mSession.getUser().getUsername(), f_uid, f_name, f_username));
                 call.enqueue(new Callback<FriendRequest>() {
                     @Override
                     public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

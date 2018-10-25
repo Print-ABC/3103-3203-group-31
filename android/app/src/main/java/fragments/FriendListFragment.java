@@ -46,7 +46,7 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = SessionHandler.getSession();
         Utils.redirectToLogin(this.getContext());
-        myCardId = session.getCardId();
+        myCardId = session.getUser().getCardId();
         myUID = session.getUser().getUid();
         if (myCardId == null){
             myCardId = "";
@@ -146,7 +146,7 @@ public class FriendListFragment extends Fragment {
             super(itemView);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.friends_name);
-            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_school);
+            mUsernameTextView = (TextView) itemView.findViewById(R.id.friends_username);
             btnSend = (ImageButton) itemView.findViewById(R.id.btnSend);
             btnDelete = (ImageButton) itemView.findViewById(R.id.btnDelete);
 

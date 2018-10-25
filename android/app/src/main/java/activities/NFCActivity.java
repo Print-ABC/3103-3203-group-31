@@ -55,14 +55,9 @@ public class NFCActivity extends AppCompatActivity
 
         tvLABEL =  (TextView) findViewById(R.id.tvLABEL);
 
-        //Change this for the connected phone
         myUid = session.getUser().getUid();
         myRole = session.getUser().getRole();
-        myCard = session.getCardId();
-
-        if (myCard == null){
-            myCard = "";
-        }
+        myCard = session.getUser().getCardId();
 
         Log.i("myUid", myUid);
         Log.i("myRole", String.valueOf(myRole));
@@ -71,15 +66,6 @@ public class NFCActivity extends AppCompatActivity
         messagesToSendArray.add(myUid);
         messagesToSendArray.add(String.valueOf(myRole));
         messagesToSendArray.add(myCard);
-
-        //Check if the user has a Card ID
-        //If don't have, bring back to home fragment(main activity)
-        if(messagesToSendArray.get(2)==""){
-            Toast.makeText(this, "No card id detected!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(NFCActivity.this, MainActivity.class);
-            startActivity(intent);
-
-        }
 
         int listSize = messagesToSendArray.size();
         for (int i = 0; i < listSize; i++) {

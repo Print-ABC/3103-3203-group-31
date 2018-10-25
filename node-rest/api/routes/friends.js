@@ -21,6 +21,6 @@ router.patch("/:uid/add/:friend", FriendController.update_friendlist_add);
 router.patch("/:uid/del/:friend", FriendController.update_friendlist_remove);
 
 // Handles DELETE requests (Delete a request with a given recipient uid)
-router.delete('/:uid', FriendController.friend_delete_request);
+router.delete('/:id', FriendController.friend_delete_request);
 
 module.exports = router;

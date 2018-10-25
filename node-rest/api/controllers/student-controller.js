@@ -39,7 +39,7 @@ exports.stu_create_card = (req, res, next) => {
                         success: true
                     });
                 })
-            
+
         })
         .catch(err => {
             console.log(err);

@@ -7,10 +7,12 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
@@ -27,6 +29,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private Session session;
     private BottomNavigationItemView friendsMenu;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        session = SessionHandler.getSession();
+
+        Log.i("CARD ID --------" , session.getUser().getCardId());
+        Utils.redirectToLogin(this);
+        setContentView(R.layout.activity_main);
+
+        friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
+
+        if (Utils.isOrganization(session)){
+            friendsMenu.setVisibility(View.GONE);
+        } else {
+            friendsMenu.setVisibility(View.VISIBLE);
+        }
+
+        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+    }
 
     /* Reference for bottom Navigation
     https://android.jlelse.eu/ultimate-guide-to-bottom-navigation-on-android-75e4efb8105f
@@ -54,8 +79,13 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    Intent intent = new Intent(MainActivity.this, NFCActivity.class);
-                    startActivity(intent);
+                    if (session.getUser().getCardId() == null || session.getCardId()== null|| session.getCardId()=="none"){
+                        Toast.makeText(getBaseContext(), "No card id detected!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Intent intent = new Intent(MainActivity.this, NFCActivity.class);
+                        startActivity(intent);
+                        }
                     break;
                 case R.id.nav_friends:
                     selectedFragment = new FriendsFragment();
@@ -67,28 +97,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        session = SessionHandler.getSession();
-
-        Utils.redirectToLogin(this);
-        setContentView(R.layout.activity_main);
-
-        friendsMenu = (BottomNavigationItemView)findViewById(R.id.nav_friends);
-
-        if (Utils.isOrganization(session)){
-            friendsMenu.setVisibility(View.GONE);
-        } else {
-            friendsMenu.setVisibility(View.VISIBLE);
-        }
-
-        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

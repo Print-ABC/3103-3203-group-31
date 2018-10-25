@@ -29,9 +29,6 @@ public interface FriendService {
     @PATCH("friends/{uid}/del/{friend}")
     Call<FriendRequest> deleteFriend(@Path("uid") String uid, @Path("friend") String friend);
 
-    @DELETE("friends/{uid}")
-    Call<FriendRequest> deleteRequest(@Path("uid") String uid);
-
-//    @POST("relationship/relationship")
-//    Call<FriendRequest> retrieveFriends(@Query("id") String friend_one_id);
+    @DELETE("friends/{id}")
+    Call<FriendRequest> deleteRequest(@Path("id") String uid);
 }
