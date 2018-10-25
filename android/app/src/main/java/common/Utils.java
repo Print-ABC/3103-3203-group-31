@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
@@ -124,6 +125,19 @@ public class Utils {
         } else {
             etContact.setError(null);
             return true;
+        }
+    }
+
+    /**
+     * Logout user if token has expired
+     * @param statusCode
+     * @param context
+     * @param activity
+     */
+    public static void checkTokenExpiry(int statusCode,Context context, Activity activity){
+        if (statusCode == 403){
+            Toast.makeText(activity, "Token has expired", Toast.LENGTH_SHORT).show();
+            SessionHandler.logoutUser(context);
         }
     }
 }

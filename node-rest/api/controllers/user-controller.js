@@ -27,10 +27,10 @@ exports.users_get_cards_info = (req, res) => {
             )
             .catch(err => {
                 console.log(err);
-                return res.status(400);
+                return res.status(400).json({});
             })
     } else {
-        return res.status(400);
+        return res.status(400).json({});
     }
 }
 
@@ -135,14 +135,14 @@ exports.users_register_user = (req, res, next) => {
         .then(result => {
             console.log(result);
             // Success response
-            return res.status(201);
+            return res.status(201).json({});
         })
         .catch(err => {
             console.log(err);
             if (err.errmsg.includes("duplicate")) {
-                return res.status(409);
+                return res.status(409).json({});
             } else {
-                return res.status(400);
+                return res.status(400).json({});
             }
 
         });
@@ -155,14 +155,14 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             // If username not found
             if (user.length < 1) {
-                return res.status(401);
+                return res.status(401).json({});
             }
             // Compare input password with stored password
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 // password does not match
                 if (err) {
-                    console.log(err);
-                    return res.status(401);
+                    // console.log(err);
+                    return res.status(401).json({});
                 }
                 if (result) {
                     // Get card ID of user if available, returns "none" if card not created
@@ -179,7 +179,6 @@ exports.users_login = (req, res, next) => {
                             // jwt token expires in 20 minutes
                                 expiresIn: config["session-duration"]
                             });
-
                         const fakeToken = utils.manipulateToken(token);
                         const parts = fakeToken.split('.');
                         headerLength = parts[0].length;
@@ -198,7 +197,7 @@ exports.users_login = (req, res, next) => {
                                     if (diff >= config["session-duration"]) {
                                         const query = {uid: active.uid};
                                         // Update current active user field with new token and time
-                                        ActiveUser.update(query, {
+                                        ActiveUser.updateOne(query, {
                                             token:token,
                                             createdAt: new Date()
                                         }).exec()
@@ -216,11 +215,7 @@ exports.users_login = (req, res, next) => {
                                         uid:user[0]._id,
                                         token:token
                                     });
-                                    activeUser.save()
-                                    .then()
-                                    .catch(err=>{
-                                        console.log(err);
-                                    });
+                                    activeUser.save();
                                 }
                             })
                         return res.status(200).json({
@@ -230,13 +225,14 @@ exports.users_login = (req, res, next) => {
                             thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
                         });
                     })
+                    return;
                 }
-                return res.status(401);
+                return res.status(401).json({});
             });
         })
         .catch(err => {
-            console.log(err);
-            return res.status(401);
+            // console.log(err);
+            return res.status(401).json({});
         });
 }
 

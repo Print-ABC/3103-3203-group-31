@@ -16,6 +16,7 @@ import com.ncshare.ncshare.R;
 
 import common.SecurityUtils;
 import common.SessionHandler;
+import common.Utils;
 import models.DummyResponse;
 import models.Session;
 import models.User;
@@ -118,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        break;
                     default:
                         Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                         tvLoginError.setText("Login failed");

@@ -9,9 +9,7 @@ exports.stu_create_card = (req, res, next) => {
     User.findById(req.body.uid)
         .then(user => {
             if (!user) {
-                return res.status(201).json({
-                    message: "User does not exists"
-                });
+                return res.status(400).json({});
             }
             const student = new Student({
                 _id: new mongoose.Types.ObjectId(),
@@ -24,25 +22,23 @@ exports.stu_create_card = (req, res, next) => {
             return student.save();
         })
         .then(result => {
-            console.log(result);
-            User.update(
+            User.updateOne(
                 { "_id": req.body.uid },
                 { $push: { "cards": result._id } },
                 function (err, docs) {
                     if (err) {
                         console.log(err);
-                        res.status(400);
+                        return res.status(400).json({});
                     }
-                    return res.status(201);
+                    return res.status(201).json({});
                 })
             
         })
         .catch(err => {
-            console.log(err);
             if (err.errmsg.includes("duplicate")) {
-                return res.status(406);
+                return res.status(406).json({})
             } else {
-                return res.status(400);
+                return res.status(400).json({});
             }
 
 
