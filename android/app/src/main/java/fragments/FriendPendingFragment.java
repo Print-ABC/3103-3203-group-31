@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class FriendPendingFragment extends Fragment {
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
                 if (response.code() == 200)
                     mFriendRequestList.addAll(response.body());
+                    Log.i("REQ SIZE", String.valueOf(mFriendRequestList.size()));
             }
 
             @Override
@@ -60,8 +62,8 @@ public class FriendPendingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_friend_pending, container, false);
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.requests_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new Handler().postDelayed(new Runnable() {
