@@ -15,14 +15,21 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ncshare.ncshare.R;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyStoreException;
+import java.util.ArrayList;
+
 import common.SecurityUtils;
 import common.SessionHandler;
 import common.Utils;
 import models.DummyResponse;
 import models.Session;
 import models.User;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import services.RetrofitClient;
 
@@ -184,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
                                     break;
                                 default:
                                     Toast.makeText(LoginActivity.this, "Invalid code!", Toast.LENGTH_SHORT).show();
-                                    tvLoginError.setText("Invalid Code");
+                                    tvLoginError.setText("Login Failed");
                                     break;
                             }
                         }
