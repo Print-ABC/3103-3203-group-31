@@ -62,10 +62,14 @@ public class FriendSearchFragment extends Fragment {
                     public void onResponse(Call<User> call, Response<User> response) {
                         switch (response.code()) {
                             case 200:
-                                tvName.setText(response.body().getName());
-                                tvUsername.setText("Username : " + response.body().getUsername());
-                                btnAdd.setVisibility(View.VISIBLE);
-                                btnAddOnClickListener(response.body().getUid(), response.body().getName(), response.body().getUsername());
+                                try{
+                                    tvName.setText(response.body().getName());
+                                    tvUsername.setText("Username : " + response.body().getUsername());
+                                    btnAdd.setVisibility(View.VISIBLE);
+                                    btnAddOnClickListener(response.body().getUid(), response.body().getName(), response.body().getUsername());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                             case 404:
                                 disableForm("User not found");
