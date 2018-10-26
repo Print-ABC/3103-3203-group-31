@@ -5,8 +5,6 @@ module.exports = (req, res, next) => {
     try {
         //TODO: check if token exists in db, return a message to logout user
         const token = req.headers.authorization;
-        console.log(token);
-        console.log(config.secret);
         const decoded = jwt.verify(token, config.secret);
         req.userData = decoded; 
         next();
