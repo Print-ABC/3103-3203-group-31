@@ -176,30 +176,35 @@ exports.users_login = (req, res, next) => {
                     });
                 } else {
                   const transporter = nodemailer.createTransport({
-                      service: 'gmail',
-                      auth: {
-                        user: 'ncshare.inc@gmail.com',
-                        pass: 'Tsd677%fffffffff'
-                      }
-                    });
-                      console.log('Generated 2FA:', twoFA);
-                      const mailOptions = {
-                        from: 'admin@mydomain.com',
-                        to: user[0].email,
-                        subject: '2FA OTP Verificator (Do Not Reply)',
-                        text: 'Your OTP verificator is: ' + twoFA
-                      };
-                      transporter.sendMail(mailOptions, function(error, info){
-                        if (error) {
-                          console.log(error);
-                        } else {
-                          console.log('Email sent: ' + info.response);
-                          return res.status(200).json({
-                              message: 'Verificator Sent!',
-                              success: true
-                          });
-                        }
+                    secure: false, // use SSL
+                    port: 25, // port for secure SMTP
+                    service: 'gmail',
+                    auth: {
+                      user: 'ncshare.inc@gmail.com',
+                      pass: 'Tsd677%fffffffff'
+                    },
+                    tls: {
+                      rejectUnauthorized: false
+                    }
+                  });
+                  console.log('Generated 2FA:', twoFA);
+                  const mailOptions = {
+                    from: 'admin@mydomain.com',
+                    to: user[0].email,
+                    subject: '2FA OTP Verificator (Do Not Reply)',
+                    text: 'Your OTP verificator is: ' + twoFA
+                  };
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                      return res.status(200).json({
+                          message: 'Verificator Sent!',
+                          success: true
                       });
+                    }
+                  });
                 }
             });
             return res.status(200).json({});
