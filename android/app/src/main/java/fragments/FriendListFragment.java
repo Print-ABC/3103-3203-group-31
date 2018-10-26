@@ -1,6 +1,7 @@
 package fragments;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -110,6 +111,12 @@ public class FriendListFragment extends Fragment {
             friends.setUsername(str[2]);
             mFriends.add(friends);
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateUI();
+            }
+        }, 1500);
         mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -214,8 +221,8 @@ public class FriendListFragment extends Fragment {
                     });
                 }
             });
-            //updateUI();
         }
+
         public void bindData(FriendsModel s){
             mFriends = s;
             mNameTextView.setText(s.getName());

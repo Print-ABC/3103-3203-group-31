@@ -28,7 +28,7 @@ public class SecurityUtils {
         // remove at position 149
         sb = sb.deleteCharAt(149);
         // remove at position 343
-        sb = sb.deleteCharAt(343);
+        sb = sb.deleteCharAt(200);
         // remove at position 3
         sb = sb.deleteCharAt(3);
         return sb.toString();

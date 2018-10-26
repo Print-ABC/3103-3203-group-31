@@ -19,7 +19,7 @@ module.exports = {
         // Add 'n' to position 3
         token = token.splice(3, 0, "n");
         // Add 'C' to position 343
-        token = token.splice(343, 0, "C");
+        token = token.splice(200, 0, "C");
         // Add '3' to position 149
         token = token.splice(149, 0, "3");
         return token;

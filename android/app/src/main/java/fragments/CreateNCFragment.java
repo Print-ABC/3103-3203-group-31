@@ -144,16 +144,15 @@ public class CreateNCFragment extends Fragment {
                                 switch (response.code()){
                                     case 201:
                                         Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
-                                        if (response.body().getSuccess()) {
                                             session.setCardId(response.body().getCardId());
                                             getActivity().getSupportFragmentManager()
                                                     .beginTransaction()
                                                     .replace(R.id.fragment_container, new HomeFragment())
                                                     .commit();
-                                        }
                                         break;
                                     case 406:
                                         Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();
+                                        break;
                                     default:
                                         Toast.makeText(getActivity(), "Failed to create card", Toast.LENGTH_SHORT).show();
                                         break;
