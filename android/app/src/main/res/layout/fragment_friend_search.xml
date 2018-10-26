@@ -42,7 +42,7 @@
         android:layout_marginTop="20dp" />
 
     <TextView
-        android:id="@+id/tvFEmail"
+        android:id="@+id/tvFUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvFName"

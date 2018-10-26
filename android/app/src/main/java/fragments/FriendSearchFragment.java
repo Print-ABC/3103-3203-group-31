@@ -25,7 +25,7 @@ import services.RetrofitClient;
 public class FriendSearchFragment extends Fragment {
 
     private EditText etUsername;
-    private TextView tvName, tvEmail;
+    private TextView tvName, tvUsername;
     private Button btnAdd;
     private ImageButton btnSearch;
     private Session mSession;
@@ -45,7 +45,7 @@ public class FriendSearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend_search, container, false);
         etUsername = (EditText) view.findViewById(R.id.etSearchUid);
         tvName = (TextView) view.findViewById(R.id.tvFName);
-        tvEmail = (TextView) view.findViewById(R.id.tvFEmail);
+        tvUsername = (TextView) view.findViewById(R.id.tvFUsername);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
         mSession = SessionHandler.getSession();
@@ -60,17 +60,19 @@ public class FriendSearchFragment extends Fragment {
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        try{
+                        if(response.code() == 200 && response.body().getRole() == 0) {
                             tvName.setText(response.body().getName());
-                            tvEmail.setText(response.body().getEmail());
+                            tvUsername.setText("Username : " + response.body().getUsername());
                             btnAdd.setVisibility(View.VISIBLE);
                             btnAddOnClickListener(response.body().getUid(), response.body().getName(), response.body().getUsername());
-                            //TODO need check if already added or not
-                        } catch (NullPointerException ex) {
-                            Toast.makeText(getActivity(), "User is not found", Toast.LENGTH_SHORT).show();
+                        } else if(response.code() == 200) {
+                            disableForm("User not found");
+                        } else if(response.code() == 404) {
+                            disableForm("User not found");
+                        } else {
+                            disableForm("Search failed");
                         }
                     }
-
                     @Override
                     public void onFailure(Call<User> callU, Throwable t) {
                     }
@@ -78,6 +80,13 @@ public class FriendSearchFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void disableForm(String msg){
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        tvName.setText(null);
+        tvUsername.setText(null);
+        btnAdd.setVisibility(View.INVISIBLE);
     }
 
     public void btnAddOnClickListener(final String f_uid, final String f_name, final String f_username){
@@ -92,12 +101,15 @@ public class FriendSearchFragment extends Fragment {
                 call.enqueue(new Callback<FriendRequest>() {
                     @Override
                     public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
-                        Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                        if(response.code() == 201) {
+                            Toast.makeText(getActivity(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "Error. Please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<FriendRequest> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Error. Please try again", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
