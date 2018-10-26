@@ -81,7 +81,10 @@ exports.users_get_all = (req, res, next) => {
 }
 
 exports.users_get_username = (req, res, next) => {
-    User.findOne({ username: new RegExp('^' + req.params.username + '$', "i") })
+    User.findOne({
+      username: new RegExp('^' + req.params.username + '$', "i"),
+      role: { $eq: 0 }
+    })
 		.select('_id name username role')
 		.exec()
 		.then(doc => {
