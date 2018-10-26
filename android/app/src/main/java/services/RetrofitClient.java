@@ -44,4 +44,5 @@ public class RetrofitClient {
     public FriendService getFriendRequestApi() { return retrofit.create(FriendService.class);}
     public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);}
     public StudentService getStudentApi() { return retrofit.create(StudentService.class);}
+    public ActiveUsersService getActiveUsersApi() { return retrofit.create(ActiveUsersService.class);}
 }

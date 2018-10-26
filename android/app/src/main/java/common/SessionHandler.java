@@ -5,12 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.ncshare.ncshare.NCShare;
+
 import java.util.Date;
 import java.util.List;
 
 import activities.LoginActivity;
+import models.Result;
 import models.Session;
 import models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import services.RetrofitClient;
 
 
 public class SessionHandler {
@@ -27,16 +34,17 @@ public class SessionHandler {
         SessionHandler.session = session;
     }
 
-    public static void setSessionUserObj(User user){
+    public static void setSessionUserObj(User user) {
         SessionHandler.session.setUser(user);
     }
 
-    public static User getSessionUserObj(){
+    public static User getSessionUserObj() {
         return SessionHandler.session.getUser();
     }
 
     /**
      * Add card ID to session
+     *
      * @param cardId
      */
     public void addCardToSession(String cardId) {
@@ -48,7 +56,7 @@ public class SessionHandler {
      * Output may be null if user is not logged in
      * Output is "none" if user has not created a card
      */
-    public String getCardFromSession(){
+    public String getCardFromSession() {
         if (!isLoggedIn()) {
             return null;
         }
@@ -58,6 +66,7 @@ public class SessionHandler {
 
     /**
      * Logs in the user by saving user details and setting session
+     *
      * @param role
      */
     public static void loginUser(String uid, String name, String username, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
@@ -112,13 +121,25 @@ public class SessionHandler {
     /**
      * Logs out user by clearing the session
      */
-    public static void logoutUser(Context context){
-        session = null;
-        SessionHandler.session.deleteSession();
-        // redirect user to Login activity
-        Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        ((Activity)context).finish();
+    public static void logoutUser(String token, String uid, final Context context) {
+        Call<Result> call = RetrofitClient.getInstance().getActiveUsersApi().logout(token, uid);
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                session = null;
+                SessionHandler.session.deleteSession();
+                // redirect user to Login activity
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                ((Activity) context).finish();
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+
+            }
+        });
+
     }
 }

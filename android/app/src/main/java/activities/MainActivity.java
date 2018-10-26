@@ -67,22 +67,22 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.nav_home:
                     selectedFragment = new HomeFragment();
-                    getSupportActionBar().setTitle("Home");
+                    getSupportActionBar().setTitle(R.string.title_home);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_create_nc:
                     selectedFragment = new CreateNCFragment();
-                    getSupportActionBar().setTitle("Create Name Card");
+                    getSupportActionBar().setTitle(R.string.title_create_nc);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_cards:
                     selectedFragment = new NameCardListFragment();
-                    getSupportActionBar().setTitle("View Name Cards");
+                    getSupportActionBar().setTitle(R.string.title_view_nc);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
                     if (cardID == null || cardID.equals("none") || cardID.isEmpty()){
-                        Toast.makeText(getBaseContext(), "No card id detected!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_friends:
                     selectedFragment = new FriendsFragment();
-                    getSupportActionBar().setTitle("Friends");
+                    getSupportActionBar().setTitle(R.string.title_friends);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
             }
@@ -113,13 +113,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_home:
                 selectedFragment = new HomeFragment();
-                getSupportActionBar().setTitle("Home");
+                getSupportActionBar().setTitle(R.string.title_home);
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
-                SessionHandler.logoutUser(this);
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+                SessionHandler.logoutUser(session.getUser().getToken(), session.getUser().getUid(), this);
                 break;
         }
         return true;

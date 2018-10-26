@@ -260,7 +260,7 @@ public class NFCActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                SessionHandler.logoutUser(this);
+                SessionHandler.logoutUser(session.getUser().getToken(),session.getUser().getUid(), this);
                 Intent intent = new Intent(NFCActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;
