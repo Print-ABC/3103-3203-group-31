@@ -196,7 +196,8 @@ exports.users_login = (req, res, next) => {
                   };
                   transporter.sendMail(mailOptions, function(error, info){
                     if (error) {
-                      console.log(error);
+                      //console.log(error);
+                      return res.status(404).json({});
                     } else {
                       console.log('Email sent: ' + info.response);
                       return res.status(200).json({
@@ -283,7 +284,7 @@ exports.users_2fa = (req, res, next) => {
                             activeUser.save()
                             .then()
                             .catch(err=>{
-                                console.log(err);
+                                //console.log(err);
                             });
                         }
                     })
@@ -301,7 +302,7 @@ exports.users_2fa = (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            return res.status(401);
+            return res.status(401).json({});
         });
 }
 

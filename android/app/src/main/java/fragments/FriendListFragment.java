@@ -214,7 +214,7 @@ public class FriendListFragment extends Fragment {
                     });
                 }
             });
-
+            //updateUI();
         }
         public void bindData(FriendsModel s){
             mFriends = s;
