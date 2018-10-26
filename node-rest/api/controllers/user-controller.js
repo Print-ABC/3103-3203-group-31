@@ -245,7 +245,7 @@ exports.users_2fa = (req, res, next) => {
                         username: user[0].username,
                         friendship: user[0].friendship,
                         cards: user[0].cards,
-                        uid: user[0]._id,
+                        _id: user[0]._id,
                         role: user[0].role
                     }, config.secret, {
                             // jwt token expires in 20 minutes
