@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    if (cardID == null || cardID =="none" || cardID.isEmpty()){
+                    if (cardID == null || cardID.equals("none") || cardID.isEmpty()){
                         Toast.makeText(getBaseContext(), "No card id detected!", Toast.LENGTH_SHORT).show();
                     }
                     else{

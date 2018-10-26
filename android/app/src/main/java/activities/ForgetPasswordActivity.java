@@ -16,8 +16,8 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
     TextView tvBackLogin, tvResetMsg;
     Button btnResetPW, btnGetVeri;
-    EditText etVeri, etEmail;
-    TextInputLayout tvVerify;
+    EditText etVeri, etEmail, etPassword;
+    TextInputLayout tvVerify, tvPassword;
     String email;
 
     @Override
@@ -31,6 +31,8 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etVeri = (EditText) findViewById(R.id.etVerify);
         tvVerify = (TextInputLayout) findViewById(R.id.tvVerify);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        tvPassword = (TextInputLayout) findViewById(R.id.tvPassword);
 
         tvBackLogin.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -51,6 +53,10 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     etEmail.setEnabled(false);
                     tvVerify.setVisibility(View.VISIBLE);
                     etVeri.setVisibility(View.VISIBLE);
+                    tvVerify.setVisibility(View.VISIBLE);
+                    etVeri.setVisibility(View.VISIBLE);
+                    tvPassword.setVisibility(View.VISIBLE);
+                    etPassword.setVisibility(View.VISIBLE);
                     btnGetVeri.setVisibility(View.GONE);
                     btnResetPW.setVisibility(View.VISIBLE);
                     btnResetPW.setOnClickListener(new View.OnClickListener(){
