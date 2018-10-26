@@ -47,7 +47,7 @@ public class FriendPendingFragment extends Fragment {
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
-                if(response.code() == 200)
+                if (response.code() == 200)
                     mFriendRequestList.addAll(response.body());
             }
 
@@ -161,8 +161,6 @@ public class FriendPendingFragment extends Fragment {
             });
         }
 
-        public void approveReqCall(){}
-
         public void removeReqCall(final FriendRequest req) {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
@@ -171,11 +169,18 @@ public class FriendPendingFragment extends Fragment {
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
-                    if(response.code() == 200) {
-                        mFriendRequestList.remove(req);
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(getActivity(), "Friend request not removed. Try again", Toast.LENGTH_SHORT).show();
+                    switch (response.code()) {
+                        case 200:
+                            try {
+                                mFriendRequestList.remove(req);
+                                mAdapter.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        default:
+                            Toast.makeText(getActivity(), "Friend request not removed. Try again", Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 }
 
