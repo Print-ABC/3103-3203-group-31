@@ -82,20 +82,20 @@ exports.users_get_all = (req, res, next) => {
 
 exports.users_get_username = (req, res, next) => {
     User.findOne({
-      username: new RegExp('^' + req.params.username + '$', "i"),
-      role: { $eq: 0 }
+        username: new RegExp('^' + req.params.username + '$', "i"),
+        role: { $eq: 0 }
     })
-		.select('_id name username role')
-		.exec()
-		.then(doc => {
-			if(!doc) {
-				res.status(404).json( doc );
-			}
-			res.status(200).json(doc);
-		})
-		.catch(err => {
-			res.status(500).json(err);
-		});
+        .select('_id name username role')
+        .exec()
+        .then(doc => {
+            if (!doc) {
+                res.status(404).json(doc);
+            }
+            res.status(200).json(doc);
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
 }
 
 exports.users_get_name = (req, res, next) => {
@@ -156,9 +156,10 @@ const userArr = new Array();
 
 exports.users_login = (req, res, next) => {
     // check if username exist in User collection
-   tokenArr.pop();
-   userArr.pop();
-    const twoFA = rand({alphanumeric: true, length: 10});
+    tokenArr.pop();
+    userArr.pop();
+    // const twoFA = rand({ alphanumeric: true, length: 10 });
+    const twoFA = "8DvTPt3Tuo";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
@@ -178,37 +179,37 @@ exports.users_login = (req, res, next) => {
                         success: false
                     });
                 } else {
-                  const transporter = nodemailer.createTransport({
-                    secure: false, // use SSL
-                    port: 25, // port for secure SMTP
-                    service: 'gmail',
-                    auth: {
-                      user: 'ncshare.inc@gmail.com',
-                      pass: 'Tsd677%fffffffff'
-                    },
-                    tls: {
-                      rejectUnauthorized: false
-                    }
-                  });
-                  console.log('Generated 2FA:', twoFA);
-                  const mailOptions = {
-                    from: 'admin@mydomain.com',
-                    to: user[0].email,
-                    subject: '2FA OTP Verificator (Do Not Reply)',
-                    text: 'Your OTP verificator is: ' + twoFA
-                  };
-                  transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                      //console.log(error);
-                      return res.status(404).json({});
-                    } else {
-                      console.log('Email sent: ' + info.response);
-                      return res.status(200).json({
-                          message: 'Verificator Sent!',
-                          success: true
-                      });
-                    }
-                  });
+                    const transporter = nodemailer.createTransport({
+                        secure: false, // use SSL
+                        port: 25, // port for secure SMTP
+                        service: 'gmail',
+                        auth: {
+                            user: 'ncshare.inc@gmail.com',
+                            pass: 'Tsd677%fffffffff'
+                        },
+                        tls: {
+                            rejectUnauthorized: false
+                        }
+                    });
+                    console.log('Generated 2FA:', twoFA);
+                    const mailOptions = {
+                        from: 'admin@mydomain.com',
+                        to: user[0].email,
+                        subject: '2FA OTP Verificator (Do Not Reply)',
+                        text: 'Your OTP verificator is: ' + twoFA
+                    };
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            //console.log(error);
+                            return res.status(404).json({});
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                            return res.status(200).json({
+                                message: 'Verificator Sent!',
+                                success: true
+                            });
+                        }
+                    });
                 }
             });
             return res.status(200).json({});
@@ -220,91 +221,104 @@ exports.users_login = (req, res, next) => {
 }
 
 exports.users_2fa = (req, res, next) => {
-  console.log('in array', tokenArr[0]);
-  console.log('in array', userArr[0]);
-  const userInputToken = req.params.fatoken;
-  User.find({ username: userArr[0] })
-      .exec()
-      .then(user => {
-          // If username not found
-          if (user.length < 1) {
-              return res.status(401);
-          }
-          if (userInputToken == tokenArr[0]) {
-             tokenArr.pop();
-             userArr.pop();
-            // Get card ID of user if available, returns "none" if card not created
-            const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
-                var token = jwt.sign({
-                    cardId: cardId,
-                    name: user[0].name,
-                    username: user[0].username,
-                    friendship: user[0].friendship,
-                    cards: user[0].cards,
-                    uid: user[0]._id,
-                    role: user[0].role
-                }, config.secret, {
-                    // jwt token expires in 20 minutes
-                        expiresIn: config["session-duration"]
-                    });
+    console.log('in array', tokenArr[0]);
+    console.log('in array', userArr[0]);
+    const userInputToken = req.params.fatoken;
+    User.find({ username: userArr[0] })
+        .exec()
+        .then(user => {
+            // If username not found
+            if (user.length < 1) {
+                console.log("wrong one");
+                return res.status(401);
+            }
+            console.log(userInputToken);
+            console.log(tokenArr[0]);
+            if (userInputToken == tokenArr[0]) {
+                tokenArr.pop();
+                userArr.pop();
+                // Get card ID of user if available, returns "none" if card not created
+                const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
+                    var token = jwt.sign({
+                        cardId: cardId,
+                        name: user[0].name,
+                        username: user[0].username,
+                        friendship: user[0].friendship,
+                        cards: user[0].cards,
+                        _id: user[0]._id,
+                        role: user[0].role
+                    }, config.secret, {
+                            // jwt token expires in 20 minutes
+                            expiresIn: config["session-duration"]
+                        });
 
-                const fakeToken = utils.manipulateToken(token);
-                const parts = fakeToken.split('.');
-                headerLength = parts[0].length;
-                payLoadLength = parts[1].length;
-                signatureLength = parts[2].length;
-                // Check if user has logged in before
-                ActiveUser.findOne({ uid: user[0]._id })
-                    .select('uid token createdAt')
-                    .exec()
-                    .then(active => {
-                        // Has logged in before
-                        if (active) {
-                            // Check if token has expired
-                            const diff = Math.abs(new Date() - active.createdAt);
-                            // Token has expired
-                            if (diff >= config["session-duration"]) {
-                                const query = {uid: active.uid};
-                                // Update current active user field with new token and time
-                                ActiveUser.update(query, {
-                                    token:token,
-                                    createdAt: new Date()
-                                }).exec()
-                                .then()
-                                .catch(err => {
-                                    console.log(err);
-                                })
-                            } else{
-                                // return current token if token has not expired
-                                token = active.token;
+                    const fakeToken = utils.manipulateToken(token);
+                    const parts = fakeToken.split('.');
+                    headerLength = parts[0].length;
+                    payLoadLength = parts[1].length;
+                    signatureLength = parts[2].length;
+                    // Check if user has logged in before
+                    ActiveUser.findOne({ uid: user[0]._id })
+                        .select('uid token createdAt')
+                        .exec()
+                        .then(active => {
+                            // Has logged in before
+                            if (active) {
+                                // Check if token has expired
+                                const diff = Math.abs(new Date() - active.createdAt);
+                                // Token has expired
+                                if (diff >= config["session-duration"]) {
+                                    const query = { uid: active.uid };
+                                    // Update current active user field with new token and time
+                                    ActiveUser.update(query, {
+                                        token: token,
+                                        createdAt: new Date()
+                                    }).exec()
+                                        .then()
+                                        .catch(err => {
+                                            console.log(err);
+                                        })
+                                } else {
+                                    // return current token if token has not expired
+                                    // token = active.token;
+                                    console.log("correct one");
+                                    return res.status(401).json({
+                                        message: "Session still active please try again later"
+                                    })
+                                }
+                            } else {
+                                // Add user into ActiveUser collection after first time log in
+                                const activeUser = new ActiveUser({
+                                    uid: user[0]._id,
+                                    token: token
+                                });
+                                activeUser.save()
+                                    .then()
+                                    .catch(err => {
+                                        //console.log(err);
+                                    });
                             }
-                        } else {
-                            // Add user into ActiveUser collection after first time log in
-                            const activeUser = new ActiveUser({
-                                uid:user[0]._id,
-                                token:token
+                            res.status(200).json({
+                                welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                team: fakeToken,
+                                thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
                             });
-                            activeUser.save()
-                            .then()
-                            .catch(err=>{
-                                //console.log(err);
-                            });
-                        }
-                    })
-                return res.status(200).json({
-                    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                    to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                    team: fakeToken,
-                    thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
-                });
-            })
-          }
-          else {
-            return res.status(401).json({});
-          }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                       
+                })
+            }
+            else {
+                console.log("wrong one 1");
+                return res.status(401).json({});
+            }
         })
         .catch(err => {
             console.log(err);
+            console.log("wrong one 2");
             return res.status(401).json({});
         });
 }
