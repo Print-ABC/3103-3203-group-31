@@ -9,7 +9,9 @@
         <item>Organization</item>
     </string-array>
 
+    <string name="title_home">Home</string>
     <string name="title_namecards">Name Cards</string>
+    <string name="title_friends">Friends</string>
     <string name="title_nfc">NFC</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_profile">Profile</string>
@@ -29,6 +31,9 @@
     <string name="invalid_password_error">Password must be of 16 to 35 characters containing at least 1 small-case letter, 1 Capital letter, 1 digit, 1 special character and the length should be between 16-35 characters</string>
     <string name="invalid_username_error">"Please enter a valid username (min 8 characters allowing points, dashes and underscores)"</string>
     <string name="invalid_confirm_password_error">Password does not match</string>
+    <string name="error_user_exists">User already exists</string>
+    <string name="error_create_user_failed">Failed to create user</string>
+    <string name="msg_user_create_success">User created successfully</string>
 
     <!-- Create Name Card Error Messages -->
     <string name="empty_org_name_error">Please enter your organization name</string>
@@ -42,11 +47,21 @@
     <string name="error_login_failed">Login Failed</string>
     <string name="error_empty_input">Cannot be empty!</string>
     <string name="dialog_logging_in">Logging In.. Please wait...</string>
-    <string name="title_home">Home</string>
     <string name="title_create_nc">Create Name Card</string>
     <string name="title_view_nc">View Name Cards</string>
     <string name="error_no_card_detected">No card id detected!</string>
-    <string name="title_friends">Friends</string>
     <string name="dialog_register">Registering.. Please wait...</string>
+    <string name="msg_login_success">Login successful</string>
+    <string name="msg_delete_friend_request">Friend request deleted</string>
+    <string name="msg_friend_request_not_removed">Friend request not removed. Try again</string>
+    <string name="msg_name_card_created">Name card successfully created</string>
+    <string name="error_nc_exists">Name card already exists</string>
+    <string name="error_nc_create_fail">Failed to create name card</string>
+    <string name="invalid_course_input">Please enter your course</string>
+    <string name="dialog_creating_nc">Creating.. Please wait...</string>
+    <string name="msg_card_added">Card Added!</string>
+    <string name="msg_error">Error!</string>
+    <string name="msg_verification_code_sent">Verification code sent!</string>
+
 
 </resources>

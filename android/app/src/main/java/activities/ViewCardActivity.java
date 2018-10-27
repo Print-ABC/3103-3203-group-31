@@ -8,15 +8,15 @@ import com.ncshare.ncshare.R;
 
 import common.SessionHandler;
 import common.Utils;
-import models.Session;
 
 public class ViewCardActivity extends AppCompatActivity {
 
-    private Session session;
+    private SessionHandler session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this);
+
         Utils.redirectToLogin(this);
 
         super.onCreate(savedInstanceState);

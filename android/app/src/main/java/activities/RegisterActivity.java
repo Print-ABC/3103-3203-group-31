@@ -86,15 +86,15 @@ public class RegisterActivity extends AppCompatActivity {
                             pDialog.dismiss();
                             switch (response.code()){
                                 case 201:
-                                    Toast.makeText(RegisterActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, R.string.msg_user_create_success, Toast.LENGTH_SHORT).show();
                                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                                     startActivity(i);
                                     break;
                                 case 409:
-                                    Toast.makeText(RegisterActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, R.string.error_user_exists, Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    Toast.makeText(RegisterActivity.this, "Failed to create user", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, R.string.error_create_user_failed, Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onFailure(Call<Result> call, Throwable t) {
                             btnRegister.setEnabled(true);
                             pDialog.dismiss();
-                            Toast.makeText(RegisterActivity.this, "Error "+ t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Error "+ t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

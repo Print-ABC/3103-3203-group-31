@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,8 @@ import activities.ViewCardActivity;
 import common.SessionHandler;
 import common.Utils;
 import models.CardList;
-import models.Session;
 import models.Student;
+import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +36,7 @@ public class ViewStudentCardFragment extends Fragment {
 
     private ArrayList<Student> students = new ArrayList<>();
     private RecyclerView rvViewStudentCard;
-    private Session session;
+    private SessionHandler session;
     private ViewStudentCardFragment.StudentAdapter mAdapter;
 
     private ImageView ivNoEntries;
@@ -52,7 +51,7 @@ public class ViewStudentCardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
 
         View view=inflater.inflate(R.layout.fragment_student_cards,container,false);
@@ -65,13 +64,14 @@ public class ViewStudentCardFragment extends Fragment {
 
         // Initialize card list array list
         CardList cardList = new CardList();
-        cardList.setCards(session.getUser().getCards());
+        User user = session.getUserDetails();
+        cardList.setCards(user.getCards());
 
         // Retrieve user's username
         Call<CardList> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
-                .getCards(session.getUser().getToken(), cardList);
+                .getCards(user.getToken(), cardList);
         call.enqueue(new Callback<CardList>() {
             @Override
             public void onResponse(Call<CardList> call, Response<CardList> response) {

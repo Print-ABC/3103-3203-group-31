@@ -3,7 +3,6 @@ package fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +11,12 @@ import android.widget.Button;
 
 import com.ncshare.ncshare.R;
 
-import activities.MainActivity;
 import common.SessionHandler;
 import common.Utils;
-import models.Session;
 
 public class HomeFragment extends Fragment {
 
-    private Session session;
+    private SessionHandler session;
     private Button btnExchangeNc, btnCreateNc, btnFriendList, btnViewCards;
     BottomNavigationItemView nameCardNavigationView;
 
@@ -29,7 +26,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Check if user is logged in
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
 
         return view;
