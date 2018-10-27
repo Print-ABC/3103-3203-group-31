@@ -21,7 +21,6 @@ import common.SessionHandler;
 import common.Utils;
 import models.FriendRequest;
 import models.Organization;
-import models.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,8 +28,8 @@ import retrofit2.Response;
 import services.RetrofitClient;
 
 public class FriendListFragment extends Fragment {
-    private List<String> friend = SessionHandler.getSessionUserObj().getFriendship();
-    private List<String> cards = SessionHandler.getSessionUserObj().getCards();
+    private List<String> friend;
+    private List<String> cards;
     private ArrayList<FriendsModel> mFriends;
     private ArrayList<Organization> mCards;
     private RecyclerView mSFriendsRecyclerView, mSNCRecyclerView;
@@ -39,18 +38,23 @@ public class FriendListFragment extends Fragment {
     private String friendUID, friendName, friendUname; //Selected friend's uid, name, and username
     private String OrgCardID, myCardId, myUID; //The selected card's id, my card Id and my UID.
     private String friendship, friendship1; //Concats
-    private Session session;
+    private SessionHandler session;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Check if user is logged in
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this.getContext());
+        user = session.getUserDetails();
+        friend = user.getFriendship();
+        cards = user.getCards();
+
         Utils.redirectToLogin(this.getContext());
 
-        myUID = session.getUser().getUid();
+        myUID = user.getUid();
 
-        friendship1 = myUID + "," + session.getUser().getName() + ","+ session.getUser().getUsername();
+        friendship1 = myUID + "," + user.getName() + ","+ user.getUsername();
 
         Log.i("MyUID------", myUID);
         Log.i("friendship1 ------", friendship1);
@@ -65,14 +69,20 @@ public class FriendListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        session = new SessionHandler(this.getContext());
+        user = session.getUserDetails();
+        friend = user.getFriendship();
+        cards = user.getCards();
+        String userCardId = user.getCardId();
+
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        if (session.getCardId() != null) {
+        if (userCardId != null) {
             Log.i("Card ID --------", "getCardId is not null");
-            myCardId = session.getCardId();
+            myCardId = user.getCardId();
         }
-        else if (!((session.getUser().getCardId()).equals("none"))){
+        else if (!((user.getCardId()).equals("none"))){
             Log.i("Card ID --------", "getUser().cardId is not null");
-            myCardId = session.getUser().getCardId();
+            myCardId = user.getCardId();
         }
         else{
             myCardId="";
@@ -97,7 +107,7 @@ public class FriendListFragment extends Fragment {
                 Call<Organization> call = RetrofitClient
                         .getInstance()
                         .getOrganizationApi()
-                        .getcardinfo(session.getUser().getToken(),cardId);
+                        .getcardinfo(user.getToken(),cardId);
                 call.enqueue(new Callback<Organization>() {
                     @Override
                     public void onResponse(Call<Organization> call, Response<Organization> response) {
@@ -159,6 +169,7 @@ public class FriendListFragment extends Fragment {
     private void updateUI(){
         mAdapter = new FriendListFragment.FriendsAdapter(mFriends);
         mSFriendsRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private class FriendsHolder extends RecyclerView.ViewHolder{
@@ -200,7 +211,7 @@ public class FriendListFragment extends Fragment {
                     Call<FriendRequest> callC = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .deleteFriend(session.getUser().getToken(), myUID, friendship);
+                            .deleteFriend(user.getToken(), myUID, friendship);
                     callC.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> callC, Response<FriendRequest> responseC) {
@@ -212,7 +223,7 @@ public class FriendListFragment extends Fragment {
                                     Call<FriendRequest> callB = RetrofitClient
                                             .getInstance()
                                             .getFriendRequestApi()
-                                            .deleteFriend(session.getUser().getToken(), friendUID, friendship1);
+                                            .deleteFriend(user.getToken(), friendUID, friendship1);
                                     callB.enqueue(new Callback<FriendRequest>() {
                                         @Override
                                         public void onResponse(Call<FriendRequest> callB, Response<FriendRequest> responseB) {
@@ -307,7 +318,7 @@ public class FriendListFragment extends Fragment {
                     Call<User> callA = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(session.getUser().getToken(),friendUID, OrgCardID);
+                            .checkForCard(user.getToken(),friendUID, OrgCardID);
                     callA.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> callA, Response<User> responseA) {

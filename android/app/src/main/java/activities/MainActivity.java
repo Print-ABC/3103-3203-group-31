@@ -22,21 +22,24 @@ import fragments.CreateNCFragment;
 import fragments.FriendsFragment;
 import fragments.HomeFragment;
 import fragments.NameCardListFragment;
-import models.Session;
+import models.User;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Session session;
+    private SessionHandler session;
     private BottomNavigationItemView friendsMenu;
     private String cardID;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this);
+        user = session.getUserDetails();
 
-        Log.i("User ID --------" , session.getUser().getUid());
+
+       // Log.i("User ID --------" , user.getUid());
         Utils.redirectToLogin(this);
         setContentView(R.layout.activity_main);
 
@@ -80,16 +83,16 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    Log.i("Card ID --------", session.getUser().getCardId());
-                    if (session.getCardId() != null) {
+                    Log.i("Card ID --------", user.getCardId());
+                    if (user.getCardId() != null) {
                         Log.i("Card ID --------", "getCardId is not null");
-                        cardID = session.getCardId();
+                        cardID = user.getCardId();
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                         startActivity(intent);
                     }
-                    else if (!((session.getUser().getCardId()).equals("none"))){
+                    else if (!((user.getCardId()).equals("none"))){
                         Log.i("Card ID --------", "getUser().cardId is not null");
-                        cardID = session.getUser().getCardId();
+                        cardID = user.getCardId();
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                         startActivity(intent);
                     }
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 break;
             case R.id.nav_logout:
-                SessionHandler.logoutUser(session.getUser().getToken(), session.getUser().getUid(), this);
+                session.logoutUser(user.getToken(), user.getUid(), this);
                 break;
         }
         return true;

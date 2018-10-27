@@ -15,7 +15,6 @@ import com.ncshare.ncshare.R;
 
 import common.SessionHandler;
 import models.FriendRequest;
-import models.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +27,7 @@ public class FriendSearchFragment extends Fragment {
     private TextView tvName, tvUsername;
     private Button btnAdd;
     private ImageButton btnSearch;
-    private Session mSession;
+    private SessionHandler mSession;
 
     public FriendSearchFragment() {
     }
@@ -48,7 +47,7 @@ public class FriendSearchFragment extends Fragment {
         tvUsername = (TextView) view.findViewById(R.id.tvFUsername);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
-        mSession = SessionHandler.getSession();
+        mSession = new SessionHandler(this.getContext());
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +98,12 @@ public class FriendSearchFragment extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                User user = mSession.getUserDetails();
                 Call<FriendRequest> call = RetrofitClient
                         .getInstance()
                         .getFriendRequestApi()
-                        .createRequest(mSession.getUser().getToken(), new FriendRequest(mSession.getUser().getUid(), mSession.getUser().getName(),
-                                mSession.getUser().getUsername(), f_uid, f_name, f_username));
+                        .createRequest(user.getToken(), new FriendRequest(user.getUid(), user.getName(),
+                                user.getUsername(), f_uid, f_name, f_username));
                 call.enqueue(new Callback<FriendRequest>() {
                     @Override
                     public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

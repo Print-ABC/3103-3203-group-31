@@ -3,64 +3,54 @@ package common;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.ncshare.ncshare.NCShare;
-
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import activities.LoginActivity;
 import models.Result;
-import models.Session;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import security.Decryptor;
+import security.Encryptor;
+import security.SecurityUtils;
 import services.RetrofitClient;
 
 
 public class SessionHandler {
-    private static Session session;
+    private static final String PREF_NAME = "UserSession";
+    private static final String KEY_EMPTY = "";
+    private static final String KEY_EXPIRES = "expires";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_USERNAME_IV = "usernameIV";
+    private static final String KEY_UID = "uid";
+    private static final String KEY_UID_IV = "uidIV";
+    private static final String KEY_CARDID = "card_ID";
+    private static final String KEY_CARDID_IV = "card_IDIV";
+    private static final String KEY_NAME = "full_name";
+    private static final String KEY_NAME_IV = "full_nameIV";
+    private static final String KEY_TOKEN = "token";
+    private static final String KEY_TOKEN_IV = "tokenIV";
+    private static final String KEY_ROLE = "role";
+    private static final String KEY_ROLE_IV = "roleIV";
+    private static final String KEY_FRIENDLIST = "friends";
+    private static final String KEY_FRIENDLIST_IV = "friendsIV";
+    private static final String KEY_CARDLIST = "card_list";
+    private static final String KEY_CARDLIST_IV = "card_listIV";
+    private Context mContext;
+    private SharedPreferences.Editor mEditor;
+    private SharedPreferences mPreferences;
+    private User user;
 
-    public static Session getSession() {
-        if (session == null) {
-            session = new Session();
-        }
-        return session;
-    }
-
-    public static void setSession(Session session) {
-        SessionHandler.session = session;
-    }
-
-    public static void setSessionUserObj(User user) {
-        SessionHandler.session.setUser(user);
-    }
-
-    public static User getSessionUserObj() {
-        return SessionHandler.session.getUser();
-    }
-
-    /**
-     * Add card ID to session
-     *
-     * @param cardId
-     */
-    public void addCardToSession(String cardId) {
-        SessionHandler.session.setCardId(cardId);
-    }
-
-    /**
-     * Retrieve card ID from session
-     * Output may be null if user is not logged in
-     * Output is "none" if user has not created a card
-     */
-    public String getCardFromSession() {
-        if (!isLoggedIn()) {
-            return null;
-        }
-        return SessionHandler.session.getCardId();
+    public SessionHandler(Context mContext) {
+        this.mContext = mContext;
+        mPreferences = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this.mEditor = mPreferences.edit();
     }
 
 
@@ -69,20 +59,68 @@ public class SessionHandler {
      *
      * @param role
      */
-    public static void loginUser(String uid, String name, String username, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
-        User user = new User();
-        user.setUid(uid);
-        user.setName(name);
-        user.setUsername(username);
-        user.setToken(token);
-        user.setRole(role);
-        user.setCardId(cardId);
-        user.setFriendship(friends);
-        user.setCards(cards);
-        setSessionUserObj(user);
+    public void loginUser(String uid, String name, String username, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
+
+        // Covert list to string + delimiter "-"
+        String cardList = Utils.listToString(cards);
+        String friendList = Utils.listToString(friends);
+
+        // Encrypt each string with their IV and store into sharedpreference
+        storeIntoSP(SecurityUtils.UID_ALIAS,uid, KEY_UID, KEY_UID_IV);
+        storeIntoSP(SecurityUtils.NAME_ALIAS, name, KEY_NAME, KEY_NAME_IV);
+        storeIntoSP(SecurityUtils.USERNAME_ALIAS, username, KEY_USERNAME, KEY_USERNAME_IV);
+        storeIntoSP(SecurityUtils.TOKEN_ALIAS, token, KEY_TOKEN, KEY_TOKEN_IV);
+        storeIntoSP(SecurityUtils.ROLE_ALIAS, role.toString(), KEY_ROLE, KEY_ROLE_IV);
+        storeIntoSP(SecurityUtils.CARDID_ALIAS, cardId, KEY_CARDID, KEY_CARDID_IV);
+        storeIntoSP(SecurityUtils.FRIENDLIST_ALIAS, friendList, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
+        storeIntoSP(SecurityUtils.CARDLIST_ALIAS, cardList, KEY_CARDLIST, KEY_CARDLIST_IV);
+
+//        Log.e("UID " + uid, retrieveFromSP(SecurityUtils.UID_ALIAS, KEY_UID, KEY_UID_IV));
+//        Log.e("NAME " + name, retrieveFromSP(KEY_NAME, KEY_NAME_IV));
+//        Log.e("USERNAME " + username, retrieveFromSP(SecurityUtils.USERNAME_ALIAS, KEY_USERNAME, KEY_USERNAME_IV));
+//        Log.e("TOKEN " + token, retrieveFromSP(KEY_TOKEN, KEY_TOKEN_IV));
+//        Log.e("ROLE " + role, retrieveFromSP(KEY_ROLE, KEY_ROLE_IV));
+//        Log.e("CARDID " + cardId, retrieveFromSP(KEY_CARDID, KEY_CARDID_IV));
+//        Log.e("FRIENDS " + friendList, retrieveFromSP(KEY_FRIENDLIST, KEY_FRIENDLIST_IV));
+//        Log.e("CARDS " + cardList, retrieveFromSP(KEY_CARDLIST, KEY_CARDLIST_IV));
+
+
         Date date = new Date();
+
         //Set user session for next 20 minutes
-        SessionHandler.session.setMillis(date.getTime() + (1200000));
+        long millis = date.getTime() + (1200000);
+        mEditor.putLong(KEY_EXPIRES, millis);
+        mEditor.commit();
+    }
+
+    public void storeIntoSP(String alias, String input, String spKey, String spIvKey) {
+        try {
+            Encryptor encryptor = new Encryptor();
+            encryptor.encryptText(alias, input);
+            String encryptedIv = encryptor.getIv();
+            String encryptedString = encryptor.getEncryption();
+
+            mEditor.putString(spKey, encryptedString);
+            mEditor.putString(spIvKey, encryptedIv);
+            mEditor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String retrieveFromSP(String alias, String spKey, String spIvKey) {
+        String decrypted = null;
+        try {
+            String encryptedString = mPreferences.getString(spKey, KEY_EMPTY);
+            String encryptedIv = mPreferences.getString(spIvKey, KEY_EMPTY);
+            Decryptor decryptor = new Decryptor();
+            decrypted = decryptor.decryptData(alias, encryptedString, encryptedIv);
+            Log.e(decrypted, "DECRYPTED LEH");
+            return decrypted;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return decrypted;
     }
 
     /**
@@ -90,19 +128,21 @@ public class SessionHandler {
      *
      * @return
      */
-    public static boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         Date currentDate = new Date();
+
+        long millis = mPreferences.getLong(KEY_EXPIRES, 0);
 
         /* If millis does not have a value
          then user is not logged in
          */
-        if (SessionHandler.session.getMillis() == 0) {
+        if (millis == 0) {
             return false;
         }
 
-        Date expiryTime = new Date(SessionHandler.session.getMillis());
+        Date expiryDate = new Date(millis);
 
-        return currentDate.before(expiryTime);
+        return currentDate.before(expiryDate);
     }
 
     /**
@@ -115,19 +155,34 @@ public class SessionHandler {
         if (!isLoggedIn()) {
             return null;
         }
-        return getSessionUserObj();
+        User user = new User();
+        String cardList = retrieveFromSP(SecurityUtils.CARDLIST_ALIAS, KEY_CARDLIST, KEY_CARDLIST_IV);
+        String friendList = retrieveFromSP(SecurityUtils.FRIENDLIST_ALIAS, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
+        List<String> cards = Arrays.asList(cardList.split("-"));
+        List<String> friends = Arrays.asList(friendList.split("-"));
+
+        user.setUid(retrieveFromSP(SecurityUtils.UID_ALIAS, KEY_UID, KEY_UID_IV));
+        user.setToken(retrieveFromSP(SecurityUtils.TOKEN_ALIAS, KEY_TOKEN, KEY_TOKEN_IV));
+        user.setCardId(retrieveFromSP(SecurityUtils.CARDID_ALIAS, KEY_CARDID, KEY_CARDID_IV));
+        user.setRole(Integer.parseInt(retrieveFromSP(SecurityUtils.ROLE_ALIAS, KEY_ROLE, KEY_ROLE_IV)));
+        user.setName(retrieveFromSP(SecurityUtils.NAME_ALIAS, KEY_NAME, KEY_NAME_IV));
+        user.setUsername(retrieveFromSP(SecurityUtils.USERNAME_ALIAS, KEY_USERNAME, KEY_USERNAME_IV));
+        user.setFriendship(friends);
+        user.setCards(cards);
+
+        return user;
     }
 
     /**
      * Logs out user by clearing the session
      */
-    public static void logoutUser(String token, String uid, final Context context) {
+    public void logoutUser(String token, String uid, final Context context) {
         Call<Result> call = RetrofitClient.getInstance().getActiveUsersApi().logout(token, uid);
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                session = null;
-                SessionHandler.session.deleteSession();
+                mEditor.clear();
+                mEditor.commit();
                 // redirect user to Login activity
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -140,6 +195,9 @@ public class SessionHandler {
 
             }
         });
+    }
 
+    public void setCardId(String cardId){
+//        storeIntoSP(cardId, KEY_CARDID, KEY_CARDID_IV);
     }
 }

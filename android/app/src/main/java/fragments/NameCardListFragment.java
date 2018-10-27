@@ -18,12 +18,11 @@ import java.util.List;
 
 import common.SessionHandler;
 import common.Utils;
-import models.Session;
 
 public class NameCardListFragment extends Fragment {
 
     private static final String TAG = "NameCardListFragment";
-    private Session session;
+    private SessionHandler session;
     private TabLayout tabs;
     private ViewPager viewPager;
 
@@ -35,7 +34,7 @@ public class NameCardListFragment extends Fragment {
 
         //TODO: uncomment
         // Check if user is logged in
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
 
         View view = inflater.inflate(R.layout.fragment_name_card_list, container, false);

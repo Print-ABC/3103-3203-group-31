@@ -17,8 +17,8 @@ import common.SessionHandler;
 import common.Utils;
 import models.Organization;
 import models.Result;
-import models.Session;
 import models.Student;
+import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +30,7 @@ import services.RetrofitClient;
 public class CreateNCFragment extends Fragment {
 
     private static final String TAG = "CreateNCFragment";
-    private Session session;
+    private SessionHandler session;
     private EditText etName, etOrgName, etJobTitle, etContact, etEmail, etCourse;
     private Button btnCreate;
     private String name, orgName, jobTitle, contact, email, course;
@@ -40,7 +40,7 @@ public class CreateNCFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Check if user is logged in
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
 
         View view;
@@ -79,17 +79,18 @@ public class CreateNCFragment extends Fragment {
                             return;
                         }
 
+                        User user = session.getUserDetails();
                         Organization org = new Organization();
                         org.setContact(contact);
                         org.setEmail(email);
                         org.setJobTitle(jobTitle);
                         org.setName(name);
                         org.setOrganization(orgName);
-                        org.setUid(session.getUser().getUid());
+                        org.setUid(user.getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getOrganizationApi()
-                                .addCard(session.getUser().getToken(), org);
+                                .addCard(user.getToken(), org);
                         call.enqueue(new Callback<Result>() {
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -97,7 +98,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 switch (response.code()) {
                                     case 201:
-                                        Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.msg_name_card_created, Toast.LENGTH_SHORT).show();
                                         session.setCardId(response.body().getCardId());
                                         getActivity().getSupportFragmentManager()
                                                 .beginTransaction()
@@ -105,10 +106,10 @@ public class CreateNCFragment extends Fragment {
                                                 .commit();
                                         break;
                                     case 406:
-                                        Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.error_nc_exists, Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
-                                        Toast.makeText(getActivity(), "Failed to create name card", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.error_nc_create_fail, Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
@@ -122,20 +123,21 @@ public class CreateNCFragment extends Fragment {
                     } else {
                         course = etCourse.getText().toString();
                         if (course.isEmpty()) {
-                            etCourse.setError("Please enter your course");
+                            etCourse.setError(getString(R.string.invalid_course_input));
                             return;
                         }
 
+                        User user = session.getUserDetails();
                         Student student = new Student();
                         student.setCourse(course);
                         student.setContact(contact);
                         student.setEmail(email);
                         student.setName(name);
-                        student.setUid(session.getUser().getUid());
+                        student.setUid(user.getUid());
                         Call<Result> call = RetrofitClient
                                 .getInstance()
                                 .getStudentApi()
-                                .addCard(session.getUser().getToken(), student);
+                                .addCard(user.getToken(), student);
                         call.enqueue(new Callback<Result>() {
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -143,7 +145,7 @@ public class CreateNCFragment extends Fragment {
                                 btnCreate.setEnabled(true);
                                 switch (response.code()) {
                                     case 201:
-                                        Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.msg_name_card_created, Toast.LENGTH_SHORT).show();
                                         session.setCardId(response.body().getCardId());
                                         getActivity().getSupportFragmentManager()
                                                 .beginTransaction()
@@ -151,10 +153,10 @@ public class CreateNCFragment extends Fragment {
                                                 .commit();
                                         break;
                                     case 406:
-                                        Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.error_nc_exists, Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
-                                        Toast.makeText(getActivity(), "Failed to create card", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.error_nc_create_fail, Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
@@ -197,7 +199,7 @@ public class CreateNCFragment extends Fragment {
     private void displayLoader() {
         btnCreate.setEnabled(false);
         pDialog = new ProgressDialog(this.getContext());
-        pDialog.setMessage("Creating.. Please wait...");
+        pDialog.setMessage(getString(R.string.dialog_creating_nc));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
