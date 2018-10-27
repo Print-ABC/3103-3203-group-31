@@ -127,17 +127,4 @@ public class Utils {
             return true;
         }
     }
-
-    /**
-     * Logout user if token has expired
-     * @param statusCode
-     * @param context
-     * @param activity
-     */
-    public static void checkTokenExpiry(int statusCode,Context context, Activity activity){
-        if (statusCode == 403){
-            Toast.makeText(activity, "Token has expired", Toast.LENGTH_SHORT).show();
-            SessionHandler.logoutUser(context);
-        }
-    }
 }

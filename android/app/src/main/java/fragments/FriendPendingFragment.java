@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,13 @@ public class FriendPendingFragment extends Fragment {
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
                 .getFriendRequestApi()
-                .getByRecipientID(mSession.getUser().getUid());
+                .getByRecipientID(mSession.getUser().getToken(), mSession.getUser().getUid());
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
                 if (response.code() == 200)
                     mFriendRequestList.addAll(response.body());
+                    Log.i("REQ SIZE", String.valueOf(mFriendRequestList.size()));
             }
 
             @Override
@@ -60,8 +62,8 @@ public class FriendPendingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_friend_pending, container, false);
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.requests_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         new Handler().postDelayed(new Runnable() {
@@ -117,7 +119,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(req.getRecipient_id(),
+                            .addFriend(mSession.getUser().getToken(), req.getRecipient_id(),
                                     req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -132,7 +134,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(req.getRequester_id(),
+                            .addFriend(mSession.getUser().getToken(), req.getRequester_id(),
                                     req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username());
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -165,7 +167,7 @@ public class FriendPendingFragment extends Fragment {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
                     .getFriendRequestApi()
-                    .deleteRequest(req.get_id());
+                    .deleteRequest(mSession.getUser().getToken(), req.get_id());
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

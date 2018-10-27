@@ -12,20 +12,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
-
-import common.Utils;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import common.Utils;
 import models.Result;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import services.RetrofitClient;
-import services.UserService;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -36,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity {
     private MaterialBetterSpinner s_role;
     private Button btnRegister;
     private String[] spinnerRole = {Utils.STUDENT, Utils.ORGANIZATION};
-    private UserService userService;
     private ProgressDialog pDialog;
 
     @Override
@@ -215,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void displayLoader() {
         btnRegister.setEnabled(false);
         pDialog = new ProgressDialog(RegisterActivity.this);
-        pDialog.setMessage("Registering.. Please wait...");
+        pDialog.setMessage(getString(R.string.dialog_register));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();

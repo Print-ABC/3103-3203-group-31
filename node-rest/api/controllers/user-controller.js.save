@@ -299,6 +299,33 @@ exports.users_2fa = (req, res, next) => {
                                         //console.log(err);
                                     });
                             }
+<<<<<<< HEAD
+                        } else {
+                            // Add user into ActiveUser collection after first time log in
+                            const activeUser = new ActiveUser({
+                                uid:user[0]._id,
+                                token:token
+                            });
+                            activeUser.save()
+                            .then()
+                            .catch(err=>{
+                                console.log(err);
+                            });
+                        }
+                    })
+		console.log('200 MESSAGEEEE');
+                return res.status(200).json({
+		    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                    to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                    team: fakeToken,
+                    thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
+                });
+            })
+          }
+          else {
+            return res.status(401).json({});
+          }
+=======
                             res.status(200).json({
                                 welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                                 to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
@@ -316,6 +343,7 @@ exports.users_2fa = (req, res, next) => {
                 console.log("wrong one 1");
                 return res.status(401).json({});
             }
+>>>>>>> 514520e32f32c8fb7a00d3f223b3880571d33486
         })
         .catch(err => {
             console.log(err);

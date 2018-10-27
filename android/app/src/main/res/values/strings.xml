@@ -9,9 +9,7 @@
         <item>Organization</item>
     </string-array>
 
-    <string name="title_home">Home</string>
     <string name="title_namecards">Name Cards</string>
-    <string name="title_friends">Friends</string>
     <string name="title_nfc">NFC</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_profile">Profile</string>
@@ -41,5 +39,14 @@
 
     <!-- Strings -->
     <string name="sit_name">Singapore Institute of Technology</string>
+    <string name="error_login_failed">Login Failed</string>
+    <string name="error_empty_input">Cannot be empty!</string>
+    <string name="dialog_logging_in">Logging In.. Please wait...</string>
+    <string name="title_home">Home</string>
+    <string name="title_create_nc">Create Name Card</string>
+    <string name="title_view_nc">View Name Cards</string>
+    <string name="error_no_card_detected">No card id detected!</string>
+    <string name="title_friends">Friends</string>
+    <string name="dialog_register">Registering.. Please wait...</string>
 
 </resources>

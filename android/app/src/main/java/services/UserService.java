@@ -21,8 +21,7 @@ public interface UserService {
     Call<User> searchByUsername(@Path("username") String user_username);
 
     @GET("users/findcards/{uid}/{card}")
-        //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
-    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
+    Call<User> checkForCard(@Header("Authorization") String token, @Path("uid") String user_id, @Path("card") String card_id);
 
     @POST("users/cards")
     Call<CardList> getCards(@Header("Authorization") String token, @Body CardList cards);
@@ -33,13 +32,6 @@ public interface UserService {
     @POST("users/login")
     Call<DummyResponse> login(@Body User body);
 
-    @POST("users/user")
-    Call<User> retrieve(@Query("id") String user_id);
-
-    @POST("users/retrieveFUID")
-    Call<User> retrieveFUID(@Query("id") String user_friend_id);
-
     @GET("users/check2fa/{fatoken}")
-        //Call<User> checkForCard(@Query("uid") String user_id, @Query("card") String card_id);
     Call<DummyResponse> check2fa(@Path("fatoken") String fatokenInput);
 }

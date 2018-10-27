@@ -9,6 +9,7 @@ import static okhttp3.logging.HttpLoggingInterceptor.*;
 
 public class RetrofitClient {
     //TODO: change base URL
+    //private static final String BASE_URL = "https://team31.icebear.online/";
     private static final String BASE_URL = "http://10.0.2.2:3000/";
     private Retrofit retrofit;
     private static RetrofitClient retrofitClient;
@@ -44,4 +45,5 @@ public class RetrofitClient {
     public FriendService getFriendRequestApi() { return retrofit.create(FriendService.class);}
     public OrganizationService getOrganizationApi() { return retrofit.create(OrganizationService.class);}
     public StudentService getStudentApi() { return retrofit.create(StudentService.class);}
+    public ActiveUsersService getActiveUsersApi() { return retrofit.create(ActiveUsersService.class);}
 }

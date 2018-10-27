@@ -15,14 +15,21 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ncshare.ncshare.R;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyStoreException;
+import java.util.ArrayList;
+
 import common.SecurityUtils;
 import common.SessionHandler;
 import common.Utils;
 import models.DummyResponse;
 import models.Session;
 import models.User;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import services.RetrofitClient;
 
@@ -70,12 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     login(v);
                 }
-            }
-        });
-        tvForgetPW.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-                startActivity(intent);
             }
         });
         tvRegister.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
     private void displayLoader() {
         btnLogin.setEnabled(false);
         pDialog = new ProgressDialog(LoginActivity.this);
-        pDialog.setMessage("Logging In.. Please wait...");
+        pDialog.setMessage(getString(R.string.dialog_logging_in));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -155,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10){
-                    Toast.makeText(LoginActivity.this, "Cannot be empty!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.error_empty_input, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     //CALL to CHECK 2FA
@@ -183,8 +184,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-                                    Toast.makeText(LoginActivity.this, "Invalid code!", Toast.LENGTH_SHORT).show();
-                                    tvLoginError.setText("Invalid Code");
+                                    Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+                                    tvLoginError.setText(R.string.error_login_failed);
                                     break;
                             }
                         }

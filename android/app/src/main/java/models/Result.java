@@ -4,12 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Result {
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("success")
-    @Expose
-    private Boolean success;
+
     @SerializedName("token")
     @Expose
     private String token;
@@ -24,22 +19,6 @@ public class Result {
     private String cardId;
 
     public Result() {
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
     }
 
     public String getUid() { return uid; }

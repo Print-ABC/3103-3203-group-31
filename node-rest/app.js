@@ -25,6 +25,7 @@ const usersRoutes = require('./api/routes/users');
 const organizationsRoutes = require('./api/routes/organizations');
 const studentsRoutes = require('./api/routes/students');
 const friendsRoutes = require('./api/routes/friends');
+const activeUsersRoutes = require('./api/routes/activeusers');
 
 // DB connection
 mongoose.connect('mongodb://127.0.0.1:27017',
@@ -48,6 +49,7 @@ app.use('/users', usersRoutes);
 app.use('/organizations', organizationsRoutes);
 app.use('/students', studentsRoutes);
 app.use('/friends', friendsRoutes);
+app.use('/activeusers', activeUsersRoutes);
 
 // Requests error handling
 app.use((req, res, next) => {
