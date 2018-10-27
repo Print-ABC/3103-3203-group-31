@@ -15,25 +15,19 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ncshare.ncshare.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.KeyStoreException;
-import java.util.ArrayList;
 
 import common.SecurityUtils;
 import common.SessionHandler;
-import common.Utils;
 import models.DummyResponse;
-import models.Session;
 import models.User;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 import services.RetrofitClient;
-
-import static java.security.AccessController.getContext;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,25 +35,24 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUsername, etPassword;
     Button btnLogin, btnSubmit;
     String username, password;
-    TextView tvForgetPW, tvRegister, tvLoginError;
+    TextView tvRegister, tvLoginError;
     EditText etCode;
     private ProgressDialog pDialog;
-    private Session session;
+    private SessionHandler session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = SessionHandler.getSession();
+        session = new SessionHandler(this);
 
         // Check if user is logged in
-        if (SessionHandler.isLoggedIn()){
+        if (session.isLoggedIn()) {
             directToMain();
         }
         setContentView(R.layout.activity_login);
 
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        tvForgetPW = (TextView) findViewById(R.id.tvForgetPW);
         tvRegister = (TextView) findViewById(R.id.tvRegister);
         tvLoginError = (TextView) findViewById(R.id.tvLoginError);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -73,8 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (username.isEmpty() || password.isEmpty()) {
                     tvLoginError.setText("Fields cannot be blank.");
-                }
-                else {
+                } else {
                     login(v);
                 }
             }
@@ -108,9 +100,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
                 pDialog.dismiss();
                 btnLogin.setEnabled(true);
-                switch (response.code()){
+                switch (response.code()) {
                     case 200:
-                        Toast.makeText(LoginActivity.this, "Verification code sent!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, R.string.msg_verification_code_sent, Toast.LENGTH_SHORT).show();
                         tvLoginError.setVisibility(View.INVISIBLE);
                         try {
                             open_dialog(v);
@@ -144,21 +136,20 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.show();
     }
 
-    public void open_dialog(View v){
+    public void open_dialog(View v) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
         View row = this.getLayoutInflater().inflate(R.layout.alert_dialog_2fa, null);
         alertDialog.setView(row);
-        btnSubmit =  (Button) row.findViewById(R.id.btnSubmit);
+        btnSubmit = (Button) row.findViewById(R.id.btnSubmit);
         etCode = (EditText) row.findViewById(R.id.etCode);
         final AlertDialog dialog = alertDialog.create();
         dialog.show();
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10){
+                if (etCode.getText().toString().isEmpty() || etCode.getText().toString().length() < 10) {
                     Toast.makeText(LoginActivity.this, R.string.error_empty_input, Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     //CALL to CHECK 2FA
                     Call<DummyResponse> call = RetrofitClient
                             .getInstance()
@@ -167,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<DummyResponse>() {
                         @Override
                         public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
-                            switch (response.code()){
+                            switch (response.code()) {
                                 case 200:
                                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                     tvLoginError.setVisibility(View.INVISIBLE);
@@ -176,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
                                         String jsonResponse = SecurityUtils.decoded(correctToken);
                                         Gson g = new Gson();
                                         User user = g.fromJson(jsonResponse, User.class);
-                                        SessionHandler.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
+                                        session.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
                                                 user.getCardId(), user.getFriendship(), user.getCards());
                                         directToMain();
                                     } catch (Exception e) {
@@ -184,7 +175,22 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-                                    Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        try {
+                                            JSONObject jsonBody = new JSONObject(response.errorBody().string());
+                                            if (jsonBody.has("message")) {
+                                                Toast.makeText(getApplicationContext(), jsonBody.getString("message"), Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, R.string.error_login_failed, Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        tvLoginError.setText(R.string.error_login_failed);
+                                        break;
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     tvLoginError.setText(R.string.error_login_failed);
                                     break;
                             }

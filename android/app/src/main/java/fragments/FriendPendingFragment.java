@@ -21,7 +21,7 @@ import java.util.List;
 
 import common.SessionHandler;
 import models.FriendRequest;
-import models.Session;
+import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,20 +31,22 @@ public class FriendPendingFragment extends Fragment {
     private ArrayList<FriendRequest> mFriendRequestList;
     private RecyclerView mSFriendsRecyclerView;
     private FriendPendingFragment.FriendsAdapter mAdapter;
-    private Session mSession;
+    private SessionHandler mSession;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSession = SessionHandler.getSession();
+        mSession = new SessionHandler(this.getContext());
         mFriendRequestList = new ArrayList<>();
         mFriendRequestList.clear();
 
+        user = mSession.getUserDetails();
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
                 .getFriendRequestApi()
-                .getByRecipientID(mSession.getUser().getToken(), mSession.getUser().getUid());
+                .getByRecipientID(user.getToken(), user.getUid());
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
@@ -115,11 +117,13 @@ public class FriendPendingFragment extends Fragment {
             mConfirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    user = mSession.getUserDetails();
                     // Add requester to friend list
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(mSession.getUser().getToken(), req.getRecipient_id(),
+                            .addFriend(user.getToken(), req.getRecipient_id(),
                                     req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -134,7 +138,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(mSession.getUser().getToken(), req.getRequester_id(),
+                            .addFriend(user.getToken(), req.getRequester_id(),
                                     req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username());
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -158,7 +162,7 @@ public class FriendPendingFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     removeReqCall(req);
-                    Toast.makeText(getActivity(), "Friend request deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.msg_delete_friend_request, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -167,7 +171,7 @@ public class FriendPendingFragment extends Fragment {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
                     .getFriendRequestApi()
-                    .deleteRequest(mSession.getUser().getToken(), req.get_id());
+                    .deleteRequest(user.getToken(), req.get_id());
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
@@ -181,7 +185,7 @@ public class FriendPendingFragment extends Fragment {
                             }
                             break;
                         default:
-                            Toast.makeText(getActivity(), "Friend request not removed. Try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.msg_friend_request_not_removed, Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }

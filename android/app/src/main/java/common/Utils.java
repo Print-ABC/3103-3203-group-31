@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ncshare.ncshare.R;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import activities.LoginActivity;
-import models.Session;
 
 public class Utils {
     public static final String STUDENT = "Student";
@@ -34,7 +33,8 @@ public class Utils {
      * @param context
      */
     public static void redirectToLogin(Context context){
-        if (!SessionHandler.isLoggedIn()){
+        SessionHandler session = new SessionHandler(context);
+        if (!session.isLoggedIn()){
             Intent intent = new Intent(context, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
@@ -47,8 +47,8 @@ public class Utils {
      * @param session
      * @return
      */
-    public static boolean isOrganization(Session session){
-        if (session.getUser().getRole() == ORGANIZATION_ROLE){
+    public static boolean isOrganization(SessionHandler session){
+        if (session.getUserDetails().getRole() == ORGANIZATION_ROLE){
             return true;
         } else {
             return false;
@@ -126,5 +126,15 @@ public class Utils {
             etContact.setError(null);
             return true;
         }
+    }
+
+    public static String listToString(List<String> list){
+        StringBuilder sb = new StringBuilder();
+        for (String s : list)
+        {
+            sb.append(s);
+            sb.append("-");
+        }
+        return sb.toString();
     }
 }
