@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         cardID = session.getUser().getCardId();
 
         Log.i("CARD ID --------" , session.getUser().getCardId());
+        Log.i("User ID --------" , session.getUser().getUid());
         Utils.redirectToLogin(this);
         setContentView(R.layout.activity_main);
 

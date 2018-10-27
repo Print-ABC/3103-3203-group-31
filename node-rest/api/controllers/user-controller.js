@@ -159,7 +159,7 @@ exports.users_login = (req, res, next) => {
     tokenArr.pop();
     userArr.pop();
     // const twoFA = rand({ alphanumeric: true, length: 10 });
-    const twoFA = "8DvTPt3Tuo";
+    const twoFA = "FFFF87283F";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
@@ -245,7 +245,7 @@ exports.users_2fa = (req, res, next) => {
                         username: user[0].username,
                         friendship: user[0].friendship,
                         cards: user[0].cards,
-                        _id: user[0]._id,
+                        uid: user[0]._id,
                         role: user[0].role
                     }, config.secret, {
                             // jwt token expires in 20 minutes
@@ -308,7 +308,7 @@ exports.users_2fa = (req, res, next) => {
                         .catch(err => {
                             console.log(err);
                         })
-                       
+
                 })
             }
             else {

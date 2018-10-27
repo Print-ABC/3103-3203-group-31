@@ -21,7 +21,7 @@ public class User {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("_id")
+    @SerializedName("uid")
     @Expose
     private String uid;
     @SerializedName("username")

@@ -52,13 +52,29 @@ public class FriendListFragment extends Fragment {
 
         friendship1 = myUID + "," + session.getUser().getName() + ","+ session.getUser().getUsername();
         Log.i("MyCardID-------", myCardId);
-        Log.i("MyUID------", myUID);
+//        Log.i("MyUID------", myUID);
         Log.i("friendship1 ------", friendship1);
 
         mFriends = new ArrayList<>();
         mFriends.clear();
         mCards = new ArrayList<>();
         mCards.clear();
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        mFriends.clear();
+        for(int i = 0; i < friend.size(); i++){
+            String str[] = friend.get(i).split(",");
+            FriendsModel friends = new FriendsModel();
+            friends.setUID(str[0]);
+            friends.setName(str[1]);
+            friends.setUsername(str[2]);
+            mFriends.add(friends);
+        }
         for(int i = 0; i < cards.size(); i++){
             String cardId = cards.get(i);
             Log.i("CARD LIST --------", cardId);
@@ -95,21 +111,6 @@ public class FriendListFragment extends Fragment {
             else{
                 Log.i("Compare CardID", "it matches my cardId or it does not exist!");
             }
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
-        mFriends.clear();
-        for(int i = 0; i < friend.size(); i++){
-            String str[] = friend.get(i).split(",");
-            FriendsModel friends = new FriendsModel();
-            friends.setUID(str[0]);
-            friends.setName(str[1]);
-            friends.setUsername(str[2]);
-            mFriends.add(friends);
         }
         new Handler().postDelayed(new Runnable() {
             @Override
