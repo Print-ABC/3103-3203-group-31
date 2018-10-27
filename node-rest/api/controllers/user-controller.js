@@ -158,7 +158,8 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
    tokenArr.pop();
    userArr.pop();
-    const twoFA = rand({alphanumeric: true, length: 10});
+   // const twoFA = rand({alphanumeric: true, length: 10});
+    const twoFA = 'FFFF87283F';
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
@@ -166,6 +167,7 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             // If username not found
             if (user.length < 1) {
+		console.log('USERNAME NOT FOUND');
                 return res.status(401).json({});
             }
             // Compare input password with stored password
@@ -214,7 +216,7 @@ exports.users_login = (req, res, next) => {
             return res.status(200).json({});
         })
         .catch(err => {
-            // console.log(err);
+            console.log(err);
             return res.status(401).json({});
         });
 }
@@ -287,12 +289,13 @@ exports.users_2fa = (req, res, next) => {
                             activeUser.save()
                             .then()
                             .catch(err=>{
-                                //console.log(err);
+                                console.log(err);
                             });
                         }
                     })
+		console.log('200 MESSAGEEEE');
                 return res.status(200).json({
-                    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+		    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                     to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                     team: fakeToken,
                     thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
