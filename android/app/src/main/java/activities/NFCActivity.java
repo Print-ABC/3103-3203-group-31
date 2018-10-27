@@ -57,11 +57,23 @@ public class NFCActivity extends AppCompatActivity
 
         myUid = session.getUser().getUid();
         myRole = session.getUser().getRole();
-        myCard = session.getUser().getCardId();
+       // myCard = session.getCardId();
+        if (session.getCardId() != null) {
+            Log.i("Card ID --------", "getCardId is not null");
+            myCard = session.getCardId();
+        }
+        else if (!((session.getUser().getCardId()).equals("none"))){
+            Log.i("Card ID --------", "getUser().cardId is not null");
+            myCard = session.getUser().getCardId();
+        }
+        else{
+            myCard="";
+            Log.i("Card ID --------", "null");
+        }
 
         Log.i("myUid", myUid);
         Log.i("myRole", String.valueOf(myRole));
-        Log.i("myCard", myCard);
+        //Log.i("myCard", myCard);
 
         messagesToSendArray.add(myUid);
         messagesToSendArray.add(String.valueOf(myRole));
@@ -191,7 +203,7 @@ public class NFCActivity extends AppCompatActivity
                     Call<User> call = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(myUid, sCard);
+                            .checkForCard(session.getUser().getToken(), myUid, sCard);
                     call.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -203,7 +215,7 @@ public class NFCActivity extends AppCompatActivity
                                 Call<User> callA = RetrofitClient
                                         .getInstance()
                                         .getUserApi()
-                                        .checkForCard(sUid, myCard);
+                                        .checkForCard(session.getUser().getToken(), sUid, myCard);
                                 callA.enqueue(new Callback<User>() {
                                     @Override
                                     public void onResponse(Call<User> callA, Response<User> responseA) {
@@ -260,7 +272,7 @@ public class NFCActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                SessionHandler.logoutUser(this);
+                SessionHandler.logoutUser(session.getUser().getToken(),session.getUser().getUid(), this);
                 Intent intent = new Intent(NFCActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;

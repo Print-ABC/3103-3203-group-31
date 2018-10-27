@@ -79,12 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        tvForgetPW.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
         tvRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -144,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
     private void displayLoader() {
         btnLogin.setEnabled(false);
         pDialog = new ProgressDialog(LoginActivity.this);
-        pDialog.setMessage("Logging In.. Please wait...");
+        pDialog.setMessage(getString(R.string.dialog_logging_in));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -162,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(etCode.getText().toString().isEmpty() || etCode.getText().toString().length()<10){
-                    Toast.makeText(LoginActivity.this, "Cannot be empty!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.error_empty_input, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     //CALL to CHECK 2FA
@@ -190,8 +184,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     break;
                                 default:
-                                    Toast.makeText(LoginActivity.this, "Invalid code!", Toast.LENGTH_SHORT).show();
-                                    tvLoginError.setText("Login Failed");
+                                    Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+                                    tvLoginError.setText(R.string.error_login_failed);
                                     break;
                             }
                         }

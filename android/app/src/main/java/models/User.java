@@ -21,7 +21,7 @@ public class User {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("uid")
+    @SerializedName("_id")
     @Expose
     private String uid;
     @SerializedName("username")
@@ -51,6 +51,9 @@ public class User {
     @SerializedName("iat")
     @Expose
     private String iat;
+    @SerializedName("exp")
+    @Expose
+    private String exp;
 
     public String getIat() {
         return iat;
@@ -64,14 +67,7 @@ public class User {
         return exp;
     }
 
-    public void setExp(String exp) {
-        this.exp = exp;
-    }
-
-    @SerializedName("exp")
-    @Expose
-
-    private String exp;
+    public void setExp(String exp) { this.exp = exp; }
 
     public String getMessage() { return message; }
 

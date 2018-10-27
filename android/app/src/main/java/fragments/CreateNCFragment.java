@@ -141,14 +141,14 @@ public class CreateNCFragment extends Fragment {
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
                                 btnCreate.setEnabled(true);
-                                switch (response.code()){
+                                switch (response.code()) {
                                     case 201:
                                         Toast.makeText(getActivity(), "Name card successfully created", Toast.LENGTH_SHORT).show();
-                                            session.setCardId(response.body().getCardId());
-                                            getActivity().getSupportFragmentManager()
-                                                    .beginTransaction()
-                                                    .replace(R.id.fragment_container, new HomeFragment())
-                                                    .commit();
+                                        session.setCardId(response.body().getCardId());
+                                        getActivity().getSupportFragmentManager()
+                                                .beginTransaction()
+                                                .replace(R.id.fragment_container, new HomeFragment())
+                                                .commit();
                                         break;
                                     case 406:
                                         Toast.makeText(getActivity(), "Name card already exists", Toast.LENGTH_SHORT).show();

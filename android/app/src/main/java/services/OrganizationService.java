@@ -14,5 +14,5 @@ public interface OrganizationService {
     Call<Result> addCard(@Header("Authorization") String token, @Body Organization body);
 
     @GET("organizations/{card}")
-    Call<Organization> getcardinfo(@Path("card") String card_id);
+    Call<Organization> getcardinfo(@Header("Authorization") String token, @Path("card") String card_id);
 }

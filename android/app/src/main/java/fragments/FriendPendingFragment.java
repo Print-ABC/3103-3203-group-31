@@ -44,7 +44,7 @@ public class FriendPendingFragment extends Fragment {
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
                 .getFriendRequestApi()
-                .getByRecipientID(mSession.getUser().getUid());
+                .getByRecipientID(mSession.getUser().getToken(), mSession.getUser().getUid());
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
@@ -119,7 +119,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(req.getRecipient_id(),
+                            .addFriend(mSession.getUser().getToken(), req.getRecipient_id(),
                                     req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -134,7 +134,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(req.getRequester_id(),
+                            .addFriend(mSession.getUser().getToken(), req.getRequester_id(),
                                     req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username());
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
@@ -167,7 +167,7 @@ public class FriendPendingFragment extends Fragment {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
                     .getFriendRequestApi()
-                    .deleteRequest(req.get_id());
+                    .deleteRequest(mSession.getUser().getToken(), req.get_id());
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

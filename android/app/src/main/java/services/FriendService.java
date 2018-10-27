@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -18,17 +19,17 @@ public interface FriendService {
     Call<List<FriendRequest>> getByRequesterID(@Path("uid") String uid);
 
     @GET("friends/recp/{uid}")
-    Call<List<FriendRequest>> getByRecipientID(@Path("uid") String uid);
+    Call<List<FriendRequest>> getByRecipientID(@Header("Authorization") String token, @Path("uid") String uid);
 
     @POST("friends/")
-    Call<FriendRequest> createRequest(@Body FriendRequest body);
+    Call<FriendRequest> createRequest(@Header("Authorization") String token, @Body FriendRequest body);
 
     @PATCH("friends/{uid}/add/{friend}")
-    Call<FriendRequest> addFriend(@Path("uid") String uid, @Path("friend") String friend);
+    Call<FriendRequest> addFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
 
     @PATCH("friends/{uid}/del/{friend}")
-    Call<FriendRequest> deleteFriend(@Path("uid") String uid, @Path("friend") String friend);
+    Call<FriendRequest> deleteFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
 
     @DELETE("friends/{id}")
-    Call<FriendRequest> deleteRequest(@Path("id") String uid);
+    Call<FriendRequest> deleteRequest(@Header("Authorization") String token, @Path("id") String uid);
 }

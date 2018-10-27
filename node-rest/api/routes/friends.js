@@ -18,7 +18,7 @@ router.post('/', FriendController.friend_post_request);
 router.patch("/:uid/add/:friend", FriendController.update_friendlist_add);
 
 // Handles PUT requests (Removes an existing friend from friendlist)
-router.patch("/:uid/del/:friend", FriendController.update_friendlist_remove);
+router.patch("/:uid/del/:friend", checkAuth, FriendController.update_friendlist_remove);
 
 // Handles DELETE requests (Delete a request with a given recipient uid)
 router.delete('/:id', FriendController.friend_delete_request);

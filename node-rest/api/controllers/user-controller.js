@@ -245,7 +245,7 @@ exports.users_2fa = (req, res, next) => {
                         username: user[0].username,
                         friendship: user[0].friendship,
                         cards: user[0].cards,
-                        uid: user[0]._id,
+                        _id: user[0]._id,
                         role: user[0].role
                     }, config.secret, {
                             // jwt token expires in 20 minutes
@@ -434,7 +434,7 @@ exports.users_find_cards = (req, res, next) => {
                 if (doc.cards.indexOf(cardToCheck) > -1) {
                     //Card already exist in collection, end.
                     console.log("EXIST!");
-                    res.status(200).json({ message: 'Card already exist in collection', success: true });
+                    res.status(406).json({});
                 } else {
                     //Card does not exist, proceed to add into database
                     console.log("NOT EXIST!");
@@ -446,10 +446,7 @@ exports.users_find_cards = (req, res, next) => {
                                 console.log(err);
                                 res.status(500).json({ error: err, success: false });
                             }
-                            res.status(200).json({
-                                message: 'New card added to collection!',
-                                success: true
-                            });
+                            res.status(200).json({ });
                         }
                     );
                 }

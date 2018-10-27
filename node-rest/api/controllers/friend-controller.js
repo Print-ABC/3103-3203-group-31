@@ -82,10 +82,7 @@ exports.update_friendlist_remove = (req, res, next) => {
         console.log(err);
         res.status(500).json( { error: err, success: false } );
       }
-      res.status(200).json({
-        message: 'Update: Friend was removed from friendlist',
-        success: true
-      });
+      res.status(200).json({});
       console.log(docs);
     }
   );
