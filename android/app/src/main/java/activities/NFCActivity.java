@@ -186,6 +186,7 @@ public class NFCActivity extends AppCompatActivity
                 sRole = Integer.parseInt(messagesReceivedArray.get(1));
                 sCard = messagesReceivedArray.get(2);
 
+                Log.i("RECEIVED ARRAYS", sUid + "," + sRole + "," + sCard);
                 Toast.makeText(this, "Received " + messagesReceivedArray.size() +
                         " Messages", Toast.LENGTH_LONG).show();
 
@@ -207,33 +208,45 @@ public class NFCActivity extends AppCompatActivity
                     call.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            Toast.makeText(NFCActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            if(response.body().getSuccess()){
-                                Log.i("onResponseeeee","Card Added!");
+                            switch (response.code()) {
+                                case 200:
+                                    Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
+                                    Log.i("onResponseeeee","Card Added!");
 
-                                //If nfc only sends from one device then include this whole chunk
-                                Call<User> callA = RetrofitClient
-                                        .getInstance()
-                                        .getUserApi()
-                                        .checkForCard(session.getUser().getToken(), sUid, myCard);
-                                callA.enqueue(new Callback<User>() {
-                                    @Override
-                                    public void onResponse(Call<User> callA, Response<User> responseA) {
-                                        Toast.makeText(NFCActivity.this, responseA.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                        if(responseA.body().getSuccess()){
-                                            Log.i("onResponseeeee -1","Card Exist!");
-                                        } else {
-                                            Log.i("onResponseeeee -1","Card NOT Exist!");
+                                    //If nfc only sends from one device then include this whole chunk
+                                    Call<User> callA = RetrofitClient
+                                            .getInstance()
+                                            .getUserApi()
+                                            .checkForCard(session.getUser().getToken(), sUid, myCard);
+                                    callA.enqueue(new Callback<User>() {
+                                        @Override
+                                        public void onResponse(Call<User> callA, Response<User> responseA) {
+                                            switch (responseA.code()) {
+                                                case 200:
+                                                    Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                case 406:
+                                                    Toast.makeText(NFCActivity.this, "Card Already exist!", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                default:
+                                                    Toast.makeText(NFCActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<User> callA, Throwable t) {
-                                        Log.i("onFailure","ERROR!");
-                                    }
-                                });
-                            } else {
-                                Log.i("onResponseeeee","Card NOT Added!");
+                                        @Override
+                                        public void onFailure(Call<User> callA, Throwable t) {
+                                            Log.i("onFailure","ERROR!");
+                                        }
+                                    });
+                                    break;
+                                case 500:
+                                    Toast.makeText(NFCActivity.this, "Card NOT Added!", Toast.LENGTH_SHORT).show();
+                                    Log.i("onResponseeeee","Card NOT Added!");
+                                    break;
+                                default:
+                                    Toast.makeText(NFCActivity.this, "Error transferring card", Toast.LENGTH_SHORT).show();
+                                    break;
                             }
                         }
                         @Override
@@ -241,13 +254,11 @@ public class NFCActivity extends AppCompatActivity
                             Log.i("onFailure","ERROR!");
                         }
                     });
-
-
                     Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
                 }
             }
             else {
-                Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
             }
         }
     }
