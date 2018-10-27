@@ -40,10 +40,13 @@ public class NFCActivity extends AppCompatActivity
     private ArrayList<String> messagesReceivedArray = new ArrayList<>();
     private Session session;
 
+    private TextView tvUsername, tvRole, tvCardID, tvMsg;
+
     private TextView tvLABEL;
     private String sUid, myUid, sCard, myCard;
     private int sRole, myRole;
     private NfcAdapter mNfcAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +58,20 @@ public class NFCActivity extends AppCompatActivity
 
         tvLABEL =  (TextView) findViewById(R.id.tvLABEL);
 
+        tvUsername = (TextView) findViewById(R.id.tvUsername1);
+        tvRole = (TextView) findViewById(R.id.tvRole1);
+        tvCardID = (TextView) findViewById(R.id.tvCardID1);
+        tvMsg = (TextView) findViewById(R.id.tvMsg1);
+
+
         myUid = session.getUser().getUid();
         myRole = session.getUser().getRole();
-       // myCard = session.getCardId();
+
+       /* myUid = "aaaaaaaaaaaaaaaaa";
+        myRole = 1;
+        myCard = "aaaaaaaaaaaaaaaaaaaaa";
+*/
+        myCard = session.getCardId();
         if (session.getCardId() != null) {
             Log.i("Card ID --------", "getCardId is not null");
             myCard = session.getCardId();
@@ -73,12 +87,18 @@ public class NFCActivity extends AppCompatActivity
 
         Log.i("myUid", myUid);
         Log.i("myRole", String.valueOf(myRole));
-        //Log.i("myCard", myCard);
+        Log.i("myCard", myCard);
 
         messagesToSendArray.add(myUid);
         messagesToSendArray.add(String.valueOf(myRole));
         messagesToSendArray.add(myCard);
 
+/*
+        tvUsername.setText(messagesToSendArray.get(0));
+        tvRole.setText(messagesToSendArray.get(1));
+        tvCardID.setText(messagesToSendArray.get(2));
+        tvMsg.setText("Sending");
+*/
         int listSize = messagesToSendArray.size();
         for (int i = 0; i < listSize; i++) {
             Log.i("messagesToSendArray -> ", messagesToSendArray.get(i));
@@ -121,6 +141,7 @@ public class NFCActivity extends AppCompatActivity
     public void onNdefPushComplete(NfcEvent event) {
         //This is called when the system detects that our NdefMessage was
         //Successfully sent.
+        messagesToSendArray.clear();
     }
 
     @Override
@@ -131,6 +152,7 @@ public class NFCActivity extends AppCompatActivity
         }
         //We'll write the createRecords() method in just a moment
         NdefRecord[] recordsToAttach = createRecords();
+        Log.i("CreateNdefMessage", "----------------HERE");
         //When creating an NdefMessage we need to provide an NdefRecord[]
         return new NdefMessage(recordsToAttach);
     }
@@ -156,13 +178,14 @@ public class NFCActivity extends AppCompatActivity
             for (int i = 0; i < messagesToSendArray.size(); i++){
                 byte[] payload = messagesToSendArray.get(i).
                         getBytes(Charset.forName("UTF-8"));
-
                 NdefRecord record = NdefRecord.createMime("text/plain",payload);
                 records[i] = record;
             }
         }
         records[messagesToSendArray.size()] =
                 NdefRecord.createApplicationRecord(getPackageName());
+
+        Log.i("createRecords", "----------------HERE");
         return records;
     }
 
@@ -186,15 +209,19 @@ public class NFCActivity extends AppCompatActivity
                 sRole = Integer.parseInt(messagesReceivedArray.get(1));
                 sCard = messagesReceivedArray.get(2);
 
+               /* tvUsername.setText(sUid);
+                tvRole.setText(sRole+"");
+                tvCardID.setText(sCard);
+                tvMsg.setText("Received");
+*/
                 Log.i("RECEIVED ARRAYS", sUid + "," + sRole + "," + sCard);
-                Toast.makeText(this, "Received " + messagesReceivedArray.size() +
-                        " Messages", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, "Received!", Toast.LENGTH_LONG).show();
 
                 //Check if the other person is opposite role of user
                 if (myRole == sRole) {
                     Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
                     Log.i("Received - Role:", "Cannot NFC with same role");
+                    //tvMsg.setText("NOT OPPOSITE USER!!");
                 }
                 else {
                     //Add the RETROFIT HERE
@@ -212,7 +239,6 @@ public class NFCActivity extends AppCompatActivity
                                 case 200:
                                     Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
                                     Log.i("onResponseeeee","Card Added!");
-
                                     //If nfc only sends from one device then include this whole chunk
                                     Call<User> callA = RetrofitClient
                                             .getInstance()
@@ -233,7 +259,6 @@ public class NFCActivity extends AppCompatActivity
                                                     break;
                                             }
                                         }
-
                                         @Override
                                         public void onFailure(Call<User> callA, Throwable t) {
                                             Log.i("onFailure","ERROR!");
@@ -254,16 +279,17 @@ public class NFCActivity extends AppCompatActivity
                             Log.i("onFailure","ERROR!");
                         }
                     });
-                    Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
-                }
-            }
-            else {
-                Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
             }
         }
+        else {
+            Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
+        }
     }
+}
     @Override
     public void onNewIntent(Intent intent) {
+        Log.i("onNewIntent", "---------------- here");
         handleNfcIntent(intent);
     }
 

@@ -20,4 +20,43 @@
         android:textSize="30dp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/tvUsername1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="123dp"
+        android:layout_marginTop="124dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvRole1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/tvUsername1"
+        android:layout_marginTop="198dp"
+        app:layout_constraintStart_toStartOf="@+id/tvUsername1"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername1" />
+
+    <TextView
+        android:id="@+id/tvCardID1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tvUsername1"
+        android:layout_marginBottom="202dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvRole1"
+        app:layout_constraintTop_toBottomOf="@+id/tvRole1" />
+
+    <TextView
+        android:id="@+id/tvMsg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tvUsername1"
+        android:layout_marginBottom="163dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvCardID1"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardID1" />
+
 </RelativeLayout>

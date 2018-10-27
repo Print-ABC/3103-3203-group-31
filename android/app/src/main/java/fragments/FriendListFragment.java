@@ -159,6 +159,7 @@ public class FriendListFragment extends Fragment {
     private void updateUI(){
         mAdapter = new FriendListFragment.FriendsAdapter(mFriends);
         mSFriendsRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private class FriendsHolder extends RecyclerView.ViewHolder{
