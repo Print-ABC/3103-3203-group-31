@@ -103,16 +103,40 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 switch (response.code()) {
                     case 200:
-                        Toast.makeText(LoginActivity.this, R.string.msg_verification_code_sent, Toast.LENGTH_SHORT).show();
+                        //Success Login
+                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         tvLoginError.setVisibility(View.INVISIBLE);
                         try {
-                            open_dialog(v);
+                            String correctToken = SecurityUtils.manipulateToken(response.body().getToken());
+                            String jsonResponse = SecurityUtils.decoded(correctToken);
+                            Gson g = new Gson();
+                            User user = g.fromJson(jsonResponse, User.class);
+                            session.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
+                                    user.getCardId(), user.getFriendship(), user.getCards());
+                            directToMain();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        break;
+
                     default:
-                        //Toast.makeText(LoginActivity.this, "Code not sent!", Toast.LENGTH_SHORT).show();
-                        tvLoginError.setText("Login failed");
+                        try {
+                            try {
+                                JSONObject jsonBody = new JSONObject(response.errorBody().string());
+                                if (jsonBody.has("message")) {
+                                    Toast.makeText(getApplicationContext(), jsonBody.getString("message"), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(LoginActivity.this, R.string.error_login_failed, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            tvLoginError.setText(R.string.error_login_failed);
+                            break;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        tvLoginError.setText(R.string.error_login_failed);
                         break;
                 }
             }
@@ -135,80 +159,5 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
-    }
-
-    public void open_dialog(View v) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-        View row = this.getLayoutInflater().inflate(R.layout.alert_dialog_2fa, null);
-        alertDialog.setView(row);
-        btnSubmit = (Button) row.findViewById(R.id.btnSubmit);
-        etCode = (EditText) row.findViewById(R.id.etCode);
-        final AlertDialog dialog = alertDialog.create();
-        dialog.show();
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (etCode.getText().toString().isEmpty() || etCode.getText().toString().length() < 10) {
-                    Toast.makeText(LoginActivity.this, R.string.error_empty_input, Toast.LENGTH_SHORT).show();
-                } else {
-                    //CALL to CHECK 2FA
-                    Call<DummyResponse> call = RetrofitClient
-                            .getInstance()
-                            .getUserApi()
-                            .check2fa(etCode.getText().toString());
-                    call.enqueue(new Callback<DummyResponse>() {
-                        @RequiresApi(api = Build.VERSION_CODES.M)
-                        @Override
-                        public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
-                            switch (response.code()) {
-                                case 200:
-                                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                    tvLoginError.setVisibility(View.INVISIBLE);
-                                    try {
-                                        String correctToken = SecurityUtils.manipulateToken(response.body().getToken());
-                                        String jsonResponse = SecurityUtils.decoded(correctToken);
-                                        Gson g = new Gson();
-                                        User user = g.fromJson(jsonResponse, User.class);
-                                        session.loginUser(user.getUid(), user.getName(), user.getUsername(), correctToken, user.getRole(),
-                                                user.getCardId(), user.getFriendship(), user.getCards());
-                                        directToMain();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    break;
-                                default:
-                                    try {
-                                        try {
-                                            JSONObject jsonBody = new JSONObject(response.errorBody().string());
-                                            if (jsonBody.has("message")) {
-                                                Toast.makeText(getApplicationContext(), jsonBody.getString("message"), Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(LoginActivity.this, R.string.error_login_failed, Toast.LENGTH_SHORT).show();
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        tvLoginError.setText(R.string.error_login_failed);
-                                        break;
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    tvLoginError.setText(R.string.error_login_failed);
-                                    break;
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<DummyResponse> call, Throwable t) {
-                            pDialog.dismiss();
-                            btnLogin.setEnabled(true);
-                        }
-                    });
-
-                    dialog.dismiss();
-                    //directToMain();
-                }
-            }
-        });
     }
 }
