@@ -140,7 +140,9 @@ public class Utils {
 
     public static String removeDelimiter(String text){
         if (text.length() != 0){
-            text = text.substring(1);
+            if (text.substring(0, 1).equals("-")){
+                text = text.substring(1);
+            }
             text = text.substring(0, text.length() - 1);
         }
         return text.toString();
