@@ -47,9 +47,6 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
-        friend = user.getFriendship();
-        Log.i("FREIDNS-------", friend.get(0));
-        Log.i("FREIDNS SZIE-------", String.valueOf(friend.size()));
         cards = user.getCards();
 
         Utils.redirectToLogin(this.getContext());
@@ -74,6 +71,8 @@ public class FriendListFragment extends Fragment {
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
         friend = user.getFriendship();
+        Log.i("FREIDNS-------", friend.get(0));
+        Log.i("FREIDNS SZIE-------", String.valueOf(friend.size()));
         cards = user.getCards();
         String userCardId = user.getCardId();
 
@@ -182,7 +181,7 @@ public class FriendListFragment extends Fragment {
 
     private class FriendsHolder extends RecyclerView.ViewHolder{
 
-        private FriendsModel mFriends;
+        private FriendsModel mFriendsModel;
         public ImageButton btnSend, btnDelete;
         public TextView mNameTextView, mUsernameTextView;
 
@@ -197,33 +196,23 @@ public class FriendListFragment extends Fragment {
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
+                    friendUID = mFriendsModel.getUID();
                     Log.i("Want to send to", friendUID);
                     Toast.makeText(getActivity(), "You're sending to " +
-                            mFriends.getName(), Toast.LENGTH_SHORT)
+                            mFriendsModel.getName(), Toast.LENGTH_SHORT)
                             .show();
                     open_dialog(v);
                 }
             });
-
-        }
-
-        public void bindData(FriendsModel s){
-            mFriends = s;
-            mNameTextView.setText(s.getName());
-            mUsernameTextView.setText("Username : " + s.getUsername());
-            btnDeleteOnClickListener(s);
-        }
-        public void btnDeleteOnClickListener(final FriendsModel s) {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
-                    friendName = mFriends.getName();
-                    friendUname = mFriends.getUsername();
+                    friendUID = mFriendsModel.getUID();
+                    friendName = mFriendsModel.getName();
+                    friendUname = mFriendsModel.getUsername();
                     friendship = friendUID + "," + friendName + "," + friendUname;
                     Log.i("friendship ------", friendship);
-                    Toast.makeText(getActivity(), "You're deleting " + mFriends.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You're deleting " + mFriendsModel.getName(), Toast.LENGTH_SHORT).show();
 
                     //Deleting friend from user's list
                     Call<FriendRequest> callC = RetrofitClient
@@ -249,7 +238,9 @@ public class FriendListFragment extends Fragment {
                                                 case 200:
                                                     Toast.makeText(getContext(), "Removing friends", Toast.LENGTH_SHORT).show();
                                                     Log.i("onResponseeeee ------", "Deleting you from friend's list");
-                                                    mAdapter.notifyDataSetChanged();
+                                                    mFriends.remove(mFriendsModel);
+                                                    session.removeFriendFromList(friendUID);
+                                                    updateUI();
                                                     break;
                                                 case 500:
                                                     Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
@@ -278,8 +269,13 @@ public class FriendListFragment extends Fragment {
                     });
                 }
             });
-        }
 
+        }
+        public void bindData(FriendsModel s){
+            mFriendsModel = s;
+            mNameTextView.setText(s.getName());
+            mUsernameTextView.setText("Username : " + s.getUsername());
+        }
     }
 
     private class FriendsAdapter extends RecyclerView.Adapter<FriendListFragment.FriendsHolder>{
@@ -378,7 +374,6 @@ public class FriendListFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.friend_card_list,parent,false);
             return new FriendListFragment.NCHolder(view);
-
         }
         @Override
         public void onBindViewHolder(FriendListFragment.NCHolder holder, int position) {
