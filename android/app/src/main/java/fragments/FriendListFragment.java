@@ -174,7 +174,7 @@ public class FriendListFragment extends Fragment {
 
     private class FriendsHolder extends RecyclerView.ViewHolder{
 
-        private FriendsModel mFriends;
+        private FriendsModel mFriendsModel;
         public ImageButton btnSend, btnDelete;
         public TextView mNameTextView, mUsernameTextView;
 
@@ -189,10 +189,10 @@ public class FriendListFragment extends Fragment {
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
+                    friendUID = mFriendsModel.getUID();
                     Log.i("Want to send to", friendUID);
                     Toast.makeText(getActivity(), "You're sending to " +
-                            mFriends.getName(), Toast.LENGTH_SHORT)
+                            mFriendsModel.getName(), Toast.LENGTH_SHORT)
                             .show();
                     open_dialog(v);
                 }
@@ -200,12 +200,12 @@ public class FriendListFragment extends Fragment {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
-                    friendName = mFriends.getName();
-                    friendUname = mFriends.getUsername();
+                    friendUID = mFriendsModel.getUID();
+                    friendName = mFriendsModel.getName();
+                    friendUname = mFriendsModel.getUsername();
                     friendship = friendUID + "," + friendName + "," + friendUname;
                     Log.i("friendship ------", friendship);
-                    Toast.makeText(getActivity(), "You're deleting " + mFriends.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You're deleting " + mFriendsModel.getName(), Toast.LENGTH_SHORT).show();
 
                     //Deleting friend from user's list
                     Call<FriendRequest> callC = RetrofitClient
@@ -231,6 +231,7 @@ public class FriendListFragment extends Fragment {
                                                 case 200:
                                                     Toast.makeText(getContext(), "Removing friends", Toast.LENGTH_SHORT).show();
                                                     Log.i("onResponseeeee ------", "Deleting you from friend's list");
+                                                    mFriends.remove(friendship);
                                                     updateUI();
                                                     break;
                                                 case 500:
@@ -263,7 +264,7 @@ public class FriendListFragment extends Fragment {
         }
 
         public void bindData(FriendsModel s){
-            mFriends = s;
+            mFriendsModel = s;
             mNameTextView.setText(s.getName());
             mUsernameTextView.setText("Username : " + s.getUsername());
         }
