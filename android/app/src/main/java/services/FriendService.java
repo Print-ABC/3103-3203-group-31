@@ -12,11 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface FriendService {
-    @GET("friends/")
-    Call<List<FriendRequest>> getAllRequests();
-
-    @GET("friends/req/{uid}")
-    Call<List<FriendRequest>> getByRequesterID(@Path("uid") String uid);
 
     @GET("friends/recp/{uid}")
     Call<List<FriendRequest>> getByRecipientID(@Header("Authorization") String token, @Path("uid") String uid);
