@@ -48,6 +48,8 @@ public class FriendListFragment extends Fragment {
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
         friend = user.getFriendship();
+        Log.i("FREIDNS-------", friend.get(0));
+        Log.i("FREIDNS SZIE-------", String.valueOf(friend.size()));
         cards = user.getCards();
 
         Utils.redirectToLogin(this.getContext());
@@ -90,65 +92,71 @@ public class FriendListFragment extends Fragment {
         }
         mFriends.clear();
         for(int i = 0; i < friend.size(); i++){
-            String str[] = friend.get(i).split(",");
-            FriendsModel friends = new FriendsModel();
-            friends.setUID(str[0]);
-            friends.setName(str[1]);
-            friends.setUsername(str[2]);
-            mFriends.add(friends);
+            if (friend.get(i) != "") {
+                String str[] = friend.get(i).split(",");
+                FriendsModel friends = new FriendsModel();
+                friends.setUID(str[0]);
+                friends.setName(str[1]);
+                friends.setUsername(str[2]);
+                mFriends.add(friends);
+            }
         }
-        mCards.clear();
-        for(int i = 0; i < cards.size(); i++){
-            String cardId = cards.get(i);
-            Log.i("CARD LIST --------", cardId);
-            if (!cardId.equals(myCardId) || myCardId.equals("")){
-                Log.i("Compare CardID", "NOPE!");
-                //CALL to get card details by card ID
-                Call<Organization> call = RetrofitClient
-                        .getInstance()
-                        .getOrganizationApi()
-                        .getcardinfo(user.getToken(),cardId);
-                call.enqueue(new Callback<Organization>() {
-                    @Override
-                    public void onResponse(Call<Organization> call, Response<Organization> response) {
-                        switch (response.code()) {
-                            case 200:
-                                Toast.makeText(getActivity(), "Retrieving cards from collections", Toast.LENGTH_SHORT).show();
-                                Log.i("CALL RESPONSE ---------", response.body().getName());
-                                Organization cards = new Organization();
-                                cards.setCardId(response.body().getCardId());
-                                cards.setName(response.body().getName());
-                                cards.setOrganization(response.body().getOrganization());
-                                mCards.add(cards);
-                                break;
 
-                            case 500:
-                                Toast.makeText(getActivity(), "Error retrieving", Toast.LENGTH_SHORT).show();
-                            default:
-                                break;
+        mCards.clear();
+
+        for(int i = 0; i < cards.size(); i++) {
+            if (cards.get(i) != "") {
+                String cardId = cards.get(i);
+                Log.i("CARD LIST --------", cardId);
+                if (!cardId.equals(myCardId) || myCardId.equals("")) {
+                    Log.i("Compare CardID", "NOPE!");
+                    //CALL to get card details by card ID
+                    Call<Organization> call = RetrofitClient
+                            .getInstance()
+                            .getOrganizationApi()
+                            .getcardinfo(user.getToken(), cardId);
+                    call.enqueue(new Callback<Organization>() {
+                        @Override
+                        public void onResponse(Call<Organization> call, Response<Organization> response) {
+                            switch (response.code()) {
+                                case 200:
+                                    Toast.makeText(getActivity(), "Retrieving cards from collections", Toast.LENGTH_SHORT).show();
+                                    Log.i("CALL RESPONSE ---------", response.body().getName());
+                                    Organization cards = new Organization();
+                                    cards.setCardId(response.body().getCardId());
+                                    cards.setName(response.body().getName());
+                                    cards.setOrganization(response.body().getOrganization());
+                                    mCards.add(cards);
+                                    break;
+
+                                case 500:
+                                    Toast.makeText(getActivity(), "Error retrieving", Toast.LENGTH_SHORT).show();
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                    @Override
-                    public void onFailure(Call<Organization> call, Throwable t) {
-                        Log.i("onFailure",t.getMessage());
-                    }
-                });
-                Log.i("CARDS", mCards.toString());
-            }
-            else{
-                Log.i("Compare CardID", "it matches my cardId or it does not exist!");
+
+                        @Override
+                        public void onFailure(Call<Organization> call, Throwable t) {
+                            Log.i("onFailure", t.getMessage());
+                        }
+                    });
+                    Log.i("CARDS", mCards.toString());
+                } else {
+                    Log.i("Compare CardID", "it matches my cardId or it does not exist!");
+                }
             }
         }
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
+        mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
+        mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 updateUI();
             }
         }, 1500);
-        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
-        mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
-        mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
         return view;
     }
 
@@ -197,6 +205,16 @@ public class FriendListFragment extends Fragment {
                     open_dialog(v);
                 }
             });
+
+        }
+
+        public void bindData(FriendsModel s){
+            mFriends = s;
+            mNameTextView.setText(s.getName());
+            mUsernameTextView.setText("Username : " + s.getUsername());
+            btnDeleteOnClickListener(s);
+        }
+        public void btnDeleteOnClickListener(final FriendsModel s) {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -231,7 +249,7 @@ public class FriendListFragment extends Fragment {
                                                 case 200:
                                                     Toast.makeText(getContext(), "Removing friends", Toast.LENGTH_SHORT).show();
                                                     Log.i("onResponseeeee ------", "Deleting you from friend's list");
-                                                    updateUI();
+                                                    mAdapter.notifyDataSetChanged();
                                                     break;
                                                 case 500:
                                                     Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
@@ -262,12 +280,8 @@ public class FriendListFragment extends Fragment {
             });
         }
 
-        public void bindData(FriendsModel s){
-            mFriends = s;
-            mNameTextView.setText(s.getName());
-            mUsernameTextView.setText("Username : " + s.getUsername());
-        }
     }
+
     private class FriendsAdapter extends RecyclerView.Adapter<FriendListFragment.FriendsHolder>{
         private ArrayList<FriendsModel> mFriends;
         public FriendsAdapter(ArrayList<FriendsModel> Friends){
