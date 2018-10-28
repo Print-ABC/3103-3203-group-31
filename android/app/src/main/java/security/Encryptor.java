@@ -1,8 +1,10 @@
 package security;
 
+import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class Encryptor {
     public Encryptor() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void encryptText(final String alias, final String textToEncrypt)
             throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException,
             NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IOException,
@@ -46,6 +49,7 @@ public class Encryptor {
         encryption = cipher.doFinal(textToEncrypt.getBytes("UTF-8"));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     private SecretKey getSecretKey(final String alias) throws NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException {

@@ -2,7 +2,9 @@ package fragments;
 
 
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +94,7 @@ public class CreateNCFragment extends Fragment {
                                 .getOrganizationApi()
                                 .addCard(user.getToken(), org);
                         call.enqueue(new Callback<Result>() {
+                            @RequiresApi(api = Build.VERSION_CODES.M)
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
@@ -100,6 +103,7 @@ public class CreateNCFragment extends Fragment {
                                     case 201:
                                         Toast.makeText(getActivity(), R.string.msg_name_card_created, Toast.LENGTH_SHORT).show();
                                         session.setCardId(response.body().getCardId());
+                                        session.addCardToList(response.body().getCardId());
                                         getActivity().getSupportFragmentManager()
                                                 .beginTransaction()
                                                 .replace(R.id.fragment_container, new HomeFragment())
@@ -139,6 +143,7 @@ public class CreateNCFragment extends Fragment {
                                 .getStudentApi()
                                 .addCard(user.getToken(), student);
                         call.enqueue(new Callback<Result>() {
+                            @RequiresApi(api = Build.VERSION_CODES.M)
                             @Override
                             public void onResponse(Call<Result> call, Response<Result> response) {
                                 pDialog.dismiss();
@@ -147,6 +152,7 @@ public class CreateNCFragment extends Fragment {
                                     case 201:
                                         Toast.makeText(getActivity(), R.string.msg_name_card_created, Toast.LENGTH_SHORT).show();
                                         session.setCardId(response.body().getCardId());
+                                        session.addCardToList(response.body().getCardId());
                                         getActivity().getSupportFragmentManager()
                                                 .beginTransaction()
                                                 .replace(R.id.fragment_container, new HomeFragment())

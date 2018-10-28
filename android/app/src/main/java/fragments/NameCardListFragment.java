@@ -32,7 +32,6 @@ public class NameCardListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //TODO: uncomment
         // Check if user is logged in
         session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
