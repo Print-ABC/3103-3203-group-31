@@ -3,7 +3,9 @@ package activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -156,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                             .getUserApi()
                             .check2fa(etCode.getText().toString());
                     call.enqueue(new Callback<DummyResponse>() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
                         public void onResponse(Call<DummyResponse> call, Response<DummyResponse> response) {
                             switch (response.code()) {
