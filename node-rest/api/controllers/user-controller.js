@@ -45,41 +45,6 @@ function checkStudentCard(cardId) {
     return promise;
 }
 
-exports.users_get_all = (req, res, next) => {
-    User.find()
-        .select('_id name username email contact role password friendship cards')
-        .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                users: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        name: doc.name,
-                        username: doc.username,
-                        email: doc.email,
-                        contact: doc.contact,
-                        role: doc.role,
-                        password: doc.password,
-                        friendship: doc.friendship,
-                        cards: doc.cards,
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:+' + config.port + '/users/' + doc._id
-                        }
-                    };
-                })
-            };
-            res.status(200).json(response);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(400).json({
-                error: err
-            });
-        });
-}
-
 exports.users_get_username = (req, res, next) => {
     User.findOne({
         username: new RegExp('^' + req.params.username + '$', "i"),
@@ -95,30 +60,6 @@ exports.users_get_username = (req, res, next) => {
         })
         .catch(err => {
             res.status(500).json(err);
-        });
-}
-
-exports.users_get_name = (req, res, next) => {
-    User.findById(req.params.uid)
-        .select('_id name')
-        .exec()
-        .then(doc => {
-            console.log("From database", doc);
-            if (doc) {
-                // Success response
-                res.status(200).json({
-                    _id: doc._id,
-                    username: doc.name,
-                    success: true
-                });
-            } else {
-                // ID does not exist
-                res.status(200).json({ success: false });
-            }
-        }).catch(err => {
-            console.log(err);
-            // Failure response
-            res.status(200).json({ success: false });
         });
 }
 
@@ -320,67 +261,6 @@ exports.users_2fa = (req, res, next) => {
             console.log(err);
             console.log("wrong one 2");
             return res.status(401).json({});
-        });
-}
-
-exports.users_get_one = (req, res, next) => {
-    const id = req.params.uid;
-    User.findById(id)
-        .select('_id name username email contact role password friendship cards')
-        .exec()
-        .then(doc => {
-            console.log("From database", doc);
-            if (doc) {
-                // Success response
-                res.status(200).json({ doc });
-            } else {
-                // ID does not exist
-                res.status(404).json({ message: 'No valid entry found for provided ID' });
-            }
-        }).catch(err => {
-            console.log(err);
-            // Failure response
-            res.status(500).json({ error: err });
-        });
-}
-
-exports.users_delete_one = (req, res, next) => {
-    const id = req.params.uid;
-    User.deleteOne({ _id: id })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'User deleted'
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
-}
-
-exports.users_update_one = (req, res, next) => {
-    const id = req.params.uid;
-    const updateOps = {};
-    for (const ops of req.body) {
-        // Obtain an object of the update operations we want to perform
-        updateOps[ops.propName] = ops.value;
-    }
-    User.update({ _id: id }, { $set: updateOps })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'User updated',
-                request: result
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
         });
 }
 

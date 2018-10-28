@@ -14,8 +14,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
-    @GET("name/{uid}")
-    Call<User> retrieveName(@Path("uid") String user_id);
 
     @GET("users/username/{username}")
     Call<User> searchByUsername(@Path("username") String user_username);
