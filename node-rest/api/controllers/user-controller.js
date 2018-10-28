@@ -13,7 +13,6 @@ const utils = require('../../common/Utils');
 
 exports.users_get_cards_info = (req, res) => {
     if (req.body.cards) {
-        if (req.body.cards === undefined || req.body.cards.length == 0) {
             //Loop through each card that a user owns
             console.log(req.body.cards);
             const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
@@ -31,9 +30,6 @@ exports.users_get_cards_info = (req, res) => {
                     console.log(err);
                     return res.status(400).json({});
                 })
-        } else {
-            return res.status(400).json({});
-        }
     } else {
         return res.status(400).json({});
     }
