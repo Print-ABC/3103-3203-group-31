@@ -30,8 +30,7 @@
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
-            android:maxLength="30"
-            android:text="Mr Foo" />
+            android:maxLength="30" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -47,8 +46,7 @@
             android:ems="10"
             android:hint="Course Name"
             android:inputType="textPersonName"
-            android:maxLength="40"
-            android:text="Bachelors in ICT" />
+            android:maxLength="40" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -64,8 +62,7 @@
             android:ems="10"
             android:hint="Contact Number"
             android:inputType="phone"
-            android:maxLength="8"
-            android:text="93847584" />
+            android:maxLength="8" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -81,8 +78,7 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textPersonName"
-            android:maxLength="40"
-            android:text="random@ict.com" />
+            android:maxLength="40" />
     </android.support.design.widget.TextInputLayout>
 
     <Button

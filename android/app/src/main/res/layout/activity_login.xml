@@ -50,8 +50,7 @@
                     android:hint="User Name"
                     android:inputType="textEmailAddress"
                     android:maxLength="25"
-                    android:singleLine="true"
-                    android:text="mariaStudent1" />
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -68,8 +67,7 @@
                     android:hint="Password"
                     android:inputType="textPassword"
                     android:maxLength="35"
-                    android:singleLine="true"
-                    android:text="Tsd677%fffffffff" />
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView

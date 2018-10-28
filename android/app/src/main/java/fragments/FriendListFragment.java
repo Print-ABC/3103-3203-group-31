@@ -47,7 +47,7 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
-        //cards = user.getCards();
+        cards = user.getCards();
 
         friend = user.getFriendship();
         Utils.redirectToLogin(this.getContext());
