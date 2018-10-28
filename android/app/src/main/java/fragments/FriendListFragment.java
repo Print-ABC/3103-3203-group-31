@@ -89,7 +89,7 @@ public class FriendListFragment extends Fragment {
             myCardId="";
             Log.i("Card ID --------", "null");
         }
-        mFriends.clear();
+
         for(int i = 0; i < friend.size(); i++){
             if (friend.get(i) != "") {
                 String str[] = friend.get(i).split(",");
