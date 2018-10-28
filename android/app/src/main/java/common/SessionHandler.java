@@ -212,6 +212,17 @@ public class SessionHandler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
+    public void addFriendToList(String uid){
+        String friendList = retrieveFromSP(SecurityUtils.FRIENDLIST_ALIAS, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
+        friendList = Utils.removeDelimiter(friendList);
+        ArrayList<String> friends = new ArrayList<>(Arrays.asList(friendList.split("-")));
+        friends.add(uid);
+        String cardsString = Utils.listToString(friends);
+        storeIntoSP(SecurityUtils.FRIENDLIST_ALIAS, cardsString, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setCardId(String cardId){
         storeIntoSP(SecurityUtils.CARDID_ALIAS, cardId, KEY_CARDID, KEY_CARDID_IV);
     }
