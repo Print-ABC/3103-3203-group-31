@@ -14,7 +14,7 @@ const utils = require('../../common/Utils');
 exports.users_get_cards_info = (req, res) => {
     if (req.body.cards) {
         //Loop through each card that a user owns
-        console.log(req.body.cards.length);
+        console.log(req.body.cards);
         const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
         const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
         Promise.all([p1, p2])
@@ -27,6 +27,7 @@ exports.users_get_cards_info = (req, res) => {
             }
             )
             .catch(err => {
+                console.log(err);
                 return res.status(400).json({});
             })
     } else {
@@ -73,7 +74,7 @@ exports.users_get_all = (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            res.status(400).json({
                 error: err
             });
         });
