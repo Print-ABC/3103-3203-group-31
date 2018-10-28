@@ -130,7 +130,7 @@ public class FriendListFragment extends Fragment {
                                     break;
 
                                 case 500:
-                                    Toast.makeText(getActivity(), "Error retrieving", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "No organization cards", Toast.LENGTH_SHORT).show();
                                 default:
                                     break;
                             }
