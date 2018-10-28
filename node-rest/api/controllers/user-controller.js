@@ -151,9 +151,6 @@ exports.users_register_user = (req, res, next) => {
         });
 }
 
-const tokenArr = new Array();
-const userArr = new Array();
-
 exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     User.find({ username: req.body.username })
@@ -214,42 +211,40 @@ exports.users_login = (req, res, next) => {
                                         .then()
                                         .catch(err => {
                                             console.log(err);
+                                        });
+                                    } else {
+                                        // return current token if token has not expired
+                                        // token = active.token;
+                                        console.log("correct one");
+                                        return res.status(401).json({
+                                            message: "Session still active please try again later"
                                         })
+                                    }
                                 } else {
-                                    // return current token if token has not expired
-                                    // token = active.token;
-                                    console.log("correct one");
-                                    return res.status(401).json({
-                                        message: "Session still active please try again later"
-                                    })
-                                }
-                            } else {
-                                // Add user into ActiveUser collection after first time log in
-                                const activeUser = new ActiveUser({
-                                    uid: user[0]._id,
-                                    token: token
-                                });
-                                activeUser.save()
-                                    .then()
-                                    .catch(err => {
-                                        //console.log(err);
+                                    // Add user into ActiveUser collection after first time log in
+                                    const activeUser = new ActiveUser({
+                                        uid: user[0]._id,
+                                        token: token
                                     });
-                            }
-                            return res.status(200).json({
-                                welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                team: fakeToken,
-                                thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
-                            });
+                                    activeUser.save()
+                                        .then()
+                                        .catch(err => {
+                                            //console.log(err);
+                                        });
+                                }
+                                res.status(200).json({
+                                    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    team: fakeToken,
+                                    thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
+                                });
                         })
                         .catch(err => {
                             console.log(err);
                         })
-
                 })
                 }
             });
-            return res.status(200).json({});
         })
         .catch(err => {
             // console.log(err);
