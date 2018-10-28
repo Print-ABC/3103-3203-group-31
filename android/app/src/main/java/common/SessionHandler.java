@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +61,7 @@ public class SessionHandler {
      *
      * @param role
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void loginUser(String uid, String name, String username, String token, Integer role, String cardId, List<String> friends, List<String> cards) {
 
         // Covert list to string + delimiter "-"
@@ -75,16 +78,6 @@ public class SessionHandler {
         storeIntoSP(SecurityUtils.FRIENDLIST_ALIAS, friendList, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
         storeIntoSP(SecurityUtils.CARDLIST_ALIAS, cardList, KEY_CARDLIST, KEY_CARDLIST_IV);
 
-//        Log.e("UID " + uid, retrieveFromSP(SecurityUtils.UID_ALIAS, KEY_UID, KEY_UID_IV));
-//        Log.e("NAME " + name, retrieveFromSP(KEY_NAME, KEY_NAME_IV));
-//        Log.e("USERNAME " + username, retrieveFromSP(SecurityUtils.USERNAME_ALIAS, KEY_USERNAME, KEY_USERNAME_IV));
-//        Log.e("TOKEN " + token, retrieveFromSP(KEY_TOKEN, KEY_TOKEN_IV));
-//        Log.e("ROLE " + role, retrieveFromSP(KEY_ROLE, KEY_ROLE_IV));
-//        Log.e("CARDID " + cardId, retrieveFromSP(KEY_CARDID, KEY_CARDID_IV));
-//        Log.e("FRIENDS " + friendList, retrieveFromSP(KEY_FRIENDLIST, KEY_FRIENDLIST_IV));
-//        Log.e("CARDS " + cardList, retrieveFromSP(KEY_CARDLIST, KEY_CARDLIST_IV));
-
-
         Date date = new Date();
 
         //Set user session for next 20 minutes
@@ -93,6 +86,7 @@ public class SessionHandler {
         mEditor.commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void storeIntoSP(String alias, String input, String spKey, String spIvKey) {
         try {
             Encryptor encryptor = new Encryptor();
@@ -115,7 +109,6 @@ public class SessionHandler {
             String encryptedIv = mPreferences.getString(spIvKey, KEY_EMPTY);
             Decryptor decryptor = new Decryptor();
             decrypted = decryptor.decryptData(alias, encryptedString, encryptedIv);
-            Log.e(decrypted, "DECRYPTED LEH");
             return decrypted;
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,6 +151,8 @@ public class SessionHandler {
         User user = new User();
         String cardList = retrieveFromSP(SecurityUtils.CARDLIST_ALIAS, KEY_CARDLIST, KEY_CARDLIST_IV);
         String friendList = retrieveFromSP(SecurityUtils.FRIENDLIST_ALIAS, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);
+        cardList = Utils.removeDelimiter(cardList);
+        friendList = Utils.removeDelimiter(friendList);
         List<String> cards = Arrays.asList(cardList.split("-"));
         List<String> friends = Arrays.asList(friendList.split("-"));
 
@@ -196,8 +191,18 @@ public class SessionHandler {
             }
         });
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void addCardToList(String cardId){
+        String cardList = retrieveFromSP(SecurityUtils.CARDLIST_ALIAS, KEY_CARDLIST, KEY_CARDLIST_IV);
+        cardList = Utils.removeDelimiter(cardList);
+        ArrayList<String> cards = new ArrayList<>(Arrays.asList(cardList.split("-")));
+        cards.add(cardId);
+        String cardsString = Utils.listToString(cards);
+        storeIntoSP(SecurityUtils.CARDLIST_ALIAS, cardsString, KEY_CARDLIST, KEY_CARDLIST_IV);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setCardId(String cardId){
-//        storeIntoSP(cardId, KEY_CARDID, KEY_CARDID_IV);
+        storeIntoSP(SecurityUtils.CARDID_ALIAS, cardId, KEY_CARDID, KEY_CARDID_IV);
     }
 }

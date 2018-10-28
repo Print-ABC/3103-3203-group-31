@@ -3,7 +3,6 @@ const config = require('../../config/config');
 
 module.exports = (req, res, next) => {
     try {
-        //TODO: check if token exists in db, return a message to logout user
         const token = req.headers.authorization;
         const decoded = jwt.verify(token, config.secret);
         req.userData = decoded; 
