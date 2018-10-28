@@ -231,7 +231,7 @@ public class FriendListFragment extends Fragment {
                                                 case 200:
                                                     Toast.makeText(getContext(), "Removing friends", Toast.LENGTH_SHORT).show();
                                                     Log.i("onResponseeeee ------", "Deleting you from friend's list");
-                                                    mFriends.remove(friendship);
+                                                    mFriends.remove(mFriendsModel);
                                                     updateUI();
                                                     break;
                                                 case 500:

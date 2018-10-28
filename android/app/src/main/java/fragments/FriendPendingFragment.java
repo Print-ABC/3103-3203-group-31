@@ -144,8 +144,6 @@ public class FriendPendingFragment extends Fragment {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
                             Toast.makeText(getActivity(), "Friend added", Toast.LENGTH_SHORT).show();
-                            mFriendRequestList.remove(req);
-                            mAdapter.notifyDataSetChanged();
                             removeReqCall(req);
                         }
 
