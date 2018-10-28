@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionHandler(this);
         user = session.getUserDetails();
 
-
-       // Log.i("User ID --------" , user.getUid());
         Utils.redirectToLogin(this);
         setContentView(R.layout.activity_main);
 
@@ -83,21 +81,17 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
-                    Log.i("Card ID --------", user.getCardId());
                     if (user.getCardId() != null) {
-                        Log.i("Card ID --------", "getCardId is not null");
                         cardID = user.getCardId();
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                         startActivity(intent);
                     }
                     else if (!((user.getCardId()).equals("none"))){
-                        Log.i("Card ID --------", "getUser().cardId is not null");
                         cardID = user.getCardId();
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                         startActivity(intent);
                     }
                     else{
-                        Log.i("Card ID --------", "null");
                         Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
                     }
                     break;

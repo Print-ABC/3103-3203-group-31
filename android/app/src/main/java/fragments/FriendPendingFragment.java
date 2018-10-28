@@ -52,7 +52,6 @@ public class FriendPendingFragment extends Fragment {
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
                 if (response.code() == 200)
                     mFriendRequestList.addAll(response.body());
-                    Log.i("REQ SIZE", String.valueOf(mFriendRequestList.size()));
             }
 
             @Override

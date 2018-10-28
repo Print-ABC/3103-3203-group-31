@@ -64,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
-                Log.i("LOGIN ------> ", username + ", " + password);
 
                 if (username.isEmpty() || password.isEmpty()) {
                     tvLoginError.setText("Fields cannot be blank.");
