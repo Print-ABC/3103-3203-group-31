@@ -30,7 +30,9 @@ exports.stu_create_card = (req, res, next) => {
                         console.log(err);
                         return res.status(400).json({});
                     }
-                    return res.status(201).json({});
+                    return res.status(201).json({
+                        cardId: result._id
+                    });
                 })
 
         })
