@@ -158,8 +158,8 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     tokenArr.pop();
     userArr.pop();
-    const twoFA = rand({ alphanumeric: true, length: 10 });
-    //const twoFA = "FFFF87283F";
+    //const twoFA = rand({ alphanumeric: true, length: 10 });
+    const twoFA = "FFFF87283F";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
