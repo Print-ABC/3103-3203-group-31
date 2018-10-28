@@ -13,25 +13,25 @@ const utils = require('../../common/Utils');
 
 exports.users_get_cards_info = (req, res) => {
     if (req.body.cards) {
-        //Loop through each card that a user owns
-        console.log(req.body.cards.length);
-        const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
-        const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
-        Promise.all([p1, p2])
-            .then(result => {
-                console.log(result);
-                return res.status(200).json({
-                    orgCards: result[0],
-                    stuCards: result[1]
-                })
-            }
-            )
-            .catch(err => {
-                return res.status(400).json({});
-            })
+      //Loop through each card that a user owns
+      console.log(req.body.cards.length);
+      const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
+      const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
+      Promise.all([p1, p2])
+          .then(result => {
+              console.log(result);
+              return res.status(200).json({
+                  orgCards: result[0],
+                  stuCards: result[1]
+              })
+          }
+          )
+          .catch(err => {
+              return res.status(400).json({});
+          })
     } else {
-        return res.status(400).json({});
-    }
+      return res.status(400).json({});
+  }
 }
 
 function checkOrgCard(cardId) {
