@@ -16,17 +16,13 @@ import common.Utils;
 
 public class HomeFragment extends Fragment {
 
-    private SessionHandler session;
-    private Button btnExchangeNc, btnCreateNc, btnFriendList, btnViewCards;
-    BottomNavigationItemView nameCardNavigationView;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Check if user is logged in
-        session = new SessionHandler(this.getContext());
+        SessionHandler session = new SessionHandler(this.getContext());
         Utils.redirectToLogin(this.getContext());
 
         return view;

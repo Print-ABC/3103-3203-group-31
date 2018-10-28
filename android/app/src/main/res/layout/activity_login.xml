@@ -73,14 +73,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/tvForgetPW"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingTop="5dp"
-                android:text="Forgot Password?" />
-
-            <TextView
                 android:id="@+id/tvRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

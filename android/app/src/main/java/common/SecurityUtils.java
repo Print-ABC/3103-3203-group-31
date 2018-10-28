@@ -1,7 +1,6 @@
 package common;
 
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 
@@ -10,7 +9,6 @@ public class SecurityUtils {
     public static String decoded(String JWTEncoded) throws Exception {
         try {
             String[] split = JWTEncoded.split("\\.");
-            Log.e("JWT_DECODED", "Body: " + getJson(split[1]));
             return getJson(split[1]);
         } catch (UnsupportedEncodingException e) {
             //Error

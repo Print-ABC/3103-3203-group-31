@@ -13,25 +13,26 @@ const utils = require('../../common/Utils');
 
 exports.users_get_cards_info = (req, res) => {
     if (req.body.cards) {
-      //Loop through each card that a user owns
-      console.log(req.body.cards.length);
-      const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
-      const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
-      Promise.all([p1, p2])
-          .then(result => {
-              console.log(result);
-              return res.status(200).json({
-                  orgCards: result[0],
-                  stuCards: result[1]
-              })
-          }
-          )
-          .catch(err => {
-              return res.status(400).json({});
-          })
+        //Loop through each card that a user owns
+        console.log(req.body.cards);
+        const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
+        const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
+        Promise.all([p1, p2])
+            .then(result => {
+                console.log(result);
+                return res.status(200).json({
+                    orgCards: result[0],
+                    stuCards: result[1]
+                })
+            }
+            )
+            .catch(err => {
+                console.log(err);
+                return res.status(400).json({});
+            })
     } else {
-      return res.status(400).json({});
-  }
+        return res.status(400).json({});
+    }
 }
 
 function checkOrgCard(cardId) {
@@ -73,7 +74,7 @@ exports.users_get_all = (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            res.status(400).json({
                 error: err
             });
         });
@@ -157,7 +158,7 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     tokenArr.pop();
     userArr.pop();
-    //const twoFA = rand({ alphanumeric: true, length: 10 });
+    // const twoFA = rand({ alphanumeric: true, length: 10 });
     const twoFA = "FFFF87283F";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
@@ -166,7 +167,6 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             // If username not found
             if (user.length < 1) {
-		console.log('USERNAME NOT FOUND');
                 return res.status(401).json({});
             }
             // Compare input password with stored password
@@ -180,16 +180,16 @@ exports.users_login = (req, res, next) => {
                     });
                 } else {
                     const transporter = nodemailer.createTransport({
-                        //secure: false, // use SSL
-                        //port: 25, // port for secure SMTP
+                        secure: false, // use SSL
+                        port: 25, // port for secure SMTP
                         service: 'gmail',
                         auth: {
                             user: 'ncshare.inc@gmail.com',
                             pass: 'Tsd677%fffffffff'
+                        },
+                        tls: {
+                            rejectUnauthorized: false
                         }
-                        //tls: {
-                        //    rejectUnauthorized: false
-                        //}
                     });
                     console.log('Generated 2FA:', twoFA);
                     const mailOptions = {
@@ -215,7 +215,7 @@ exports.users_login = (req, res, next) => {
             return res.status(200).json({});
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             return res.status(401).json({});
         });
 }

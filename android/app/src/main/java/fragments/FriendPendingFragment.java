@@ -52,7 +52,6 @@ public class FriendPendingFragment extends Fragment {
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
                 if (response.code() == 200)
                     mFriendRequestList.addAll(response.body());
-                    Log.i("REQ SIZE", String.valueOf(mFriendRequestList.size()));
             }
 
             @Override
@@ -144,8 +143,7 @@ public class FriendPendingFragment extends Fragment {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
                             Toast.makeText(getActivity(), "Friend added", Toast.LENGTH_SHORT).show();
-                            mFriendRequestList.remove(req);
-                            mAdapter.notifyDataSetChanged();
+                            mSession.addFriendToList(req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
                             removeReqCall(req);
                         }
 

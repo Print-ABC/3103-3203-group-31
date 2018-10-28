@@ -58,23 +58,7 @@ public class NFCActivity extends AppCompatActivity
 
         myUid = user.getUid();
         myRole = user.getRole();
-       // myCard = session.getCardId();
-        if (user.getCardId() != null) {
-            Log.i("Card ID --------", "getCardId is not null");
-            myCard = user.getCardId();
-        }
-        else if (!((user.getCardId()).equals("none"))){
-            Log.i("Card ID --------", "getUser().cardId is not null");
-            myCard = user.getCardId();
-        }
-        else{
-            myCard="";
-            Log.i("Card ID --------", "null");
-        }
-
-        Log.i("myUid", myUid);
-        Log.i("myRole", String.valueOf(myRole));
-        Log.i("myCard", myCard);
+        myCard = user.getCardId();
 
         messagesToSendArray.add(myUid);
         messagesToSendArray.add(String.valueOf(myRole));
@@ -86,10 +70,6 @@ public class NFCActivity extends AppCompatActivity
         tvCardID.setText(messagesToSendArray.get(2));
         tvMsg.setText("Sending");
 */
-        int listSize = messagesToSendArray.size();
-        for (int i = 0; i < listSize; i++) {
-            Log.i("messagesToSendArray -> ", messagesToSendArray.get(i));
-        }
 
         //Check if NFC is available on device
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -139,7 +119,6 @@ public class NFCActivity extends AppCompatActivity
         }
         //We'll write the createRecords() method in just a moment
         NdefRecord[] recordsToAttach = createRecords();
-        Log.i("CreateNdefMessage", "----------------HERE");
         //When creating an NdefMessage we need to provide an NdefRecord[]
         return new NdefMessage(recordsToAttach);
     }
@@ -172,7 +151,6 @@ public class NFCActivity extends AppCompatActivity
         records[messagesToSendArray.size()] =
                 NdefRecord.createApplicationRecord(getPackageName());
 
-        Log.i("createRecords", "----------------HERE");
         return records;
     }
 
@@ -201,13 +179,11 @@ public class NFCActivity extends AppCompatActivity
                 tvCardID.setText(sCard);
                 tvMsg.setText("Received");
 */
-                Log.i("RECEIVED ARRAYS", sUid + "," + sRole + "," + sCard);
                 Toast.makeText(this, "Received!", Toast.LENGTH_LONG).show();
 
                 //Check if the other person is opposite role of user
                 if (myRole == sRole) {
                     Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
-                    Log.i("Received - Role:", "Cannot NFC with same role");
                     //tvMsg.setText("NOT OPPOSITE USER!!");
                 }
                 else {
@@ -226,7 +202,6 @@ public class NFCActivity extends AppCompatActivity
                             switch (response.code()) {
                                 case 200:
                                     Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
-                                    Log.i("onResponseeeee","Card Added!");
                                     //If nfc only sends from one device then include this whole chunk
                                     Call<User> callA = RetrofitClient
                                             .getInstance()
@@ -249,13 +224,11 @@ public class NFCActivity extends AppCompatActivity
                                         }
                                         @Override
                                         public void onFailure(Call<User> callA, Throwable t) {
-                                            Log.i("onFailure","ERROR!");
                                         }
                                     });
                                     break;
                                 case 500:
                                     Toast.makeText(NFCActivity.this, "Card NOT Added!", Toast.LENGTH_SHORT).show();
-                                    Log.i("onResponseeeee","Card NOT Added!");
                                     break;
                                 default:
                                     Toast.makeText(NFCActivity.this, "Error transferring card", Toast.LENGTH_SHORT).show();
@@ -264,7 +237,6 @@ public class NFCActivity extends AppCompatActivity
                         }
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
-                            Log.i("onFailure","ERROR!");
                         }
                     });
                 Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
@@ -277,7 +249,6 @@ public class NFCActivity extends AppCompatActivity
 }
     @Override
     public void onNewIntent(Intent intent) {
-        Log.i("onNewIntent", "---------------- here");
         handleNfcIntent(intent);
     }
 

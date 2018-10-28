@@ -30,7 +30,9 @@ exports.stu_create_card = (req, res, next) => {
                         console.log(err);
                         return res.status(400).json({});
                     }
-                    return res.status(201).json({});
+                    return res.status(201).json({
+                        cardId: result._id
+                    });
                 })
 
         })
@@ -71,44 +73,6 @@ exports.stu_get_all = (req, res, next) => {
         }
         )
         .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-}
-
-exports.stu_get_one = (req, res, next) => {
-    Student.findById(req.params.cardId)
-        .select('_id uid name course email contact')
-        .exec()
-        .then(student => {
-            if (!student) {
-                return res.status(404).json({
-                    message: 'Name card not found'
-                });
-            }
-            res.status(200).json({
-                student: student
-            });
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-}
-
-exports.stu_delete_one = (req, res, next) => {
-    const id = req.params.cardId;
-    Student.deleteOne({ _id: id })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Name card deleted'
-            });
-        })
-        .catch(err => {
-            console.log(err);
             res.status(500).json({
                 error: err
             });

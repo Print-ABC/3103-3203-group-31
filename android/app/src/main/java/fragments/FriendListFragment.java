@@ -47,22 +47,32 @@ public class FriendListFragment extends Fragment {
         // Check if user is logged in
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
-        friend = user.getFriendship();
-        cards = user.getCards();
+        //cards = user.getCards();
 
+        friend = user.getFriendship();
         Utils.redirectToLogin(this.getContext());
 
         myUID = user.getUid();
 
         friendship1 = myUID + "," + user.getName() + ","+ user.getUsername();
 
-        Log.i("MyUID------", myUID);
-        Log.i("friendship1 ------", friendship1);
-
         mFriends = new ArrayList<>();
         mFriends.clear();
         mCards = new ArrayList<>();
         mCards.clear();
+
+
+        for(int i = 0; i < friend.size(); i++){
+            if (friend.get(i) != "") {
+                String str[] = friend.get(i).split(",");
+                FriendsModel friends = new FriendsModel();
+                friends.setUID(str[0]);
+                friends.setName(str[1]);
+                friends.setUsername(str[2]);
+                mFriends.add(friends);
+            }
+        }
+
 
     }
 
@@ -77,32 +87,19 @@ public class FriendListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
         if (userCardId != null) {
-            Log.i("Card ID --------", "getCardId is not null");
             myCardId = user.getCardId();
         }
         else if (!((user.getCardId()).equals("none"))){
-            Log.i("Card ID --------", "getUser().cardId is not null");
             myCardId = user.getCardId();
         }
         else{
             myCardId="";
-            Log.i("Card ID --------", "null");
         }
-        mFriends.clear();
-        for(int i = 0; i < friend.size(); i++){
-            String str[] = friend.get(i).split(",");
-            FriendsModel friends = new FriendsModel();
-            friends.setUID(str[0]);
-            friends.setName(str[1]);
-            friends.setUsername(str[2]);
-            mFriends.add(friends);
-        }
+
         mCards.clear();
         for(int i = 0; i < cards.size(); i++){
             String cardId = cards.get(i);
-            Log.i("CARD LIST --------", cardId);
             if (!cardId.equals(myCardId) || myCardId.equals("")){
-                Log.i("Compare CardID", "NOPE!");
                 //CALL to get card details by card ID
                 Call<Organization> call = RetrofitClient
                         .getInstance()
@@ -114,7 +111,6 @@ public class FriendListFragment extends Fragment {
                         switch (response.code()) {
                             case 200:
                                 Toast.makeText(getActivity(), "Retrieving cards from collections", Toast.LENGTH_SHORT).show();
-                                Log.i("CALL RESPONSE ---------", response.body().getName());
                                 Organization cards = new Organization();
                                 cards.setCardId(response.body().getCardId());
                                 cards.setName(response.body().getName());
@@ -130,25 +126,22 @@ public class FriendListFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(Call<Organization> call, Throwable t) {
-                        Log.i("onFailure",t.getMessage());
                     }
                 });
-                Log.i("CARDS", mCards.toString());
             }
             else{
-                Log.i("Compare CardID", "it matches my cardId or it does not exist!");
             }
         }
+        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
+        mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
+        mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 updateUI();
             }
         }, 1500);
-        mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
-        mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
-        mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
         return view;
     }
 
@@ -174,7 +167,7 @@ public class FriendListFragment extends Fragment {
 
     private class FriendsHolder extends RecyclerView.ViewHolder{
 
-        private FriendsModel mFriends;
+        private FriendsModel mFriendsModel;
         public ImageButton btnSend, btnDelete;
         public TextView mNameTextView, mUsernameTextView;
 
@@ -189,10 +182,9 @@ public class FriendListFragment extends Fragment {
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
-                    Log.i("Want to send to", friendUID);
+                    friendUID = mFriendsModel.getUID();
                     Toast.makeText(getActivity(), "You're sending to " +
-                            mFriends.getName(), Toast.LENGTH_SHORT)
+                            mFriendsModel.getName(), Toast.LENGTH_SHORT)
                             .show();
                     open_dialog(v);
                 }
@@ -200,12 +192,11 @@ public class FriendListFragment extends Fragment {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriends.getUID();
-                    friendName = mFriends.getName();
-                    friendUname = mFriends.getUsername();
+                    friendUID = mFriendsModel.getUID();
+                    friendName = mFriendsModel.getName();
+                    friendUname = mFriendsModel.getUsername();
                     friendship = friendUID + "," + friendName + "," + friendUname;
-                    Log.i("friendship ------", friendship);
-                    Toast.makeText(getActivity(), "You're deleting " + mFriends.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You're deleting " + mFriendsModel.getName(), Toast.LENGTH_SHORT).show();
 
                     //Deleting friend from user's list
                     Call<FriendRequest> callC = RetrofitClient
@@ -217,7 +208,6 @@ public class FriendListFragment extends Fragment {
                         public void onResponse(Call<FriendRequest> callC, Response<FriendRequest> responseC) {
                             switch (responseC.code()) {
                                 case 200:
-                                    Log.i("onResponseeeee ------", "Friend deleted from list");
                                     Toast.makeText(getContext(), "Friend deleted from list", Toast.LENGTH_SHORT).show();
                                     //Deleting user from friend's list
                                     Call<FriendRequest> callB = RetrofitClient
@@ -230,7 +220,8 @@ public class FriendListFragment extends Fragment {
                                             switch (responseB.code()) {
                                                 case 200:
                                                     Toast.makeText(getContext(), "Removing friends", Toast.LENGTH_SHORT).show();
-                                                    Log.i("onResponseeeee ------", "Deleting you from friend's list");
+                                                    mFriends.remove(mFriendsModel);
+                                                    session.removeFriendFromList(friendship);
                                                     updateUI();
                                                     break;
                                                 case 500:
@@ -244,7 +235,6 @@ public class FriendListFragment extends Fragment {
 
                                         @Override
                                         public void onFailure(Call<FriendRequest> callB, Throwable t) {
-                                            Log.i("onFailure", "ERROR second round!");
                                         }
                                     });
                                     break;
@@ -255,19 +245,19 @@ public class FriendListFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(Call<FriendRequest> callC, Throwable t) {
-                            Log.i("onFailure","ERROR!");
                         }
                     });
                 }
             });
-        }
 
+        }
         public void bindData(FriendsModel s){
-            mFriends = s;
+            mFriendsModel = s;
             mNameTextView.setText(s.getName());
             mUsernameTextView.setText("Username : " + s.getUsername());
         }
     }
+
     private class FriendsAdapter extends RecyclerView.Adapter<FriendListFragment.FriendsHolder>{
         private ArrayList<FriendsModel> mFriends;
         public FriendsAdapter(ArrayList<FriendsModel> Friends){
@@ -325,15 +315,12 @@ public class FriendListFragment extends Fragment {
                             switch (responseA.code()) {
                                 case 200:
                                     Toast.makeText(getContext(), "Card Sent to Friend!", Toast.LENGTH_SHORT).show();
-                                    Log.i("onResponseeeee ------", "Card SEnt to Friend!");
                                     break;
                                 case 500:
                                     Toast.makeText(getContext(), "Card NOT sent to friend!", Toast.LENGTH_SHORT).show();
-                                    Log.i("onResponseeeee --------", "Card NOT sent to friend!");
                                     break;
                                 case 406:
                                     Toast.makeText(getContext(), "Exist in friend's collection", Toast.LENGTH_SHORT).show();
-                                    Log.i("onResponseeeee --------", "Exist in friend's collection");
                                     break;
                                 default:
                                     Toast.makeText(getActivity(), "Failed to send card", Toast.LENGTH_SHORT).show();
@@ -342,7 +329,6 @@ public class FriendListFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(Call<User> callA, Throwable t) {
-                            Log.i("onFailure","ERROR!");
                         }
                     });
                 }
@@ -364,7 +350,6 @@ public class FriendListFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.friend_card_list,parent,false);
             return new FriendListFragment.NCHolder(view);
-
         }
         @Override
         public void onBindViewHolder(FriendListFragment.NCHolder holder, int position) {
@@ -373,7 +358,6 @@ public class FriendListFragment extends Fragment {
         }
         @Override
         public int getItemCount() {
-            Log.i("ITEM count ------", String.valueOf(mCards.size()));
             return mCards.size();
         }
     }
