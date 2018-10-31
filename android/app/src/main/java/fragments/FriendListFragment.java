@@ -97,8 +97,10 @@ public class FriendListFragment extends Fragment {
         }
 
         mCards.clear();
+        Log.i("CARDS SIZE", String.valueOf(cards.size()));
         for(int i = 0; i < cards.size(); i++){
             String cardId = cards.get(i);
+            Log.i("CARDS IDE", cardId);
             if (!cardId.equals(myCardId) || myCardId.equals("")){
                 //CALL to get card details by card ID
                 Call<Organization> call = RetrofitClient
