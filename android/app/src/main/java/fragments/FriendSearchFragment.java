@@ -55,7 +55,7 @@ public class FriendSearchFragment extends Fragment {
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .searchByUsername(etUsername.getText().toString());
+                        .searchByUsername(mSession.getUserDetails().getToken(),etUsername.getText().toString());
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
