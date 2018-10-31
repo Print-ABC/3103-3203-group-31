@@ -79,3 +79,35 @@ exports.org_get_all = (req, res, next) => {
             });
         });
 }
+
+exports.org_get_one = (req, res, next) => {
+    Organization.findById(req.params.cardId)
+        .select('_id uid name organization email contact jobTitle')
+        .exec()
+        .then(organization => {
+            if (!organization) {
+                return res.status(404).json({
+                    message: 'Name card not found',
+                    success: false
+                });
+            }
+            res.status(200).json({
+                message: 'From collections',
+                success: true,
+                organization: organization.organization,
+                _id: organization._id,
+                uid: organization.uid,
+                name: organization.name,
+                email: organization.email,
+                contact: organization.contact,
+                jobTitle: organization.jobTitle
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                success : false,
+                message: 'error retrieving from collections',
+                error: err
+            });
+        });
+}
