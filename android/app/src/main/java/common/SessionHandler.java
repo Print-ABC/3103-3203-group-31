@@ -226,4 +226,9 @@ public class SessionHandler {
     public void setCardId(String cardId){
         storeIntoSP(SecurityUtils.CARDID_ALIAS, cardId, KEY_CARDID, KEY_CARDID_IV);
     }
+
+    public User getUserFromDb(String uid){
+        User user = new User();
+        return user;
+    }
 }

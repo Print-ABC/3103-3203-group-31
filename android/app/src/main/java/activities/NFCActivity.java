@@ -1,3 +1,4 @@
+
 package activities;
 
 import android.content.Intent;
@@ -36,6 +37,7 @@ public class NFCActivity extends AppCompatActivity
     private ArrayList<String> messagesToSendArray = new ArrayList<>();
     private ArrayList<String> messagesReceivedArray = new ArrayList<>();
     private SessionHandler session;
+    private User user;
 
     private TextView tvUsername, tvRole, tvCardID, tvMsg;
 
@@ -47,14 +49,24 @@ public class NFCActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_nfc);
 
         // Check if user is logged in
         session = new SessionHandler(this);
         Utils.redirectToLogin(this.getApplicationContext());
-        User user = session.getUserDetails();
+        user = session.getUserDetails();
+
+        if (user.getCardId() == null || (user.getCardId().equals("none"))) {
+            Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         tvLABEL =  (TextView) findViewById(R.id.tvLABEL);
+        tvUsername =  (TextView) findViewById(R.id.tvUsername1);
+        tvRole =  (TextView) findViewById(R.id.tvRole1);
+        tvCardID =  (TextView) findViewById(R.id.tvCardID1);
+        tvMsg =  (TextView) findViewById(R.id.tvMsg1);
 
         myUid = user.getUid();
         myRole = user.getRole();
@@ -64,12 +76,10 @@ public class NFCActivity extends AppCompatActivity
         messagesToSendArray.add(String.valueOf(myRole));
         messagesToSendArray.add(myCard);
 
-/*
         tvUsername.setText(messagesToSendArray.get(0));
         tvRole.setText(messagesToSendArray.get(1));
         tvCardID.setText(messagesToSendArray.get(2));
         tvMsg.setText("Sending");
-*/
 
         //Check if NFC is available on device
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -81,10 +91,9 @@ public class NFCActivity extends AppCompatActivity
 
             //This will be called if the message is sent successfully
             mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
-
         } else {
-            //Toast.makeText(this, "NFC not available on this device", Toast.LENGTH_SHORT).show();
             tvLABEL.setText("NFC not available on this device!");
+           // Toast.makeText(this, "NFC not available on this device", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,8 +116,7 @@ public class NFCActivity extends AppCompatActivity
     @Override
     public void onNdefPushComplete(NfcEvent event) {
         //This is called when the system detects that our NdefMessage was
-        //Successfully sent.
-        messagesToSendArray.clear();
+        //Successfully sent.\
     }
 
     @Override
@@ -144,13 +152,13 @@ public class NFCActivity extends AppCompatActivity
             for (int i = 0; i < messagesToSendArray.size(); i++){
                 byte[] payload = messagesToSendArray.get(i).
                         getBytes(Charset.forName("UTF-8"));
+
                 NdefRecord record = NdefRecord.createMime("text/plain",payload);
                 records[i] = record;
             }
         }
         records[messagesToSendArray.size()] =
                 NdefRecord.createApplicationRecord(getPackageName());
-
         return records;
     }
 
@@ -174,19 +182,18 @@ public class NFCActivity extends AppCompatActivity
                 sRole = Integer.parseInt(messagesReceivedArray.get(1));
                 sCard = messagesReceivedArray.get(2);
 
-               /* tvUsername.setText(sUid);
+                tvUsername.setText(sUid);
                 tvRole.setText(sRole+"");
                 tvCardID.setText(sCard);
                 tvMsg.setText("Received");
-*/
-                Toast.makeText(this, "Received!", Toast.LENGTH_LONG).show();
 
                 //Check if the other person is opposite role of user
                 if (myRole == sRole) {
                     Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
-                    //tvMsg.setText("NOT OPPOSITE USER!!");
+                    tvMsg.setText("NOT OPPOSITE USER!!");
                 }
                 else {
+                    Log.i("NFC ---------------", "sending now");
                     final User user = session.getUserDetails();
                     //Add the RETROFIT HERE
                     //After Receiving
@@ -201,6 +208,12 @@ public class NFCActivity extends AppCompatActivity
                         public void onResponse(Call<User> call, Response<User> response) {
                             switch (response.code()) {
                                 case 200:
+                                    if (myCard != session.getUserDetails().getCardId()){
+                                        session.addCardToList(myCard);
+                                    }
+                                    else{
+                                        session.addCardToList(sCard);
+                                    }
                                     Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
                                     //If nfc only sends from one device then include this whole chunk
                                     Call<User> callA = RetrofitClient
@@ -212,9 +225,16 @@ public class NFCActivity extends AppCompatActivity
                                         public void onResponse(Call<User> callA, Response<User> responseA) {
                                             switch (responseA.code()) {
                                                 case 200:
+                                                    if (myCard != session.getUserDetails().getCardId()){
+                                                        session.addCardToList(myCard);
+                                                    }
+                                                    else{
+                                                        session.addCardToList(sCard);
+                                                    }
                                                     Toast.makeText(NFCActivity.this, R.string.msg_card_added, Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case 406:
+
                                                     Toast.makeText(NFCActivity.this, R.string.error_nc_exists, Toast.LENGTH_SHORT).show();
                                                     break;
                                                 default:
@@ -239,26 +259,26 @@ public class NFCActivity extends AppCompatActivity
                         public void onFailure(Call<User> call, Throwable t) {
                         }
                     });
-                Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else {
+                Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
             }
         }
-        else {
-            Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
-        }
     }
-}
     @Override
     public void onNewIntent(Intent intent) {
         handleNfcIntent(intent);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -268,8 +288,7 @@ public class NFCActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                User user = session.getUserDetails();
-                session.logoutUser(user.getToken(),user.getUid(), this);
+                session.logoutUser(user.getToken(), user.getUid(), this);
                 Intent intent = new Intent(NFCActivity.this, LoginActivity.class);
                 startActivity(intent);
                 break;

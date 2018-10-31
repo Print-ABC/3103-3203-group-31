@@ -81,13 +81,15 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     break;
                 case R.id.nav_nfc:
+                    /*SessionHandler session = new SessionHandler();
+                    User user = session.getUserDetails();
                     if (user.getCardId() == null || (user.getCardId().equals("none"))) {
                         Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
                     }
-                    else{
+                    else{*/
                         Intent intent = new Intent(MainActivity.this, NFCActivity.class);
                         startActivity(intent);
-                    }
+                    //}
                     break;
                 case R.id.nav_friends:
                     selectedFragment = new FriendsFragment();
