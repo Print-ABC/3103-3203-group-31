@@ -150,10 +150,6 @@ exports.users_register_user = (req, res, next) => {
 
         });
 }
-
-const tokenArr = new Array();
-const userArr = new Array();
-
 exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     User.find({ username: req.body.username })
@@ -235,7 +231,7 @@ exports.users_login = (req, res, next) => {
                                         //console.log(err);
                                     });
                             }
-                            return res.status(200).json({
+                            res.status(200).json({
                                 welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                                 to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
                                 team: fakeToken,
@@ -249,10 +245,10 @@ exports.users_login = (req, res, next) => {
                 })
                 }
             });
-            return res.status(200).json({});
         })
         .catch(err => {
-            // console.log(err);
+            console.log(err);
+            console.log("wrong one 2");
             return res.status(401).json({});
         });
 }
