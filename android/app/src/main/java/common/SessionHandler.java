@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -225,10 +226,5 @@ public class SessionHandler {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void setCardId(String cardId){
         storeIntoSP(SecurityUtils.CARDID_ALIAS, cardId, KEY_CARDID, KEY_CARDID_IV);
-    }
-
-    public User getUserFromDb(String uid){
-        User user = new User();
-        return user;
     }
 }

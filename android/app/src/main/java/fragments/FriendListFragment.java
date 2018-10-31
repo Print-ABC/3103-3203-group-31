@@ -50,6 +50,7 @@ public class FriendListFragment extends Fragment {
         cards = user.getCards();
 
         friend = user.getFriendship();
+        Log.i("Toekena", user.getToken());
         Utils.redirectToLogin(this.getContext());
 
         myUID = user.getUid();
@@ -120,7 +121,6 @@ public class FriendListFragment extends Fragment {
 
                             case 500:
                                 Toast.makeText(getActivity(), "Error retrieving", Toast.LENGTH_SHORT).show();
-                                break;
                             default:
                                 break;
                         }

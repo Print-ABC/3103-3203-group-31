@@ -32,4 +32,7 @@ public interface UserService {
 
     @GET("users/check2fa/{fatoken}")
     Call<DummyResponse> check2fa(@Path("fatoken") String fatokenInput);
+
+    @GET("users/{uid}")
+    Call<User> getUserInfo(@Header("Authorization") String token, @Path("uid") String uid);
 }
