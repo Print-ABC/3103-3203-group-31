@@ -34,7 +34,6 @@ exports.users_get_cards_info = (req, res) => {
         return res.status(400).json({});
     }
 }
-
 function checkOrgCard(cardId) {
     const promise = Organization.findById(cardId).exec();
     return promise;
