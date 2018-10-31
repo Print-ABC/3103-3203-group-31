@@ -9,8 +9,13 @@ import static okhttp3.logging.HttpLoggingInterceptor.*;
 
 public class RetrofitClient {
     //TODO: change base URL
+<<<<<<< HEAD
     //private static final String BASE_URL = "https://team31.icebear.online/";
     private static final String BASE_URL = "http://10.0.2.2:3000/";
+=======
+    private static final String BASE_URL = "https://team31.icebear.online/";
+//    private static final String BASE_URL = "http://10.0.2.2:3000/";
+>>>>>>> face5980609e81b8a18168917237bafc816e254a
     private Retrofit retrofit;
     private static RetrofitClient retrofitClient;
 

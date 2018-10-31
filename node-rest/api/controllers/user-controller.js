@@ -210,38 +210,37 @@ exports.users_login = (req, res, next) => {
                                         .then()
                                         .catch(err => {
                                             console.log(err);
+                                        });
+                                    } else {
+                                        // return current token if token has not expired
+                                        // token = active.token;
+                                        console.log("correct one");
+                                        return res.status(401).json({
+                                            message: "Session still active please try again later"
                                         })
+                                    }
                                 } else {
-                                    // return current token if token has not expired
-                                    // token = active.token;
-                                    console.log("correct one");
-                                    return res.status(401).json({
-                                        message: "Session still active please try again later"
-                                    })
-                                }
-                            } else {
-                                // Add user into ActiveUser collection after first time log in
-                                const activeUser = new ActiveUser({
-                                    uid: user[0]._id,
-                                    token: token
-                                });
-                                activeUser.save()
-                                    .then()
-                                    .catch(err => {
-                                        //console.log(err);
+                                    // Add user into ActiveUser collection after first time log in
+                                    const activeUser = new ActiveUser({
+                                        uid: user[0]._id,
+                                        token: token
                                     });
-                            }
-                            res.status(200).json({
-                                welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                team: fakeToken,
-                                thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
-                            });
-                        })
+                                    activeUser.save()
+                                        .then()
+                                        .catch(err => {
+                                            //console.log(err);
+                                        });
+                                }
+                                res.status(200).json({
+                                    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    team: fakeToken,
+                                    thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
+                                });
+                                })
                         .catch(err => {
                             console.log(err);
                         })
-
                 })
                 }
             });
