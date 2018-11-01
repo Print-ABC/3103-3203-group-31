@@ -75,12 +75,12 @@ public class NFCActivity extends AppCompatActivity
         messagesToSendArray.add(myUid);
         messagesToSendArray.add(String.valueOf(myRole));
         messagesToSendArray.add(myCard);
-
+/*
         tvUsername.setText(messagesToSendArray.get(0));
         tvRole.setText(messagesToSendArray.get(1));
         tvCardID.setText(messagesToSendArray.get(2));
         tvMsg.setText("Sending");
-
+*/
         //Check if NFC is available on device
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(mNfcAdapter != null && mNfcAdapter.isEnabled()) {
@@ -181,12 +181,12 @@ public class NFCActivity extends AppCompatActivity
                 sUid = messagesReceivedArray.get(0);
                 sRole = Integer.parseInt(messagesReceivedArray.get(1));
                 sCard = messagesReceivedArray.get(2);
-
+/*
                 tvUsername.setText(sUid);
                 tvRole.setText(sRole+"");
                 tvCardID.setText(sCard);
                 tvMsg.setText("Received");
-
+*/
                 //Check if the other person is opposite role of user
                 if (myRole == sRole) {
                     Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();

@@ -50,7 +50,6 @@ public class FriendListFragment extends Fragment {
         cards = user.getCards();
 
         friend = user.getFriendship();
-        Log.i("Toekena", user.getToken());
         Utils.redirectToLogin(this.getContext());
 
         myUID = user.getUid();
