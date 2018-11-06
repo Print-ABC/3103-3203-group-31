@@ -121,6 +121,21 @@ exports.users_get_name = (req, res, next) => {
         });
 }
 
+exports.users_get_friends = (req, res, next) => {
+  User.findById(req.params.uid)
+      .select('friendship')
+      .exec()
+      .then(doc => {
+        if(!doc) {
+          res.status(400).json(doc);
+        }
+        res.status(200).json(doc);
+      })
+      .catch(err => {
+        res.status(500).json(err);
+      });
+}
+
 exports.users_register_user = (req, res, next) => {
     const user = new User({
         _id: new mongoose.Types.ObjectId(),

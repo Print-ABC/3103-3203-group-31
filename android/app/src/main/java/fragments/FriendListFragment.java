@@ -28,7 +28,6 @@ import retrofit2.Response;
 import services.RetrofitClient;
 
 public class FriendListFragment extends Fragment {
-    private List<String> friend;
     private List<String> cards;
     private ArrayList<FriendsModel> mFriends;
     private ArrayList<Organization> mCards;
@@ -49,31 +48,13 @@ public class FriendListFragment extends Fragment {
         user = session.getUserDetails();
         cards = user.getCards();
 
-        friend = user.getFriendship();
         Utils.redirectToLogin(this.getContext());
 
         myUID = user.getUid();
-
         friendship1 = myUID + "," + user.getName() + ","+ user.getUsername();
 
         mFriends = new ArrayList<>();
-        mFriends.clear();
         mCards = new ArrayList<>();
-        mCards.clear();
-
-
-        for(int i = 0; i < friend.size(); i++){
-            if (friend.get(i) != "") {
-                String str[] = friend.get(i).split(",");
-                FriendsModel friends = new FriendsModel();
-                friends.setUID(str[0]);
-                friends.setName(str[1]);
-                friends.setUsername(str[2]);
-                mFriends.add(friends);
-            }
-        }
-
-
     }
 
     @Override
@@ -81,9 +62,37 @@ public class FriendListFragment extends Fragment {
                              Bundle savedInstanceState) {
         session = new SessionHandler(this.getContext());
         user = session.getUserDetails();
-        friend = user.getFriendship();
         cards = user.getCards();
         String userCardId = user.getCardId();
+
+        mFriends.clear();
+        Call<User> call = RetrofitClient
+                .getInstance()
+                .getUserApi()
+                .getUserFriends(user.getToken(), myUID);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user.setFriendship(response.body().getFriendship());
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {}
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for(int i = 0; i < user.getFriendship().size(); i++){
+                    if (user.getFriendship().get(i) != "") {
+                        String str[] = user.getFriendship().get(i).split(",");
+                        FriendsModel friends = new FriendsModel();
+                        friends.setUID(str[0]);
+                        friends.setName(str[1]);
+                        friends.setUsername(str[2]);
+                        mFriends.add(friends);
+                    }
+                }
+            }
+        }, 1200);
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
         if (userCardId != null) {
@@ -101,11 +110,11 @@ public class FriendListFragment extends Fragment {
             String cardId = cards.get(i);
             if (!cardId.equals(myCardId) || myCardId.equals("")){
                 //CALL to get card details by card ID
-                Call<Organization> call = RetrofitClient
+                Call<Organization> call2 = RetrofitClient
                         .getInstance()
                         .getOrganizationApi()
                         .getcardinfo(user.getToken(),cardId);
-                call.enqueue(new Callback<Organization>() {
+                call2.enqueue(new Callback<Organization>() {
                     @Override
                     public void onResponse(Call<Organization> call, Response<Organization> response) {
                         switch (response.code()) {
@@ -117,7 +126,6 @@ public class FriendListFragment extends Fragment {
                                 cards.setOrganization(response.body().getOrganization());
                                 mCards.add(cards);
                                 break;
-
                             case 500:
                                 Toast.makeText(getActivity(), "Error retrieving", Toast.LENGTH_SHORT).show();
                             default:
@@ -135,7 +143,6 @@ public class FriendListFragment extends Fragment {
         mSFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recycler_view);
         mSFriendsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getResources()));
         mSFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

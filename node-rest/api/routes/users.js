@@ -17,6 +17,9 @@ router.post('/login', UserController.users_login);
 // Gets username of a specific user
 router.get("/username/:username", checkAuth, UserController.users_get_username);
 
+// Retrive friends of a specific user
+router.get("/:uid/friends/", checkAuth, UserController.users_get_friends);
+
 // Check if card exists for that user, if not then update to array
 router.get("/findcards/:uid/:cardtocheck", checkAuth, UserController.users_find_cards);
 

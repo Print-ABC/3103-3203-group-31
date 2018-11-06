@@ -35,4 +35,7 @@ public interface UserService {
 
     @GET("users/{uid}")
     Call<User> getUserInfo(@Header("Authorization") String token, @Path("uid") String uid);
+
+    @GET("users/{uid}/friends")
+    Call<User> getUserFriends(@Header("Authorization") String token, @Path("uid") String uid);
 }
