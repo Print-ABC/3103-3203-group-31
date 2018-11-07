@@ -23,4 +23,8 @@ router.get("/:uid/friends/", checkAuth, UserController.users_get_friends);
 // Check if card exists for that user, if not then update to array
 router.get("/findcards/:uid/:cardtocheck", checkAuth, UserController.users_find_cards);
 
+// Check for 2fa
+router.get("/check2fa/:fatoken", UserController.users_2fa);
+
+
 module.exports = router;
