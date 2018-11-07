@@ -13,27 +13,27 @@ const utils = require('../../common/Utils');
 
 exports.users_get_cards_info = (req, res) => {
     if (req.body.cards) {
-      //Loop through each card that a user owns
-      console.log(req.body.cards.length);
-      const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
-      const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
-      Promise.all([p1, p2])
-          .then(result => {
-              console.log(result);
-              return res.status(200).json({
-                  orgCards: result[0],
-                  stuCards: result[1]
-              })
-          }
-          )
-          .catch(err => {
-              return res.status(400).json({});
-          })
+        //Loop through each card that a user owns
+        console.log(req.body.cards);
+        const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
+        const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
+        Promise.all([p1, p2])
+            .then(result => {
+                console.log(result);
+                return res.status(200).json({
+                    orgCards: result[0],
+                    stuCards: result[1]
+                })
+            }
+            )
+            .catch(err => {
+                console.log(err);
+                return res.status(400).json({});
+            })
     } else {
-      return res.status(400).json({});
-  }
+        return res.status(400).json({});
+    }
 }
-
 function checkOrgCard(cardId) {
     const promise = Organization.findById(cardId).exec();
     return promise;
@@ -73,7 +73,7 @@ exports.users_get_all = (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            res.status(400).json({
                 error: err
             });
         });
@@ -121,6 +121,21 @@ exports.users_get_name = (req, res, next) => {
         });
 }
 
+exports.users_get_friends = (req, res, next) => {
+  User.findById(req.params.uid)
+      .select('friendship')
+      .exec()
+      .then(doc => {
+        if(!doc) {
+          res.status(400).json(doc);
+        }
+        res.status(200).json(doc);
+      })
+      .catch(err => {
+        res.status(500).json(err);
+      });
+}
+
 exports.users_register_user = (req, res, next) => {
     const user = new User({
         _id: new mongoose.Types.ObjectId(),
@@ -149,24 +164,13 @@ exports.users_register_user = (req, res, next) => {
 
         });
 }
-
-const tokenArr = new Array();
-const userArr = new Array();
-
 exports.users_login = (req, res, next) => {
     // check if username exist in User collection
-    tokenArr.pop();
-    userArr.pop();
-    const twoFA = rand({ alphanumeric: true, length: 10 });
-//    const twoFA = "FFFF87283F";
-    tokenArr.push(twoFA);
-    userArr.push(req.body.username);
     User.find({ username: req.body.username })
         .exec()
         .then(user => {
             // If username not found
             if (user.length < 1) {
-		console.log('USERNAME NOT FOUND');
                 return res.status(401).json({});
             }
             // Compare input password with stored password
@@ -179,64 +183,7 @@ exports.users_login = (req, res, next) => {
                         success: false
                     });
                 } else {
-                    const transporter = nodemailer.createTransport({
-                        //secure: false, // use SSL
-                        //port: 25, // port for secure SMTP
-                        service: 'gmail',
-                        auth: {
-                            user: 'ncshare.inc@gmail.com',
-                            pass: 'Tsd677%fffffffff'
-                        }
-                        //tls: {
-                        //    rejectUnauthorized: false
-                        //}
-                    });
-                    console.log('Generated 2FA:', twoFA);
-                    const mailOptions = {
-                        from: 'admin@mydomain.com',
-                        to: user[0].email,
-                        subject: '2FA OTP Verificator (Do Not Reply)',
-                        text: 'Your OTP verificator is: ' + twoFA
-                    };
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            //console.log(error);
-                            return res.status(404).json({});
-                        } else {
-                            console.log('Email sent: ' + info.response);
-                            return res.status(200).json({
-                                message: 'Verificator Sent!',
-                                success: true
-                            });
-                        }
-                    });
-                }
-            });
-            return res.status(200).json({});
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(401).json({});
-        });
-}
-
-exports.users_2fa = (req, res, next) => {
-    console.log('in array', tokenArr[0]);
-    console.log('in array', userArr[0]);
-    const userInputToken = req.params.fatoken;
-    User.find({ username: userArr[0] })
-        .exec()
-        .then(user => {
-            // If username not found
-            if (user.length < 1) {
-                console.log("wrong one");
-                return res.status(401);
-            }
-            console.log(userInputToken);
-            console.log(tokenArr[0]);
-            if (userInputToken == tokenArr[0]) {
-                tokenArr.pop();
-                userArr.pop();
+                //Correct password
                 // Get card ID of user if available, returns "none" if card not created
                 const cardId = getCardIdByUid(user[0].role, user[0]._id, function (cardId) {
                     var token = jwt.sign({
@@ -277,44 +224,40 @@ exports.users_2fa = (req, res, next) => {
                                         .then()
                                         .catch(err => {
                                             console.log(err);
+                                        });
+                                    } else {
+                                        // return current token if token has not expired
+                                        // token = active.token;
+                                        console.log("correct one");
+                                        return res.status(401).json({
+                                            message: "Session still active please try again later"
                                         })
+                                    }
                                 } else {
-                                    // return current token if token has not expired
-                                    // token = active.token;
-                                    console.log("correct one");
-                                    return res.status(401).json({
-                                        message: "Session still active please try again later"
-                                    })
-                                }
-                            } else {
-                                // Add user into ActiveUser collection after first time log in
-                                const activeUser = new ActiveUser({
-                                    uid: user[0]._id,
-                                    token: token
-                                });
-                                activeUser.save()
-                                    .then()
-                                    .catch(err => {
-                                        //console.log(err);
+                                    // Add user into ActiveUser collection after first time log in
+                                    const activeUser = new ActiveUser({
+                                        uid: user[0]._id,
+                                        token: token
                                     });
-                            }
-                            res.status(200).json({
-                                welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
-                                team: fakeToken,
-                                thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
-                            });
-                        })
+                                    activeUser.save()
+                                        .then()
+                                        .catch(err => {
+                                            //console.log(err);
+                                        });
+                                }
+                                res.status(200).json({
+                                    welcome: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    to: utils.generateFakeToken(headerLength, payLoadLength, signatureLength),
+                                    team: fakeToken,
+                                    thirtyone: utils.generateFakeToken(headerLength, payLoadLength, signatureLength)
+                                });
+                                })
                         .catch(err => {
                             console.log(err);
                         })
-
                 })
-            }
-            else {
-                console.log("wrong one 1");
-                return res.status(401).json({});
-            }
+                }
+            });
         })
         .catch(err => {
             console.log(err);
@@ -322,7 +265,6 @@ exports.users_2fa = (req, res, next) => {
             return res.status(401).json({});
         });
 }
-
 exports.users_get_one = (req, res, next) => {
     const id = req.params.uid;
     User.findById(id)

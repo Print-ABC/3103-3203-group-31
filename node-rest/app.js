@@ -34,11 +34,11 @@ mongoose.connect('mongodb://127.0.0.1:27017',
     });
 
 // Atlas Connection
-//mongoose.connect('mongodb://xjustus:' + process.env.MONGO_ATLAS_PW +
+// mongoose.connect('mongodb://xjustus:' + process.env.MONGO_ATLAS_PW +
 //    '@ncshare-shard-00-00-ng4qy.mongodb.net:27017,ncshare-shard-00-01-ng4qy.mongodb.net:27017,ncshare-shard-00-02-ng4qy.mongodb.net:27017/test?ssl=true&replicaSet=ncshare-shard-0&authSource=admin&retryWrites=true',
- //   {
- //       useNewUrlParser: true
-  //  });
+//    {
+//        useNewUrlParser: true
+//    });
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
