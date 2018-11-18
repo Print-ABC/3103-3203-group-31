@@ -172,8 +172,8 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     tokenArr.pop();
     userArr.pop();
-    const twoFA = rand({ alphanumeric: true, length: 10 });
-//    const twoFA = "FFFF87283F";
+    //const twoFA = rand({ alphanumeric: true, length: 10 });
+    const twoFA = "FFFFFFFFFF";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
@@ -216,8 +216,10 @@ exports.users_login = (req, res, next) => {
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
                             //console.log(error);
+                            console.log("3");
                             return res.status(404).json({});
                         } else {
+                            console.log("4");
                             console.log('Email sent: ' + info.response);
                             return res.status(200).json({
                                 message: 'Verificator Sent!',
@@ -227,7 +229,8 @@ exports.users_login = (req, res, next) => {
                     });
                 }
             });
-            return res.status(200).json({});
+            console.log("5");
+            //return res.status(200).json({});
         })
         .catch(err => {
             console.log(err);
