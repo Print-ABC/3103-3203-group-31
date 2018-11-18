@@ -47,34 +47,3 @@ exports.stu_create_card = (req, res, next) => {
         });
 
 }
-
-exports.stu_get_all = (req, res, next) => {
-    Student.find()
-        .select('_id uid name email contact course')
-        .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                stu_cards: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        name: doc.name,
-                        uid: doc.ud,
-                        course: doc.course,
-                        email: doc.email,
-                        contact: doc.contact,
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:' + config.port + '/students/' + doc._id
-                        }
-                    };
-                })
-            });
-        }
-        )
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-}

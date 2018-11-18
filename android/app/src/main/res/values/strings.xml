@@ -28,7 +28,7 @@
     <string name="invalid_contact_error">"Please enter a valid contact number, e.g 98765432"</string>
     <string name="invalid_name_error">Please enter a valid full name, e.g. Peter Tan (max 30 characters)</string>
     <string name="invalid_email_error">Please enter a valid email address</string>
-    <string name="invalid_password_error">Password must be of 16 to 35 characters containing at least 1 small-case letter, 1 Capital letter, 1 digit, 1 special character and the length should be between 16-35 characters</string>
+    <string name="invalid_password_error">Password must be of 16 to 35 characters containing at least 1 small-case letter, 1 upper-case letter, 1 digit, 1 special character and the length should be between 16-35 characters</string>
     <string name="invalid_username_error">"Please enter a valid username (min 8 characters allowing points, dashes and underscores)"</string>
     <string name="invalid_confirm_password_error">Password does not match</string>
     <string name="error_user_exists">User already exists</string>
