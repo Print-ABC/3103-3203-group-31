@@ -141,9 +141,11 @@ exports.users_login = (req, res, next) => {
     userArr.pop();
     // const twoFA = rand({ alphanumeric: true, length: 10 });
    const twoFA = "FFFF87283F";
+   // Prevent NoSQL injection by escaping user input
+   const inputUsername = escape(req.body.username);
     tokenArr.push(twoFA);
-    userArr.push(req.body.username);
-    User.find({ username: req.body.username })
+    userArr.push(inputUsername);
+    User.find({ username: inputUsername })
         .exec()
         .then(user => {
             // If username not found
