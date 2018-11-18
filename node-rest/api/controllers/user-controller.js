@@ -44,41 +44,6 @@ function checkStudentCard(cardId) {
     return promise;
 }
 
-exports.users_get_all = (req, res, next) => {
-    User.find()
-        .select('_id name username email contact role password friendship cards')
-        .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                users: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        name: doc.name,
-                        username: doc.username,
-                        email: doc.email,
-                        contact: doc.contact,
-                        role: doc.role,
-                        password: doc.password,
-                        friendship: doc.friendship,
-                        cards: doc.cards,
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:+' + config.port + '/users/' + doc._id
-                        }
-                    };
-                })
-            };
-            res.status(200).json(response);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(400).json({
-                error: err
-            });
-        });
-}
-
 exports.users_get_username = (req, res, next) => {
     User.findOne({
         username: new RegExp('^' + req.params.username + '$', "i"),
@@ -155,13 +120,15 @@ exports.users_register_user = (req, res, next) => {
             return res.status(201).json({});
         })
         .catch(err => {
-            console.log(err);
-            if (err.errmsg.includes("duplicate")) {
-                return res.status(409).json({});
+            if (err.errmsg != null){
+                if (err.errmsg.includes("duplicate")) {
+                    return res.status(409).json({});
+                } else {
+                    return res.status(400).json({});
+                }
             } else {
                 return res.status(400).json({});
             }
-
         });
 }
 
@@ -172,22 +139,25 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     tokenArr.pop();
     userArr.pop();
-    //const twoFA = rand({ alphanumeric: true, length: 10 });
-    const twoFA = "FFFFFFFFFF";
+    // const twoFA = rand({ alphanumeric: true, length: 10 });
+   const twoFA = "FFFF87283F";
+   // Prevent NoSQL injection by escaping user input
+   const inputUsername = escape(req.body.username);
     tokenArr.push(twoFA);
-    userArr.push(req.body.username);
-    User.find({ username: req.body.username })
+    userArr.push(inputUsername);
+    User.find({ username: inputUsername })
         .exec()
         .then(user => {
             // If username not found
             if (user.length < 1) {
-		            console.log('USERNAME NOT FOUND');
+                console.log('USERNAME NOT FOUND');
                 return res.status(401).json({});
             }
             // Compare input password with stored password
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                console.log(result);
                 // password does not match
-                if (err) {
+                if (!result) {
                     console.log(err);
                     return res.status(201).json({
                         message: 'Login failed',
@@ -201,10 +171,10 @@ exports.users_login = (req, res, next) => {
                         auth: {
                             user: 'ncshare.inc@gmail.com',
                             pass: 'Tsd677%fffffffff'
+                        },
+                        tls: {
+                           rejectUnauthorized: false
                         }
-                        //tls: {
-                        //    rejectUnauthorized: false
-                        //}
                     });
                     console.log('Generated 2FA:', twoFA);
                     const mailOptions = {
@@ -217,6 +187,7 @@ exports.users_login = (req, res, next) => {
                         if (error) {
                             //console.log(error);
                             console.log("3");
+                            console.log(error);
                             return res.status(404).json({});
                         } else {
                             console.log("4");
@@ -338,66 +309,6 @@ exports.users_2fa = (req, res, next) => {
             console.log(err);
             console.log("wrong one 2");
             return res.status(401).json({});
-        });
-}
-exports.users_get_one = (req, res, next) => {
-    const id = req.params.uid;
-    User.findById(id)
-        .select('_id name username email contact role password friendship cards')
-        .exec()
-        .then(doc => {
-            console.log("From database", doc);
-            if (doc) {
-                // Success response
-                res.status(200).json({ doc });
-            } else {
-                // ID does not exist
-                res.status(404).json({ message: 'No valid entry found for provided ID' });
-            }
-        }).catch(err => {
-            console.log(err);
-            // Failure response
-            res.status(500).json({ error: err });
-        });
-}
-
-exports.users_delete_one = (req, res, next) => {
-    const id = req.params.uid;
-    User.deleteOne({ _id: id })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'User deleted'
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
-}
-
-exports.users_update_one = (req, res, next) => {
-    const id = req.params.uid;
-    const updateOps = {};
-    for (const ops of req.body) {
-        // Obtain an object of the update operations we want to perform
-        updateOps[ops.propName] = ops.value;
-    }
-    User.update({ _id: id }, { $set: updateOps })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'User updated',
-                request: result
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
         });
 }
 

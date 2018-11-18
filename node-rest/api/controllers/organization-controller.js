@@ -48,38 +48,6 @@ exports.org_create_card = (req, res, next) => {
 
 }
 
-exports.org_get_all = (req, res, next) => {
-    Organization.find()
-        .select('_id uid name organization email contact jobTitle')
-        .exec()
-        .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                org_cards: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        name: doc.name,
-                        uid: doc.uid,
-                        organization: doc.organization,
-                        email: doc.email,
-                        contact: doc.contact,
-                        jobTitle: doc.jobTitle,
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:' + config.port + '/organizations/' + doc._id
-                        }
-                    };
-                })
-            });
-        }
-        )
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
-}
-
 exports.org_get_one = (req, res, next) => {
     Organization.findById(req.params.cardId)
         .select('_id uid name organization email contact jobTitle')
