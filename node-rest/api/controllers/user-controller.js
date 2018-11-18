@@ -172,8 +172,8 @@ exports.users_login = (req, res, next) => {
     // check if username exist in User collection
     tokenArr.pop();
     userArr.pop();
-    const twoFA = rand({ alphanumeric: true, length: 10 });
-//    const twoFA = "FFFF87283F";
+    // const twoFA = rand({ alphanumeric: true, length: 10 });
+   const twoFA = "FFFF87283F";
     tokenArr.push(twoFA);
     userArr.push(req.body.username);
     User.find({ username: req.body.username })
@@ -181,7 +181,8 @@ exports.users_login = (req, res, next) => {
         .then(user => {
             // If username not found
             if (user.length < 1) {
-		            console.log('USERNAME NOT FOUND');
+                    console.log('USERNAME NOT FOUND');
+                console.log("1");
                 return res.status(401).json({});
             }
             // Compare input password with stored password
@@ -189,6 +190,7 @@ exports.users_login = (req, res, next) => {
                 // password does not match
                 if (err) {
                     console.log(err);
+                    console.log("2");
                     return res.status(201).json({
                         message: 'Login failed',
                         success: false
@@ -201,10 +203,10 @@ exports.users_login = (req, res, next) => {
                         auth: {
                             user: 'ncshare.inc@gmail.com',
                             pass: 'Tsd677%fffffffff'
+                        },
+                        tls: {
+                           rejectUnauthorized: false
                         }
-                        //tls: {
-                        //    rejectUnauthorized: false
-                        //}
                     });
                     console.log('Generated 2FA:', twoFA);
                     const mailOptions = {
@@ -215,10 +217,12 @@ exports.users_login = (req, res, next) => {
                     };
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
-                            //console.log(error);
+                            console.log(error);
+                            console.log("3");
                             return res.status(404).json({});
                         } else {
                             console.log('Email sent: ' + info.response);
+                            console.log("4");
                             return res.status(200).json({
                                 message: 'Verificator Sent!',
                                 success: true
@@ -227,10 +231,10 @@ exports.users_login = (req, res, next) => {
                     });
                 }
             });
-            return res.status(200).json({});
         })
         .catch(err => {
             console.log(err);
+            console.log("6");
             return res.status(401).json({});
         });
 }
