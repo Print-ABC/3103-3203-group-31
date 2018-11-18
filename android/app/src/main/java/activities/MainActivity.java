@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionHandler(this);
         user = session.getUserDetails();
 
+        Log.i("NameCard -----------", user.getCardId());
+        Log.i("Cards -----------", String.valueOf(user.getCards().size()));
         Utils.redirectToLogin(this);
         setContentView(R.layout.activity_main);
 

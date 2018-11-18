@@ -56,7 +56,7 @@ public class NFCActivity extends AppCompatActivity
         session = new SessionHandler(this);
         Utils.redirectToLogin(this.getApplicationContext());
         user = session.getUserDetails();
-
+        Log.i("NameCard: =----------", user.getCardId());
         if (user.getCardId() == null || (user.getCardId().equals("none"))) {
             Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
             finish();
