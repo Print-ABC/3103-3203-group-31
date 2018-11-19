@@ -202,6 +202,11 @@ public class SessionHandler {
         storeIntoSP(SecurityUtils.CARDLIST_ALIAS, cardsString, KEY_CARDLIST, KEY_CARDLIST_IV);
     }
 
+    public void setCardList(ArrayList<String> cardList){
+        String cardsString = Utils.listToString(cardList);
+        storeIntoSP(SecurityUtils.CARDLIST_ALIAS, cardsString, KEY_CARDLIST, KEY_CARDLIST_IV);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void removeFriendFromList(String uid){
         String friendList = retrieveFromSP(SecurityUtils.FRIENDLIST_ALIAS, KEY_FRIENDLIST, KEY_FRIENDLIST_IV);

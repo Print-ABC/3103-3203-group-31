@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +68,9 @@ public class ViewStudentCardFragment extends Fragment {
         Request req = new Request();
         User user = session.getUserDetails();
         req.setUid(user.getUid());
-        req.setCards(user.getCards());
 
-        // Retrieve user's username
+        // Instead of get cards from session, get from db and update UI + session
+        // Now cards array is the most updated
         Call<CardList> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
@@ -86,6 +87,9 @@ public class ViewStudentCardFragment extends Fragment {
 
                             // Get card lists
                             List<Student> studentCards = cardInfo.getStuCards();
+
+                            // Set retrieved card list to session
+                            session.setCardList((ArrayList<String>) cardInfo.getCards());
 
                             if (studentCards == null){
                                 toggleListOff();

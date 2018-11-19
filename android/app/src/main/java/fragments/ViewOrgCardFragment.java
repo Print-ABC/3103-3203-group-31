@@ -63,7 +63,6 @@ public class ViewOrgCardFragment extends Fragment {
         Request req = new Request();
         User user = session.getUserDetails();
         req.setUid(user.getUid());
-        req.setCards(user.getCards());
 
         // Retrieve user's username
         Call<CardList> call = RetrofitClient
@@ -82,6 +81,10 @@ public class ViewOrgCardFragment extends Fragment {
 
                             // Get card lists
                             List<Organization> orgCards = cardInfo.getOrgCards();
+
+                            // Set retrieved card list to session
+                            session.setCardList((ArrayList<String>) cardInfo.getCards());
+                            
                             if (orgCards == null){
                                 toggleListOff();
                                 return;

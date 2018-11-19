@@ -22,7 +22,6 @@ module.exports = (req, res, next) => {
             if (user === undefined || user.length == 0){
                 throw new Error("no matching active users");
             } else {
-                console.log("yes found it");
                 next();
             }
         })
