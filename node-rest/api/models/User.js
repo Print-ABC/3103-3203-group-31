@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
         required: true,
         minlength: 1,
         maxlength: 30,
-        match: /^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/
+        match: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
     },
     username: {
         type: String, 
