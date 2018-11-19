@@ -15,6 +15,7 @@ import com.ncshare.ncshare.R;
 
 import common.SessionHandler;
 import models.FriendRequest;
+import models.Request;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +29,7 @@ public class FriendSearchFragment extends Fragment {
     private Button btnAdd;
     private ImageButton btnSearch;
     private SessionHandler mSession;
+    private User user;
 
     public FriendSearchFragment() {
     }
@@ -48,6 +50,11 @@ public class FriendSearchFragment extends Fragment {
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnSearch = (ImageButton) view.findViewById(R.id.btnSearch);
         mSession = new SessionHandler(this.getContext());
+        user = mSession.getUserDetails();
+
+        final Request req = new Request();
+        req.setUid(user.getUid());
+        req.setUsername(etUsername.getText().toString());
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +62,7 @@ public class FriendSearchFragment extends Fragment {
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .searchByUsername(mSession.getUserDetails().getToken(), etUsername.getText().toString());
+                        .searchByUsername(user.getToken(), req);
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

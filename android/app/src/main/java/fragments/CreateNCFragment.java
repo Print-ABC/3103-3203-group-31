@@ -18,6 +18,7 @@ import com.ncshare.ncshare.R;
 import common.SessionHandler;
 import common.Utils;
 import models.Organization;
+import models.Request;
 import models.Result;
 import models.Student;
 import models.User;
@@ -82,7 +83,9 @@ public class CreateNCFragment extends Fragment {
                         }
 
                         User user = session.getUserDetails();
+                        Request req = new Request();
                         Organization org = new Organization();
+                        org.setUid(user.getUid());
                         org.setContact(contact);
                         org.setEmail(email);
                         org.setJobTitle(jobTitle);
@@ -133,6 +136,7 @@ public class CreateNCFragment extends Fragment {
 
                         User user = session.getUserDetails();
                         Student student = new Student();
+                        student.setUid(user.getUid());
                         student.setCourse(course);
                         student.setContact(contact);
                         student.setEmail(email);

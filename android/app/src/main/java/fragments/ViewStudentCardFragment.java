@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import activities.ViewCardActivity;
 import common.SessionHandler;
 import common.Utils;
 import models.CardList;
+import models.Request;
 import models.Student;
 import models.User;
 import retrofit2.Call;
@@ -63,15 +65,16 @@ public class ViewStudentCardFragment extends Fragment {
         rvViewStudentCard.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Initialize card list array list
-        CardList cardList = new CardList();
+        Request req = new Request();
         User user = session.getUserDetails();
-        cardList.setCards(user.getCards());
+        req.setUid(user.getUid());
 
-        // Retrieve user's username
+        // Instead of get cards from session, get from db and update UI + session
+        // Now cards array is the most updated
         Call<CardList> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
-                .getCards(user.getToken(), cardList);
+                .getCards(user.getToken(), req);
         call.enqueue(new Callback<CardList>() {
             @Override
             public void onResponse(Call<CardList> call, Response<CardList> response) {
@@ -84,6 +87,9 @@ public class ViewStudentCardFragment extends Fragment {
 
                             // Get card lists
                             List<Student> studentCards = cardInfo.getStuCards();
+
+                            // Set retrieved card list to session
+                            session.setCardList((ArrayList<String>) cardInfo.getCards());
 
                             if (studentCards == null){
                                 toggleListOff();

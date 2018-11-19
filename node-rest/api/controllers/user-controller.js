@@ -12,50 +12,57 @@ const config = require('../../config/config');
 const utils = require('../../common/Utils');
 
 exports.users_get_cards_info = (req, res) => {
-    if (req.body.cards) {
-        //Loop through each card that a user owns
-        console.log(req.body.cards);
-        const p1 = Organization.find({ _id: { $in: req.body.cards } }).select("name organization jobTitle contact email ").exec();
-        const p2 = Student.find({ _id: { $in: req.body.cards } }).select("name course email contact").exec();
-        Promise.all([p1, p2])
-            .then(result => {
-                console.log(result);
-                return res.status(200).json({
-                    orgCards: result[0],
-                    stuCards: result[1]
-                })
+    User.find({ _id: escape(req.body.uid) })
+        .select('cards')
+        .exec()
+        .then(user => {
+            // If username not found
+            if (user.length < 1) {
+                return res.status(401);
+            } else {
+                if (user[0].cards) {
+                    //Loop through each card that a user owns
+                    const p1 = Organization.find({ _id: { $in: user[0].cards } }).select("name organization jobTitle contact email ").exec();
+                    const p2 = Student.find({ _id: { $in: user[0].cards } }).select("name course email contact").exec();
+                    Promise.all([p1, p2])
+                        .then(result => {
+                            return res.status(200).json({
+                                orgCards: result[0],
+                                stuCards: result[1],
+                                cards: user[0].cards
+                            })
+                        }
+                        )
+                        .catch(err => {
+                            console.log(err);
+                            return res.status(400).json({});
+                        })
+                } else {
+                    return res.status(400).json({});
+                }
             }
-            )
-            .catch(err => {
-                console.log(err);
-                return res.status(400).json({});
-            })
-    } else {
-        return res.status(400).json({});
+        }
+        )
+        .catch(err=>{
+             console.log(err);
+             return res.status(401);   
+        })
+    
     }
-}
-function checkOrgCard(cardId) {
-    const promise = Organization.findById(cardId).exec();
-    return promise;
-}
-
-function checkStudentCard(cardId) {
-    const promise = Student.findById(cardId).exec();
-    return promise;
-}
 
 exports.users_get_username = (req, res, next) => {
     User.findOne({
-        username: new RegExp('^' + req.params.username + '$', "i"),
+        username: new RegExp('^' + escape(req.body.username) + '$', "i"),
         role: { $eq: 0 }
     })
         .select('_id name username role')
         .exec()
         .then(doc => {
             if (!doc) {
-                res.status(404).json(doc);
+                return res.status(404).json(doc);
+            } else {
+                res.status(200).json(doc);
             }
-            res.status(200).json(doc);
         })
         .catch(err => {
             res.status(500).json(err);
