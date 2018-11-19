@@ -45,12 +45,13 @@ exports.users_get_cards_info = (req, res) => {
         )
         .catch(err=>{
              console.log(err);
-             return res.status(401);   
+             return res.status(401);
         })
-    
+
     }
 
 exports.users_get_username = (req, res, next) => {
+    console.log(req.body.username);
     User.findOne({
         username: new RegExp('^' + escape(req.body.username) + '$', "i"),
         role: { $eq: 0 }

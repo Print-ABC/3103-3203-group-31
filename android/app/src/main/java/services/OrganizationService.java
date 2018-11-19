@@ -13,6 +13,6 @@ public interface OrganizationService {
     @POST("organizations/create")
     Call<Result> addCard(@Header("Authorization") String token, @Body Organization body);
 
-    @GET("organizations/{card}")
-    Call<Organization> getCardInfo(@Header("Authorization") String token, @Path("card") String card_id);
+    @GET("organizations/{uid}/{card}")
+    Call<Organization> getCardInfo(@Header("Authorization") String token, @Path("uid") String uid, @Path("card") String card_id);
 }
