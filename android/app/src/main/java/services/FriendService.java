@@ -19,12 +19,12 @@ public interface FriendService {
     @POST("friends/")
     Call<FriendRequest> createRequest(@Header("Authorization") String token, @Body FriendRequest body);
 
-    @PATCH("friends/{uid}/add/{friend}")
+    @POST("friends/{uid}/add/{friend}")
     Call<FriendRequest> addFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
 
-    @PATCH("friends/{uid}/del/{friend}")
+    @POST("friends/{uid}/del/{friend}")
     Call<FriendRequest> deleteFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
 
-    @DELETE("friends/{id}")
+    @POST("friends/{id}")
     Call<FriendRequest> deleteRequest(@Header("Authorization") String token, @Path("id") String uid);
 }

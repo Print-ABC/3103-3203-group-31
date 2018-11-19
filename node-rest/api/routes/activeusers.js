@@ -6,6 +6,6 @@ const checkAuth = require('../middleware/check-auth');
 const ActiveUsersController = require('../controllers/active-user-controller');
 
 // Handles DELETE requests (Remove entry from database)
-router.delete('/logout/:uid', checkAuth, ActiveUsersController.active_users_logout);
+router.post('/logout/:uid', checkAuth, ActiveUsersController.active_users_logout);
 
 module.exports = router;
