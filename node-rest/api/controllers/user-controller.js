@@ -52,16 +52,16 @@ exports.users_get_cards_info = (req, res) => {
 
 exports.users_get_username = (req, res, next) => {
     User.findOne({
-        username: new RegExp('^' + escape(req.body.username) + '$', "i"),
+        username: new RegExp('^' + escape(req.params.username) + '$', "i"),
         role: { $eq: 0 }
-    })
+		})
         .select('_id name username role')
         .exec()
         .then(doc => {
-            if (!doc) {
-                return res.status(404).json(doc);
+            if (doc) {
+                return res.status(200).json(doc);
             } else {
-                res.status(200).json(doc);
+                res.status(404).json(doc);
             }
         })
         .catch(err => {

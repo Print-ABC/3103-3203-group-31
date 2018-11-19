@@ -52,17 +52,13 @@ public class FriendSearchFragment extends Fragment {
         mSession = new SessionHandler(this.getContext());
         user = mSession.getUserDetails();
 
-        final Request req = new Request();
-        req.setUid(user.getUid());
-        req.setUsername(etUsername.getText().toString());
-
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .searchByUsername(user.getToken(), req);
+                        .searchByUsername(etUsername.getText().toString());
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -109,7 +105,7 @@ public class FriendSearchFragment extends Fragment {
                 Call<FriendRequest> call = RetrofitClient
                         .getInstance()
                         .getFriendRequestApi()
-                        .createRequest(user.getToken(), new FriendRequest(user.getUid(), user.getName(),
+                        .createRequest(new FriendRequest(user.getUid(), user.getName(),
                                 user.getUsername(), f_uid, f_name, f_username));
                 call.enqueue(new Callback<FriendRequest>() {
                     @Override

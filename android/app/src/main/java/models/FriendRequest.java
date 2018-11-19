@@ -36,7 +36,12 @@ public class FriendRequest {
     @Expose
     private String message;
 
-    public FriendRequest() {}
+    public FriendRequest(){}
+
+    public FriendRequest(String requester_id, String recipient_id) {
+        this.requester_id = requester_id;
+        this.recipient_id = recipient_id;
+    }
 
     public FriendRequest(String requester_id, String requester, String requester_username, String recipient_id, String recipient, String recipient_username) {
         this.requester_id = requester_id;

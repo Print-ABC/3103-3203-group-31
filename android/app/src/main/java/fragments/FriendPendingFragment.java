@@ -46,7 +46,7 @@ public class FriendPendingFragment extends Fragment {
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
                 .getFriendRequestApi()
-                .getByRecipientID(user.getToken(), user.getUid());
+                .getByRecipientID(user.getUid());
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
@@ -113,6 +113,8 @@ public class FriendPendingFragment extends Fragment {
         }
 
         public void btnConfirmOnClickListener(final FriendRequest req) {
+            final String friendship = req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username();
+            final String friendshipTwo = req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username();
             mConfirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -122,8 +124,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(user.getToken(), req.getRecipient_id(),
-                                    req.getRequester_id() + "," + req.getRequester() + "," + req.getRequester_username());
+                            .addFriend(new FriendRequest(req.getRecipient_id(), friendshipTwo));
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
@@ -137,8 +138,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(user.getToken(), req.getRequester_id(),
-                                    req.getRecipient_id() + "," + req.getRecipient() + "," + req.getRecipient_username());
+                            .addFriend(new FriendRequest(req.getRequester_id(), friendship));
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
@@ -169,7 +169,7 @@ public class FriendPendingFragment extends Fragment {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
                     .getFriendRequestApi()
-                    .deleteRequest(user.getToken(), req.get_id());
+                    .deleteRequest(req.get_id());
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

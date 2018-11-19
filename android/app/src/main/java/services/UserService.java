@@ -16,8 +16,8 @@ import retrofit2.http.Query;
 
 public interface UserService {
 
-    @POST("users/username")
-    Call<User> searchByUsername(@Header("Authorization") String token, @Body Request request);
+    @GET("users/username/{username}")
+    Call<User> searchByUsername(@Path("username") String username);
 
     @GET("users/findcards/{uid}/{card}")
     Call<User> checkForCard(@Header("Authorization") String token, @Path("uid") String user_id, @Path("card") String card_id);

@@ -33,9 +33,9 @@ public class FriendListFragment extends Fragment {
     private RecyclerView mSFriendsRecyclerView, mSNCRecyclerView;
     private FriendListFragment.FriendsAdapter mAdapter;
     private FriendListFragment.NCAdapter mNCAdapter;
-    private String friendUID, friendName, friendUname; //Selected friend's uid, name, and username
+    private String friendUID; //Selected friend's uid, name, and username
     private String OrgCardID, myCardId, myUID; //The selected card's id, my card Id and my UID.
-    private String friendship, friendship1; //Concats
+    private String friendship, friendshipTwo; //Concats
     private SessionHandler session;
     private User user;
 
@@ -50,7 +50,6 @@ public class FriendListFragment extends Fragment {
         Utils.redirectToLogin(this.getContext());
 
         myUID = user.getUid();
-        friendship1 = myUID + "," + user.getName() + ","+ user.getUsername();
 
         mFriends = new ArrayList<>();
         mCards = new ArrayList<>();
@@ -198,17 +197,15 @@ public class FriendListFragment extends Fragment {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    friendUID = mFriendsModel.getUID();
-                    friendName = mFriendsModel.getName();
-                    friendUname = mFriendsModel.getUsername();
-                    friendship = friendUID + "," + friendName + "," + friendUname;
+                    friendship = mFriendsModel.getUID() + "," + mFriendsModel.getName() + "," + mFriendsModel.getUsername();
+                    friendshipTwo = user.getUid() + "," + user.getName() + "," + user.getUsername();
                     Toast.makeText(getActivity(), "You're deleting " + mFriendsModel.getName(), Toast.LENGTH_SHORT).show();
 
                     //Deleting friend from user's list
                     Call<FriendRequest> callC = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .deleteFriend(user.getToken(), myUID, friendship);
+                            .deleteFriend(new FriendRequest(myUID, friendship));
                     callC.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> callC, Response<FriendRequest> responseC) {
@@ -219,7 +216,7 @@ public class FriendListFragment extends Fragment {
                                     Call<FriendRequest> callB = RetrofitClient
                                             .getInstance()
                                             .getFriendRequestApi()
-                                            .deleteFriend(user.getToken(), friendUID, friendship1);
+                                            .deleteFriend(new FriendRequest(friendUID, friendshipTwo));
                                     callB.enqueue(new Callback<FriendRequest>() {
                                         @Override
                                         public void onResponse(Call<FriendRequest> callB, Response<FriendRequest> responseB) {

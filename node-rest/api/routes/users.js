@@ -18,7 +18,7 @@ router.post('/cardId', checkAuth, UserController.users_get_card_id);
 router.post('/login', UserController.users_login);
 
 // Gets username of a specific user
-router.post("/username", checkAuth, UserController.users_get_username);
+router.get("/username/:username", UserController.users_get_username);
 
 // Retrive friends of a specific user
 router.get("/:uid/friends/", checkAuth, UserController.users_get_friends);

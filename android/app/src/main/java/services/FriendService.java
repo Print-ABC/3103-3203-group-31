@@ -14,17 +14,17 @@ import retrofit2.http.Path;
 public interface FriendService {
 
     @GET("friends/recp/{uid}")
-    Call<List<FriendRequest>> getByRecipientID(@Header("Authorization") String token, @Path("uid") String uid);
+    Call<List<FriendRequest>> getByRecipientID(@Path("uid") String uid);
 
     @POST("friends/")
-    Call<FriendRequest> createRequest(@Header("Authorization") String token, @Body FriendRequest body);
+    Call<FriendRequest> createRequest(@Body FriendRequest body);
 
-    @PATCH("friends/{uid}/add/{friend}")
-    Call<FriendRequest> addFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
+    @POST("friends/add")
+    Call<FriendRequest> addFriend(@Body FriendRequest body);
 
-    @PATCH("friends/{uid}/del/{friend}")
-    Call<FriendRequest> deleteFriend(@Header("Authorization") String token, @Path("uid") String uid, @Path("friend") String friend);
+    @POST("friends/remove")
+    Call<FriendRequest> deleteFriend(@Body FriendRequest body);
 
     @DELETE("friends/{id}")
-    Call<FriendRequest> deleteRequest(@Header("Authorization") String token, @Path("id") String uid);
+    Call<FriendRequest> deleteRequest(@Path("id") String uid);
 }
