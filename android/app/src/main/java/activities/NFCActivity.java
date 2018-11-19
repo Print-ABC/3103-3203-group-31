@@ -232,7 +232,7 @@ public class NFCActivity extends AppCompatActivity
                     Call<User> call = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(user.getToken(), myUid, sCard);
+                            .checkForCard(myUid, sCard);
                     call.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -248,7 +248,7 @@ public class NFCActivity extends AppCompatActivity
                                     Call<User> callA = RetrofitClient
                                             .getInstance()
                                             .getUserApi()
-                                            .checkForCard(user.getToken(), sUid, myCard);
+                                            .checkForCard(sUid, myCard);
                                     callA.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> callA, Response<User> responseA) {

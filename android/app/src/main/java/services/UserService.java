@@ -20,7 +20,7 @@ public interface UserService {
     Call<User> searchByUsername(@Path("username") String username);
 
     @GET("users/findcards/{uid}/{card}")
-    Call<User> checkForCard(@Header("Authorization") String token, @Path("uid") String user_id, @Path("card") String card_id);
+    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
 
     @POST("users/cards")
     Call<CardList> getCards(@Header("Authorization") String token, @Body Request request);

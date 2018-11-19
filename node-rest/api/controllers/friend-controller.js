@@ -90,7 +90,7 @@ exports.update_friendlist_remove = (req, res, next) => {
 
 //DELETE: Delete an existing friend request
 exports.friend_delete_request = (req, res, next) => {
-    Friend.deleteOne({ _id: req.params.id })
+    Friend.findByIdAndRemove({ _id: req.params.id })
         .exec()
         .then(result => {
             res.status(200).json({

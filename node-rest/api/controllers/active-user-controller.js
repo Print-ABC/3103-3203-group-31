@@ -4,7 +4,7 @@ const ActiveUser = require('../models/ActiveUser');
 
 exports.active_users_logout = (req,res, next) => {
     const id = req.params.uid;
-    ActiveUser.deleteOne({uid: id})
+    ActiveUser.findOneAndRemove({uid: id})
     .exec()
     .then(result => {
         res.status(200).json({});

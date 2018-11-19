@@ -45,12 +45,13 @@ exports.users_get_cards_info = (req, res) => {
         )
         .catch(err=>{
              console.log(err);
-             return res.status(401);   
+             return res.status(401);
         })
-    
+
     }
 
 exports.users_get_username = (req, res, next) => {
+    console.log(req.body.username);
     User.findOne({
         username: new RegExp('^' + escape(req.params.username) + '$', "i"),
         role: { $eq: 0 }
@@ -192,9 +193,12 @@ exports.users_login = (req, res, next) => {
                     };
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
+                            //console.log(error);
+                            console.log("3");
                             console.log(error);
                             return res.status(404).json({});
                         } else {
+                            console.log("4");
                             console.log('Email sent: ' + info.response);
                             return res.status(200).json({
                                 message: 'Verificator Sent!',
@@ -204,6 +208,8 @@ exports.users_login = (req, res, next) => {
                     });
                 }
             });
+            console.log("5");
+            //return res.status(200).json({});
         })
         .catch(err => {
             console.log(err);

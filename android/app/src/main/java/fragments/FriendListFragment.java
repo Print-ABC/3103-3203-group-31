@@ -111,7 +111,7 @@ public class FriendListFragment extends Fragment {
                 Call<Organization> call2 = RetrofitClient
                         .getInstance()
                         .getOrganizationApi()
-                        .getCardInfo(user.getToken(),cardId);
+                        .getCardInfo(user.getToken(), myUID, cardId);
                 call2.enqueue(new Callback<Organization>() {
                     @Override
                     public void onResponse(Call<Organization> call, Response<Organization> response) {
@@ -311,7 +311,7 @@ public class FriendListFragment extends Fragment {
                     Call<User> callA = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(user.getToken(),friendUID, OrgCardID);
+                            .checkForCard(friendUID, OrgCardID);
                     callA.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> callA, Response<User> responseA) {

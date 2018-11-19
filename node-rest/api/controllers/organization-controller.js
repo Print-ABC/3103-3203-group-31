@@ -53,6 +53,7 @@ exports.org_get_one = (req, res, next) => {
         .select('_id uid name organization email contact jobTitle')
         .exec()
         .then(organization => {
+            console.log("here:");
             if (!organization) {
                 return res.status(404).json({
                     message: 'Name card not found',
