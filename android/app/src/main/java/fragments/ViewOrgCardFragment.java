@@ -23,6 +23,7 @@ import common.SessionHandler;
 import common.Utils;
 import models.CardList;
 import models.Organization;
+import models.Request;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,15 +60,16 @@ public class ViewOrgCardFragment extends Fragment {
         rvViewOrgCard.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Initialize card list array list
-        CardList cardList = new CardList();
+        Request req = new Request();
         User user = session.getUserDetails();
-        cardList.setCards(user.getCards());
+        req.setUid(user.getUid());
+        req.setCards(user.getCards());
 
         // Retrieve user's username
         Call<CardList> call = RetrofitClient
                 .getInstance()
                 .getUserApi()
-                .getCards(user.getToken(), cardList);
+                .getCards(user.getToken(), req);
         call.enqueue(new Callback<CardList>() {
             @Override
             public void onResponse(Call<CardList> call, Response<CardList> response) {

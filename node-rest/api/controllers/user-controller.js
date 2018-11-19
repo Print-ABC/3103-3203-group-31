@@ -46,16 +46,17 @@ function checkStudentCard(cardId) {
 
 exports.users_get_username = (req, res, next) => {
     User.findOne({
-        username: new RegExp('^' + req.params.username + '$', "i"),
+        username: new RegExp('^' + escape(req.body.username) + '$', "i"),
         role: { $eq: 0 }
     })
         .select('_id name username role')
         .exec()
         .then(doc => {
             if (!doc) {
-                res.status(404).json(doc);
+                return res.status(404).json(doc);
+            } else {
+                res.status(200).json(doc);
             }
-            res.status(200).json(doc);
         })
         .catch(err => {
             res.status(500).json(err);

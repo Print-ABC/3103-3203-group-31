@@ -1,6 +1,7 @@
 package services;
 
 import models.DummyResponse;
+import models.Request;
 import models.Result;
 import models.User;
 import models.CardList;
@@ -15,14 +16,14 @@ import retrofit2.http.Query;
 
 public interface UserService {
 
-    @GET("users/username/{username}")
-    Call<User> searchByUsername(@Header("Authorization") String token, @Path("username") String user_username);
+    @POST("users/username")
+    Call<User> searchByUsername(@Header("Authorization") String token, @Body Request request);
 
     @GET("users/findcards/{uid}/{card}")
     Call<User> checkForCard(@Header("Authorization") String token, @Path("uid") String user_id, @Path("card") String card_id);
 
     @POST("users/cards")
-    Call<CardList> getCards(@Header("Authorization") String token, @Body CardList cards);
+    Call<CardList> getCards(@Header("Authorization") String token, @Body Request request);
 
     @POST("users/register")
     Call<Result> addUser(@Body User body);

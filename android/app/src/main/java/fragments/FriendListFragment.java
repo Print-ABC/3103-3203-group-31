@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +112,7 @@ public class FriendListFragment extends Fragment {
                 Call<Organization> call2 = RetrofitClient
                         .getInstance()
                         .getOrganizationApi()
-                        .getcardinfo(user.getToken(),cardId);
+                        .getCardInfo(user.getToken(),cardId);
                 call2.enqueue(new Callback<Organization>() {
                     @Override
                     public void onResponse(Call<Organization> call, Response<Organization> response) {
