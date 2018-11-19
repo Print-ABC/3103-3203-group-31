@@ -303,15 +303,27 @@ exports.users_2fa = (req, res, next) => {
                 })
             }
             else {
-                console.log("wrong one 1");
                 return res.status(401).json({});
             }
         })
         .catch(err => {
             console.log(err);
-            console.log("wrong one 2");
             return res.status(401).json({});
         });
+}
+
+exports.users_get_card_id = (req, res, next)=>{
+    const uid = escape(req.body.uid);
+    const role = escape(req.body.role);
+    getCardIdByUid(escape(role), escape(uid), function (cardId) {
+        if (cardId != "none"){
+            return res.status(200).json({
+                cardId: cardId
+            })
+        } else {
+            return res.status(401).json({});
+        }
+    })
 }
 
 // Retrieve cardId of a user

@@ -25,6 +25,9 @@ public interface UserService {
     @POST("users/cards")
     Call<CardList> getCards(@Header("Authorization") String token, @Body Request request);
 
+    @POST("users/cardId")
+    Call<Result> getCardId(@Header("Authorization") String token, @Body Request request);
+
     @POST("users/register")
     Call<Result> addUser(@Body User body);
 

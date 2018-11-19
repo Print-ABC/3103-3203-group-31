@@ -15,9 +15,9 @@ public class Request {
     @SerializedName("cards")
     @Expose
     private List<String> cards = null;
-    @SerializedName("requester")
+    @SerializedName("role")
     @Expose
-    private String requester;
+    private Integer role;
 
     public List<String> getCards() { return cards; }
 
@@ -37,5 +37,13 @@ public class Request {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 }
