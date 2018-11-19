@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 import common.SessionHandler;
 import common.Utils;
+import models.Request;
+import models.Result;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,34 +58,61 @@ public class NFCActivity extends AppCompatActivity
         session = new SessionHandler(this);
         Utils.redirectToLogin(this.getApplicationContext());
         user = session.getUserDetails();
-        Log.i("NameCard: =----------", user.getCardId());
-        if (user.getCardId() == null || (user.getCardId().equals("none"))) {
-            Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
-        tvLABEL =  (TextView) findViewById(R.id.tvLABEL);
-        tvUsername =  (TextView) findViewById(R.id.tvUsername1);
-        tvRole =  (TextView) findViewById(R.id.tvRole1);
-        tvCardID =  (TextView) findViewById(R.id.tvCardID1);
-        tvMsg =  (TextView) findViewById(R.id.tvMsg1);
+        Request req = new Request();
+        req.setUid(user.getUid());
+        req.setRole(user.getRole());
 
-        myUid = user.getUid();
-        myRole = user.getRole();
-        myCard = user.getCardId();
+        tvLABEL = (TextView) findViewById(R.id.tvLABEL);
+        tvUsername = (TextView) findViewById(R.id.tvUsername1);
+        tvRole = (TextView) findViewById(R.id.tvRole1);
+        tvCardID = (TextView) findViewById(R.id.tvCardID1);
+        tvMsg = (TextView) findViewById(R.id.tvMsg1);
 
-        messagesToSendArray.add(myUid);
-        messagesToSendArray.add(String.valueOf(myRole));
-        messagesToSendArray.add(myCard);
-/*
-        tvUsername.setText(messagesToSendArray.get(0));
-        tvRole.setText(messagesToSendArray.get(1));
-        tvCardID.setText(messagesToSendArray.get(2));
-        tvMsg.setText("Sending");
-*/
+        Call<Result> call = RetrofitClient
+                .getInstance()
+                .getUserApi()
+                .getCardId(user.getToken(), req);
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                switch (response.code()) {
+                    case 200:
+
+                        session.setCardId(response.body().getCardId());
+                        
+                        myUid = user.getUid();
+                        myRole = user.getRole();
+                        myCard = response.body().getCardId();
+
+                        messagesToSendArray.add(myUid);
+                        messagesToSendArray.add(String.valueOf(myRole));
+                        messagesToSendArray.add(myCard);
+
+                        /*
+                        tvUsername.setText(messagesToSendArray.get(0));
+                        tvRole.setText(messagesToSendArray.get(1));
+                        tvCardID.setText(messagesToSendArray.get(2));
+                        tvMsg.setText("Sending");
+                        */
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), R.string.error_no_card_detected, Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Toast.makeText(getBaseContext(), "Failed to retrieve cards", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
         //Check if NFC is available on device
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(mNfcAdapter != null && mNfcAdapter.isEnabled()) {
+        if (mNfcAdapter != null && mNfcAdapter.isEnabled()) {
             tvLABEL.setText("Place phones back to back to start!");
             // Handle some NFC initialization here
             //This will refer back to createNdefMessage for what it will send
@@ -102,7 +131,7 @@ public class NFCActivity extends AppCompatActivity
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putStringArrayList("messagesToSend", messagesToSendArray);
-        savedInstanceState.putStringArrayList("lastMessagesReceived",messagesReceivedArray);
+        savedInstanceState.putStringArrayList("lastMessagesReceived", messagesReceivedArray);
     }
 
     //Load our Array Lists of Messages for when the user navigates back
@@ -135,7 +164,7 @@ public class NFCActivity extends AppCompatActivity
         NdefRecord[] records = new NdefRecord[messagesToSendArray.size() + 1];
         //To Create Messages Manually if API is less than
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            for (int i = 0; i < messagesToSendArray.size(); i++){
+            for (int i = 0; i < messagesToSendArray.size(); i++) {
                 byte[] payload = messagesToSendArray.get(i).
                         getBytes(Charset.forName("UTF-8"));
                 NdefRecord record = new NdefRecord(
@@ -149,11 +178,11 @@ public class NFCActivity extends AppCompatActivity
         }
         //Api is high enough that we can use createMime, which is preferred.
         else {
-            for (int i = 0; i < messagesToSendArray.size(); i++){
+            for (int i = 0; i < messagesToSendArray.size(); i++) {
                 byte[] payload = messagesToSendArray.get(i).
                         getBytes(Charset.forName("UTF-8"));
 
-                NdefRecord record = NdefRecord.createMime("text/plain",payload);
+                NdefRecord record = NdefRecord.createMime("text/plain", payload);
                 records[i] = record;
             }
         }
@@ -166,15 +195,17 @@ public class NFCActivity extends AppCompatActivity
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
             Parcelable[] receivedArray =
                     NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            if(receivedArray != null) {
+            if (receivedArray != null) {
                 messagesReceivedArray.clear();
                 NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
                 NdefRecord[] attachedRecords = receivedMessage.getRecords();
 
-                for (NdefRecord record:attachedRecords) {
+                for (NdefRecord record : attachedRecords) {
                     String string = new String(record.getPayload());
                     //Make sure we don't pass along our AAR (Android Application Record)
-                    if (string.equals(getPackageName())) { continue; }
+                    if (string.equals(getPackageName())) {
+                        continue;
+                    }
                     messagesReceivedArray.add(string);
                 }
 
@@ -191,8 +222,7 @@ public class NFCActivity extends AppCompatActivity
                 if (myRole == sRole) {
                     Toast.makeText(this, "Cannot NFC with same role", Toast.LENGTH_SHORT).show();
                     tvMsg.setText("NOT OPPOSITE USER!!");
-                }
-                else {
+                } else {
                     Log.i("NFC ---------------", "sending now");
                     final User user = session.getUserDetails();
                     //Add the RETROFIT HERE
@@ -208,10 +238,9 @@ public class NFCActivity extends AppCompatActivity
                         public void onResponse(Call<User> call, Response<User> response) {
                             switch (response.code()) {
                                 case 200:
-                                    if (myCard != session.getUserDetails().getCardId()){
+                                    if (myCard != session.getUserDetails().getCardId()) {
                                         session.addCardToList(myCard);
-                                    }
-                                    else{
+                                    } else {
                                         session.addCardToList(sCard);
                                     }
                                     Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
@@ -225,10 +254,9 @@ public class NFCActivity extends AppCompatActivity
                                         public void onResponse(Call<User> callA, Response<User> responseA) {
                                             switch (responseA.code()) {
                                                 case 200:
-                                                    if (myCard != session.getUserDetails().getCardId()){
+                                                    if (myCard != session.getUserDetails().getCardId()) {
                                                         session.addCardToList(myCard);
-                                                    }
-                                                    else{
+                                                    } else {
                                                         session.addCardToList(sCard);
                                                     }
                                                     Toast.makeText(NFCActivity.this, R.string.msg_card_added, Toast.LENGTH_SHORT).show();
@@ -242,6 +270,7 @@ public class NFCActivity extends AppCompatActivity
                                                     break;
                                             }
                                         }
+
                                         @Override
                                         public void onFailure(Call<User> callA, Throwable t) {
                                         }
@@ -255,6 +284,7 @@ public class NFCActivity extends AppCompatActivity
                                     break;
                             }
                         }
+
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
                         }
@@ -263,22 +293,24 @@ public class NFCActivity extends AppCompatActivity
                     Toast.makeText(this, "Card successfully added!", Toast.LENGTH_SHORT).show();
                 }
 
-            }
-            else {
+            } else {
                 Toast.makeText(this, "NFC Failed.", Toast.LENGTH_LONG).show();
             }
         }
     }
+
     @Override
     public void onNewIntent(Intent intent) {
         handleNfcIntent(intent);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

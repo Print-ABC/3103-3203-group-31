@@ -11,6 +11,9 @@ router.post('/register', UserController.users_register_user);
 //Retrieve all namecards of a user, return username, name and organization/school
 router.post('/cards', checkAuth, UserController.users_get_cards_info);
 
+//Retrieve cardId of user
+router.post('/cardId', checkAuth, UserController.users_get_card_id);
+
 // User Login
 router.post('/login', UserController.users_login);
 
