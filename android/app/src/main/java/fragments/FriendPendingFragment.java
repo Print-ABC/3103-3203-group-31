@@ -46,7 +46,7 @@ public class FriendPendingFragment extends Fragment {
         Call<List<FriendRequest>> call = RetrofitClient
                 .getInstance()
                 .getFriendRequestApi()
-                .getByRecipientID(user.getUid());
+                .getByRecipientID(user.getToken(), user.getUid());
         call.enqueue(new Callback<List<FriendRequest>>() {
             @Override
             public void onResponse(Call<List<FriendRequest>> call, Response<List<FriendRequest>> response) {
@@ -169,7 +169,7 @@ public class FriendPendingFragment extends Fragment {
             Call<FriendRequest> call = RetrofitClient
                     .getInstance()
                     .getFriendRequestApi()
-                    .deleteRequest(req.get_id());
+                    .deleteRequest(user.getToken(), user.getUid(), req.get_id());
             call.enqueue(new Callback<FriendRequest>() {
                 @Override
                 public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

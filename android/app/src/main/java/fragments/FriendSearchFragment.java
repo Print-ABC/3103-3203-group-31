@@ -105,7 +105,7 @@ public class FriendSearchFragment extends Fragment {
                 Call<FriendRequest> call = RetrofitClient
                         .getInstance()
                         .getFriendRequestApi()
-                        .createRequest(new FriendRequest(user.getUid(), user.getName(),
+                        .createRequest(user.getToken(), user.getUid(), new FriendRequest(user.getUid(), user.getName(),
                                 user.getUsername(), f_uid, f_name, f_username));
                 call.enqueue(new Callback<FriendRequest>() {
                     @Override
