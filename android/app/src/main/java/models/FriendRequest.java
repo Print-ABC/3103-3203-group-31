@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class FriendRequest {
 
+    @SerializedName("uid")
+    @Expose
+    private String uid;
     @SerializedName("_id")
     @Expose
     private String _id;
@@ -36,6 +39,10 @@ public class FriendRequest {
     @Expose
     private String message;
 
+    @SerializedName("friendsOp")
+    @Expose
+    private Boolean friendsOp;
+
     public FriendRequest(){}
 
     public FriendRequest(String requester_id, String recipient_id) {
@@ -50,6 +57,14 @@ public class FriendRequest {
         this.recipient_id = recipient_id;
         this.recipient = recipient;
         this.recipient_username = recipient_username;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String get_id() {
@@ -122,6 +137,14 @@ public class FriendRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getFriendsOp() {
+        return friendsOp;
+    }
+
+    public void setFriendsOp(Boolean friendsOp) {
+        this.friendsOp = friendsOp;
     }
 
 }

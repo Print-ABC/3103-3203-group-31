@@ -124,7 +124,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(new FriendRequest(req.getRecipient_id(), friendshipTwo));
+                            .addFriend(user.getToken(), new FriendRequest(req.getRecipient_id(), friendshipTwo));
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
@@ -138,7 +138,7 @@ public class FriendPendingFragment extends Fragment {
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(new FriendRequest(req.getRequester_id(), friendship));
+                            .addFriend(user.getToken(), new FriendRequest(req.getRequester_id(), friendship));
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

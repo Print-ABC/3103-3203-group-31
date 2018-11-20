@@ -20,10 +20,10 @@ public interface FriendService {
     Call<FriendRequest> createRequest(@Header("Authorization") String token, @Path("uid") String uid, @Body FriendRequest body);
 
     @POST("friends/add")
-    Call<FriendRequest> addFriend(@Body FriendRequest body);
+    Call<FriendRequest> addFriend(@Header("Authorization") String token, @Body FriendRequest body);
 
     @POST("friends/remove")
-    Call<FriendRequest> deleteFriend(@Body FriendRequest body);
+    Call<FriendRequest> deleteFriend(@Header("Authorization") String token, @Body FriendRequest body);
 
     @DELETE("friends/{uid}/{id}")
     Call<FriendRequest> deleteRequest(@Header("Authorization") String token, @Path("uid") String uid, @Path("id") String id);

@@ -201,11 +201,13 @@ public class FriendListFragment extends Fragment {
                     friendshipTwo = user.getUid() + "," + user.getName() + "," + user.getUsername();
                     Toast.makeText(getActivity(), "You're deleting " + mFriendsModel.getName(), Toast.LENGTH_SHORT).show();
 
+                    FriendRequest fr = new FriendRequest(myUID, friendship);
+                    fr.setUid(myUID);
                     //Deleting friend from user's list
                     Call<FriendRequest> callC = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .deleteFriend(new FriendRequest(myUID, friendship));
+                            .deleteFriend(user.getToken(), fr);
                     callC.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> callC, Response<FriendRequest> responseC) {
@@ -213,10 +215,12 @@ public class FriendListFragment extends Fragment {
                                 case 200:
                                     Toast.makeText(getContext(), "Friend deleted from list", Toast.LENGTH_SHORT).show();
                                     //Deleting user from friend's list
+                                    FriendRequest fr2 = new FriendRequest(friendUID, friendshipTwo);
+                                    fr2.setFriendsOp(true);
                                     Call<FriendRequest> callB = RetrofitClient
                                             .getInstance()
                                             .getFriendRequestApi()
-                                            .deleteFriend(new FriendRequest(friendUID, friendshipTwo));
+                                            .deleteFriend(user.getToken(), fr2);
                                     callB.enqueue(new Callback<FriendRequest>() {
                                         @Override
                                         public void onResponse(Call<FriendRequest> callB, Response<FriendRequest> responseB) {
