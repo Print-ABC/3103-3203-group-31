@@ -19,7 +19,7 @@ public interface UserService {
     @POST("users/username")
     Call<User> searchByUsername(@Header("Authorization") String token, @Body Request request);
 
-    @GET("users/findCards")
+    @POST("users/findCards")
     Call<User> checkForCard(@Header("Authorization") String token, @Body Request request);
 
     @POST("users/cards")

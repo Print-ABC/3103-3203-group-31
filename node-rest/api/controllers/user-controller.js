@@ -368,9 +368,9 @@ function getCardIdByUid(role, uid, callback) {
 }
 
 exports.users_find_cards = (req, res, next) => {
-    const id = escape(req.body.checkingID);
+    const id = escape(req.body.checkingId);
     const cardToCheck = escape(req.body.cardId);
-    console.log(id);
+    console.log("id", id);
     User.findById(id)
         .select('cards')
         .exec()
