@@ -118,13 +118,16 @@ public class FriendPendingFragment extends Fragment {
             mConfirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Log.e("JUSTUS", "HIIIIIIIIIIII");
                     user = mSession.getUserDetails();
+                    FriendRequest fr = new FriendRequest(req.getRecipient_id(), friendshipTwo);
+                    fr.setUid(user.getUid());
+                    fr.setFriendsOp(true);
                     // Add requester to friend list
                     Call<FriendRequest> call = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(user.getToken(), new FriendRequest(req.getRecipient_id(), friendshipTwo));
+                            .addFriend(user.getToken(), fr);
                     call.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {
@@ -135,10 +138,14 @@ public class FriendPendingFragment extends Fragment {
                         }
                     });
                     // Add yourself to requester's friend list
+                    //TODO: friendship in receipient_id???
+                    FriendRequest fr1 = new FriendRequest(req.getRequester_id(), friendship);
+                    fr1.setUid(user.getUid());
+                    fr1.setFriendsOp(true);
                     Call<FriendRequest> call2 = RetrofitClient
                             .getInstance()
                             .getFriendRequestApi()
-                            .addFriend(user.getToken(), new FriendRequest(req.getRequester_id(), friendship));
+                            .addFriend(user.getToken(), fr1);
                     call2.enqueue(new Callback<FriendRequest>() {
                         @Override
                         public void onResponse(Call<FriendRequest> call, Response<FriendRequest> response) {

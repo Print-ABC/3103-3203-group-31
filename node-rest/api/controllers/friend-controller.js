@@ -28,6 +28,8 @@ exports.friend_get_requests_recipient = (req, res, next) => {
 
 //POST: Make a new friend request
 exports.friend_post_request = (req, res, next) => {
+  console.log(req.body);
+  console.log("JUSTSSSSSSS");
   const request = new Friend({
       _id: new mongoose.Types.ObjectId(),
       requester_id: req.body.requester_id,
@@ -57,9 +59,15 @@ exports.friend_post_request = (req, res, next) => {
 
 //UPDATE: Add uid to list of friends of an existing user
 exports.update_friendlist_add = (req, res, next) => {
+  console.log(req.body);
+  console.log("REQUEST BODDYYY");
+  console.log(req.body.recipient_id);
+  const recipientId = req.body.recipient_id.split(',')[0];
+  console.log(recipientId);
+  console.log("RECIEPIENT IDDDDDDD");
   User.update(
     { "_id": req.body.requester_id },
-    { $push: {"friendship": req.body.recipient_id} },
+    { $push: {"friendship": recipientId} },
     function (err, docs) {
       if(err) {
         console.log(err);

@@ -16,11 +16,11 @@ import retrofit2.http.Query;
 
 public interface UserService {
 
-    @GET("users/username/{username}")
-    Call<User> searchByUsername(@Path("username") String username);
+    @POST("users/username")
+    Call<User> searchByUsername(@Header("Authorization") String token, @Body Request request);
 
-    @GET("users/findcards/{uid}/{card}")
-    Call<User> checkForCard(@Path("uid") String user_id, @Path("card") String card_id);
+    @GET("users/findCards")
+    Call<User> checkForCard(@Header("Authorization") String token, @Body Request request);
 
     @POST("users/cards")
     Call<CardList> getCards(@Header("Authorization") String token, @Body Request request);

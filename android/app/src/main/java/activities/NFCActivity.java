@@ -229,10 +229,14 @@ public class NFCActivity extends AppCompatActivity
                     //After Receiving
                     //This is to check if the card exist in user's collection
                     //If not, then straight update to DB.
+                    Request request = new Request();
+                    request.setUid(user.getUid());
+                    request.setCardId(sCard);
+                    request.setCheckingId(myUid);
                     Call<User> call = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(myUid, sCard);
+                            .checkForCard(user.getToken(), request);
                     call.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -245,10 +249,15 @@ public class NFCActivity extends AppCompatActivity
                                     }
                                     Toast.makeText(NFCActivity.this, "Card Added!", Toast.LENGTH_SHORT).show();
                                     //If nfc only sends from one device then include this whole chunk
+                                    Request requestA = new Request();
+                                    requestA.setUid(user.getUid());
+                                    requestA.setCheckingId(sUid);
+                                    requestA.setCardId(myCard);
+                                    requestA.setFriendsOp(true);
                                     Call<User> callA = RetrofitClient
                                             .getInstance()
                                             .getUserApi()
-                                            .checkForCard(sUid, myCard);
+                                            .checkForCard(user.getToken(), requestA);
                                     callA.enqueue(new Callback<User>() {
                                         @Override
                                         public void onResponse(Call<User> callA, Response<User> responseA) {

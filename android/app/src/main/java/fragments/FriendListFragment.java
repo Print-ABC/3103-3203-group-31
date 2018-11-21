@@ -20,6 +20,7 @@ import common.SessionHandler;
 import common.Utils;
 import models.FriendRequest;
 import models.Organization;
+import models.Request;
 import models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -310,12 +311,16 @@ public class FriendListFragment extends Fragment {
 
                     //get the cardID from the clicked item
                     OrgCardID = mCards.getCardId();
+                    Request request = new Request();
+                    request.setUid(user.getUid());
+                    request.setCheckingId(friendUID);
+                    request.setCardId(OrgCardID);
 
                     //Update the receiver user's cards array
                     Call<User> callA = RetrofitClient
                             .getInstance()
                             .getUserApi()
-                            .checkForCard(friendUID, OrgCardID);
+                            .checkForCard(user.getToken(), request);
                     callA.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> callA, Response<User> responseA) {

@@ -2,6 +2,7 @@ package fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,13 +53,17 @@ public class FriendSearchFragment extends Fragment {
         mSession = new SessionHandler(this.getContext());
         user = mSession.getUserDetails();
 
+        final Request req = new Request();
+        req.setUid(user.getUid());
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                req.setUsername(etUsername.getText().toString());
                 Call<User> call = RetrofitClient
                         .getInstance()
                         .getUserApi()
-                        .searchByUsername(etUsername.getText().toString());
+                        .searchByUsername(user.getToken(), req);
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

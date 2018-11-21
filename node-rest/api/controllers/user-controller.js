@@ -52,8 +52,9 @@ exports.users_get_cards_info = (req, res) => {
 
 exports.users_get_username = (req, res, next) => {
     console.log(req.body.username);
+    const username = escape(req.body.username);
     User.findOne({
-        username: new RegExp('^' + escape(req.params.username) + '$', "i"),
+        username: new RegExp('^' + escape(username) + '$', "i"),
         role: { $eq: 0 }
 		})
         .select('_id name username role')
@@ -367,8 +368,8 @@ function getCardIdByUid(role, uid, callback) {
 }
 
 exports.users_find_cards = (req, res, next) => {
-    const id = req.params.uid;
-    const cardToCheck = req.params.cardtocheck;
+    const id = escape(req.body.checkingID);
+    const cardToCheck = escape(req.body.cardId);
     console.log(id);
     User.findById(id)
         .select('cards')
