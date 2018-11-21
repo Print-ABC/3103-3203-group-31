@@ -15,10 +15,10 @@ router.get('/recp/:uid', checkAuth, FriendController.friend_get_requests_recipie
 router.post('/:uid', checkAuth, FriendController.friend_post_request);
 
 // Handles POST requests (Adds a new friend to friendlist)
-router.post("/add", checkAuth, FriendController.update_friendlist_add);
+router.post("/update/add", FriendController.update_friendlist_add);
 
 // Handles POST requests (Removes an existing friend from friendlist)
-router.post("/remove",checkAuth, FriendController.update_friendlist_remove);
+router.post("/update/remove", FriendController.update_friendlist_remove);
 
 // Handles DELETE requests (Delete a request with a given recipient uid)
 router.delete('/:uid/:id', checkAuth, FriendController.friend_delete_request);

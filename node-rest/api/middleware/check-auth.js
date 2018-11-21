@@ -5,12 +5,8 @@ const ActiveUser = require('../models/ActiveUser');
 module.exports = (req, res, next) => {
     try {
         const token = escape(req.headers.authorization);
-        console.log(req.body);
-        console.log("debug checkauth");
-
         if (req.body.friendsOp){
             // Verify JWT
-            console.log("hello");
             jwt.verify(token, config.secret);
             next();
         } else {
@@ -30,14 +26,12 @@ module.exports = (req, res, next) => {
             .exec()
             .then(user=>{
                 if (user === undefined || user.length == 0){
-                    console.log("SHOULD BE HERE");
                     throw new Error("no matching active users");
                 } else {
                     next();
                 }
             })
             .catch (err=>{
-                console.log("ITS HERE");
                 return res.status(403).json({
                     message: 'Auth Failed',
                     success: false
